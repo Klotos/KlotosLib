@@ -1311,6 +1311,13 @@
             Если не содержит ни одной строки, не являющейся NULL или пустой, метод возвращает пустую строку.</param>
             <returns>Одна строка</returns>
         </member>
+        <member name="M:KlotosLib.StringTools.SubstringHelpers.ShrinkSpaces(System.String)">
+            <summary>
+            Уплотняет пробелы в указанной строка, сокращая множественные подряд идущие пробелы до одного
+            </summary>
+            <param name="Input"></param>
+            <returns></returns>
+        </member>
         <member name="T:KlotosLib.StringTools.ValidatorHelpers">
             <summary>
             Содержит статические методы, определяющие соответствие или несоответствие входной строки определённым критериям

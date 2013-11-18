@@ -1554,6 +1554,40 @@ namespace KlotosLib
                 }
                 return temp.ToString();
             }
+
+            /// <summary>
+            /// Уплотняет пробелы в указанной строка, сокращая множественные подряд идущие пробелы до одного
+            /// </summary>
+            /// <param name="Input"></param>
+            /// <returns></returns>
+            public static String ShrinkSpaces(String Input)
+            {
+                if (Input.IsNullOrEmpty() == true) {return Input;}
+                StringBuilder output = new StringBuilder(Input.Length);
+                const Char space = ' ';
+                Int32 spaces_count = 0;
+                foreach (Char c in Input)
+                {
+                    if (Char.IsWhiteSpace(c) == false)
+                    {
+                        if (spaces_count > 0)
+                        {
+                            spaces_count = 0;
+                            output.Append(space);
+                        }
+                        output.Append(c);
+                    }
+                    else
+                    {
+                        spaces_count++;
+                    }
+                }
+                if (spaces_count > 0)
+                {
+                    output.Append(space);
+                }
+                return output.ToString();
+            }
         }//end of class SubstringHelpers
 
         /// <summary>

@@ -148,5 +148,16 @@ namespace KlotosLib.UnitTests
         {
             return StringTools.SubstringHelpers.ConcatenateAllStringsManyTimes(IterationsCount, Input);
         }
+
+        [TestCase("", ExpectedResult = "")]
+        [TestCase(" ", ExpectedResult = " ")]
+        [TestCase("  ", ExpectedResult = " ")]
+        [TestCase(" a ", ExpectedResult = " a ")]
+        [TestCase("  b  ", ExpectedResult = " b ")]
+        [TestCase("  a  b  c ", ExpectedResult = " a b c ")]
+        public String ShrinkSpaces(String Input)
+        {
+            return StringTools.SubstringHelpers.ShrinkSpaces(Input);
+        }
     }
 }
