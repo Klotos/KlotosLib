@@ -1556,9 +1556,9 @@ namespace KlotosLib
             }
 
             /// <summary>
-            /// Уплотняет пробелы в указанной строка, сокращая множественные подряд идущие пробелы до одного
+            /// Уплотняет пробелы в указанной строке, сокращая множественные идущие подряд пробелы до одного
             /// </summary>
-            /// <param name="Input"></param>
+            /// <param name="Input">Строка, которую следует уплотнить. Если NULL или пустая - будет возвращена без изменений.</param>
             /// <returns></returns>
             public static String ShrinkSpaces(String Input)
             {
@@ -1671,7 +1671,8 @@ namespace KlotosLib
                 if (Input.IsStringNullEmptyWhiteSpace() == true) { return false; }
                 return Regex.IsMatch(Input,
                                      @"^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*" +
-            "(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$");
+                "(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$",
+                RegexOptions.IgnoreCase | RegexOptions.Compiled);
             }
         }
 

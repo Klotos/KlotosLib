@@ -1313,9 +1313,9 @@
         </member>
         <member name="M:KlotosLib.StringTools.SubstringHelpers.ShrinkSpaces(System.String)">
             <summary>
-            Уплотняет пробелы в указанной строка, сокращая множественные подряд идущие пробелы до одного
+            Уплотняет пробелы в указанной строке, сокращая множественные идущие подряд пробелы до одного
             </summary>
-            <param name="Input"></param>
+            <param name="Input">Строка, которую следует уплотнить. Если NULL или пустая - будет возвращена без- изменений.</param>
             <returns></returns>
         </member>
         <member name="T:KlotosLib.StringTools.ValidatorHelpers">
