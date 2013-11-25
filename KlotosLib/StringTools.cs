@@ -1568,7 +1568,7 @@ namespace KlotosLib
                 Int32 spaces_count = 0;
                 foreach (Char c in Input)
                 {
-                    if (Char.IsWhiteSpace(c) == false)
+                    if (Char.IsControl(c) == true || Char.IsWhiteSpace(c) == false)
                     {
                         if (spaces_count > 0)
                         {

@@ -14,7 +14,7 @@ namespace KlotosLib
     public static class ExceptionTools
     {
         /// <summary>
-        /// Генерирует исключение 'ArgumentException', если входная последовательность NULL или пустая
+        /// Генерирует и выбрасывает исключение 'ArgumentException', если входная последовательность NULL или пустая
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="Source"></param>
@@ -22,6 +22,60 @@ namespace KlotosLib
         {
             if (Source == null) { throw new ArgumentException("Входная последовательность не может быть NULL"); }
             if (Source.Any() == false) { throw new ArgumentException("Входная последовательность не может быть пустой"); }
+        }
+        
+        /// <summary>
+        /// Генерирует и выбрасывает исключение 'ArgumentException' с указанным сообщением об ошибке, 
+        /// если входная последовательность NULL или пустая
+        /// </summary>
+        /// <param name="Source"></param>
+        /// <param name="Message"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <exception cref="ArgumentException"></exception>
+        public static void ThrowIfNullOrEmpty<T>(this IEnumerable<T> Source, String Message)
+        {
+            if (Source == null) { throw new ArgumentException(Message.ToStringS()); }
+            if (Source.Any() == false) { throw new ArgumentException(Message.ToStringS()); }
+        }
+
+        /// <summary>
+        /// Генерирует и выбрасывает исключение 'ArgumentException' с указанным названием параметра и сообщениями об ошибках, 
+        /// если входная последовательность NULL или пустая
+        /// </summary>
+        /// <param name="Source"></param>
+        /// <param name="MessageIfNull"></param>
+        /// <param name="MessageIfEmpty"></param>
+        /// <param name="ParamName"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <exception cref="ArgumentException"></exception>
+        public static void ThrowIfNullOrEmpty<T>(this IEnumerable<T> Source, String MessageIfNull, String MessageIfEmpty, String ParamName)
+        {
+            if (Source == null) { throw new ArgumentException(MessageIfNull.ToStringS(), ParamName.ToStringS()); }
+            if (Source.Any() == false) { throw new ArgumentException(MessageIfEmpty.ToStringS(), ParamName.ToStringS()); }
+        }
+
+        /// <summary>
+        /// Генерирует и выбрасывает исключение 'ArgumentException' с указанным названием параметра и сообщениями об ошибках, 
+        /// если входная последовательность NULL или пустая, или же все без исключения элементы входной последовательности являются NULL
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="Source"></param>
+        /// <param name="MessageIfNull"></param>
+        /// <param name="MessageIfEmpty"></param>
+        /// <param name="AllElementsNull"></param>
+        /// <param name="ParamName"></param>
+        public static void ThrowIfNullOrEmptyAll<T>(this IEnumerable<T> Source, String MessageIfNull, String MessageIfEmpty, String AllElementsNull, String ParamName)
+        {
+            if (Source == null) { throw new ArgumentException(MessageIfNull.ToStringS(), ParamName.ToStringS()); }
+            if (Source.Any() == false) { throw new ArgumentException(MessageIfEmpty.ToStringS(), ParamName.ToStringS()); }
+            if (typeof(T).IsValueType == false)
+            {
+                foreach (T element in Source)
+                {
+                    if((Object)element != null) {return;}
+                }
+                throw new ArgumentException(AllElementsNull.ToStringS(), ParamName.ToStringS());
+            }
         }
 
         /// <summary>

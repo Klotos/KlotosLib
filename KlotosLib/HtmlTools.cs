@@ -33,12 +33,8 @@ namespace KlotosLib
 
             foreach (KeyValuePair<int, string> one_possible_tag in tags_with_positions)
             {
-                if (CommonTools.AreAllEqual<Int32>(start_position, one_possible_tag.Key - 1, 0) == true)
-                {
-                    start_position = one_possible_tag.Key + one_possible_tag.Value.Length + 1;
-                    continue;
-                }
-                if (CommonTools.AreAllEqual<Int32>(start_position, one_possible_tag.Key - 1) == true)
+                if (CommonTools.AreAllEqual<Int32>(start_position, one_possible_tag.Key - 1, 0) == true ||
+                    start_position == one_possible_tag.Key - 1)
                 {
                     start_position = one_possible_tag.Key + one_possible_tag.Value.Length + 1;
                     continue;
@@ -46,6 +42,61 @@ namespace KlotosLib
                 temp.Append(InputHTML.SubstringWithEnd(start_position, one_possible_tag.Key - 1, true, false, true));
                 start_position = one_possible_tag.Key + one_possible_tag.Value.Length + 1;
             }
+            String temp2 = InputHTML.Substring(start_position);
+            if (temp2.HasVisibleChars() == true)
+            {
+                String temp3 = StringTools.SubstringHelpers.GetSubstringToToken(temp2, "<", StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase);
+                temp.Append(temp3);
+            }
+            else
+            {
+                temp.Append(temp2);
+            }
+            return temp.ToString();
+        }
+
+        /// <summary>
+        /// Удаляет из входной строки все одинарные и парные HTML-тэги с их атрибутами, оставляя их содержимое. Если входная строка не содержит HTML-тэгов, метод возвращает её без изменений. 
+        /// Удаляются также некорректно расположенные HTML-тэги (неоткрытые, незакрытые и перехлестывающиеся). Заменяет все HTML-пробелы и переносы строк на их символьные аналоги.
+        /// </summary>
+        /// <param name="InputHTML">Входная HTML-содержащая строка</param>
+        /// <returns>Копия входной строки, не содержащая никаких HTML-тегов</returns>
+        public static String IntelliRemoveHTMLTags(String InputHTML)
+        {
+            if (InputHTML.HasVisibleChars() == false) { return InputHTML; }
+            if (StringTools.ContainsHelpers.ContainsAllOf(InputHTML, new char[] { '<', '>' }) == false) { return InputHTML; }
+            Dictionary<Int32, String> tags_with_positions = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(InputHTML, "<", ">", 0, StringComparison.OrdinalIgnoreCase);
+            if (tags_with_positions.Any() == false) { return InputHTML; }
+            
+            const String combined_enter = "\r\n", space = " ";
+
+            StringBuilder temp = new StringBuilder(InputHTML.Length);
+            Int32 start_position = 0;
+
+            foreach (KeyValuePair<int, string> one_possible_tag in tags_with_positions)
+            {
+                if (start_position < one_possible_tag.Key - 1)
+                {
+                    temp.Append(InputHTML.SubstringWithEnd(start_position, one_possible_tag.Key - 1, true, false, true));
+                }
+                if (one_possible_tag.Value.Contains("br", StringComparison.OrdinalIgnoreCase)==true
+                    && StringTools.ContainsHelpers.ContainsOnlyAllowed(one_possible_tag.Value, new char[] { ' ', '/', 'b', 'r', 'B', 'R' }) == true)
+                {
+                    temp.Append(combined_enter);
+                }
+                start_position = one_possible_tag.Key + one_possible_tag.Value.Length + 1;
+            }
+            String temp2 = InputHTML.Substring(start_position);
+            if (temp2.HasVisibleChars() == true)
+            {
+                String temp3 = StringTools.SubstringHelpers.GetSubstringToToken(temp2, "<", StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase);
+                temp.Append(temp3);
+            }
+            else
+            {
+                temp.Append(temp2);
+            }
+            temp.Replace("&nbsp;", space).Replace("&ensp;", space);
             return temp.ToString();
         }
 

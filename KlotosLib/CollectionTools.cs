@@ -248,12 +248,13 @@ namespace KlotosLib
             const String def = "";
             if (Source == null)
             {
-                if (Strict == true) { throw new ArgumentNullException("Source", "Последовательность является NULL"); }
+                if (Strict == true) { throw new ArgumentNullException("Source", "Конкатенируемая последовательность является NULL"); }
                 else { return def; }
             }
             if (Source.Any<T>() == false)
             {
-                if (Strict == true) { throw new ArgumentException("Последовательность не содержит ни единого элемента", "Source"); }
+                if (Strict == true) 
+                { throw new ArgumentException("Конкатенируемая последовательность типа '"+Source.GetType().Name+"' не содержит ни единого элемента", "Source"); }
                 else { return def; }
             }
             Func<T, String> conv;

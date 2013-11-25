@@ -10,10 +10,28 @@ namespace KlotosLib.UnitTests
         [TestCase(" \n", Result = " \n")]
         [TestCase("x", Result = "x")]
         [TestCase("<x cc>  </x cc>", Result = "  ")]
-        [TestCase("<html><body> <title>incorrect body and title</body></title> <br/> <img src = \"x\"></html>", Result = " incorrect body and title  ")]
-        public String RemoveHTMLTagsTest(String Input)
+        [TestCase("<html><body> <title>incorrect body and title</body></title> <br/> <img src = \"x\"></html>", ExpectedResult = " incorrect body and title  ")]
+        [TestCase("text: <br>first line<br >second line: value<br/><br/><b><a href=\"", ExpectedResult = "text: first linesecond line: value")]
+        [TestCase("<a href> text:&nbsp;<br>first line<br >second line:&nbsp;value<a href=\"xxx\"", ExpectedResult = " text:&nbsp;first linesecond line:&nbsp;value")]
+        public String RemoveHTMLTags(String Input)
         {
             return HtmlTools.RemoveHTMLTags(Input);
+        }
+
+        [TestCase(null, Result = null)]
+        [TestCase(" \n", Result = " \n")]
+        [TestCase("x", Result = "x")]
+        [TestCase("<x cc>  </x cc>", Result = "  ")]
+        [TestCase("<html><body> <title>incorrect body and title</body></title> <br/> <img src = \"x\"></html>final",
+            ExpectedResult = " incorrect body and title \r\n final")]
+        [TestCase("text: <br>first line<br >second line: value<br/ >< br/><b><a href=\"", ExpectedResult = "text: \r\nfirst line\r\nsecond line: value\r\n\r\n")]
+        [TestCase(" <b>text1&nbsp;text2<br>second&ensp;line< br >third line</b> ", ExpectedResult = " text1 text2\r\nsecond line\r\nthird line ")]
+        [TestCase("bla-bla<br />bla bla<html><body>text&nbsp; text</body></html>", ExpectedResult = "bla-bla\r\nbla blatext  text")]
+        [TestCase("<a href> text:&nbsp;<br>first line<br >second line:&nbsp;value<a href=\"xxx\"", ExpectedResult = " text: \r\nfirst line\r\nsecond line: value")]
+        [TestCase("<bold><bla> text:&nbsp;<br>first line<br >second line:&nbsp;value</ bold><a href=\"xxx\"", ExpectedResult = " text: \r\nfirst line\r\nsecond line: value")]
+        public String IntelliRemoveHTMLTags(String InputHTML)
+        {
+            return HtmlTools.IntelliRemoveHTMLTags(InputHTML);
         }
 
         [TestCase(null, Result = null)]
@@ -26,13 +44,13 @@ namespace KlotosLib.UnitTests
             Result = "<text><br> startend_<tag3><tag4 >tag4text</tag4 ></tag3 > <br /></text><tr><>")]
         [TestCase("<html>< body><p></p></body></html >", Result = "")]
         [TestCase("<html>< body><p>passage</p></body></html >", Result = "<html>< body><p>passage</p></body></html >")]
-        public String RemoveEmptyPairHTMLTagsTest(String Input)
+        public String RemoveEmptyPairHTMLTags(String Input)
         {
             return HtmlTools.RemoveEmptyPairHTMLTags(Input);
         }
 
         [Test]
-        public void AdjustTextToHtmlTest()
+        public void AdjustTextToHtml()
         {
             String input1 = " <html>"+
                             "   text with 3 spaces behind"+
@@ -45,7 +63,7 @@ namespace KlotosLib.UnitTests
         }
 
         [Test]
-        public void FixBrokenXMLTagsTest()
+        public void FixBrokenXMLTags()
         {
             String input1 = "<html>without closing html<body><title>incorrect</clos> body and title</body></title><br></closing_without_opening>";
             String output1 = HtmlTools.FixBrokenXMLTags(input1);
@@ -54,7 +72,7 @@ namespace KlotosLib.UnitTests
         }
 
         [Test]
-        public void ValidateHtmlTagTest()
+        public void ValidateHtmlTag()
         {
             String input_tag1 = " <body > ";
             String output_tag_name1;
@@ -82,7 +100,7 @@ namespace KlotosLib.UnitTests
         }
 
         [Test]
-        public void SecureScriptXSSTest()
+        public void SecureScriptXSS()
         {
             String input1 = "<body>text <a href=z>link</a><script>alert(ha-ha)< / script > <body>";
             String output1 = HtmlTools.SecureScriptXSS(input1);

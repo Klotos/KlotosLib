@@ -62,6 +62,10 @@ namespace KlotosLib.UnitTests
             Dictionary<Int32, String> output3 = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input1, "Start", "End", 15, StringComparison.OrdinalIgnoreCase);
             CollectionAssert.AreEqual(new Dictionary<int, string>(1) { { 26, "inner2" } }, output3,
                 output3.ConcatToString((int k) => k.ToString(), (String v) => v, "=>", "; "));
+
+            const string input4 = "<br>< a href> <<>";
+            Dictionary<Int32, String> output4 = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input4, "<", ">", 0, StringComparison.Ordinal);
+            CollectionAssert.AreEqual(new Dictionary<int, string>(){{1, "br"}, {5, " a href"}, {15, "<"}}, output4, output4.ConcatToString());
         }
 
         [TestCase("1234abcd123", "cd", StringTools.Direction.FromStartToEnd, StringComparison.Ordinal, ExpectedResult = "1234ab")]
@@ -155,6 +159,8 @@ namespace KlotosLib.UnitTests
         [TestCase(" a ", ExpectedResult = " a ")]
         [TestCase("  b  ", ExpectedResult = " b ")]
         [TestCase("  a  b  c ", ExpectedResult = " a b c ")]
+        [TestCase("  a\r\ncarriage return \r\n  c  ", ExpectedResult = " a\r\ncarriage return \r\n c ")]
+        [TestCase("  ab \r\n cd  \r\n\r\n  ef   ", ExpectedResult = " ab \r\n cd \r\n\r\n ef ")]
         public String ShrinkSpaces(String Input)
         {
             return StringTools.SubstringHelpers.ShrinkSpaces(Input);
