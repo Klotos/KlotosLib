@@ -71,6 +71,7 @@
     <Compile Include="StringExtensionMethods.cs" />
     <Compile Include="StringTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Substring.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="KlotosLibSN.snk" />

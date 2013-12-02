@@ -59,6 +59,7 @@
     <Compile Include="StringToolsStringAnalyzersTests.cs" />
     <Compile Include="StringToolsSubstringHelpersTests.cs" />
     <Compile Include="StringToolsValidatorHelpersTests.cs" />
+    <Compile Include="SubstringTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KlotosLib\KlotosLib.csproj">

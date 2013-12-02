@@ -24,7 +24,10 @@ namespace KlotosLib.UnitTests
 
         [TestCase(4, 5, 6, Result=false)]
         [TestCase(4, 5, Result = false)]
+        [TestCase(4, Result = true)]
         [TestCase(new Int32[1] { 4 }, Result = true)]
+        [TestCase(new Int32[3] { 3, 4, 5 }, Result = false)]
+        [TestCase(new Int32[0] {  }, Result = false)]
         public Boolean HasSingle(params Int32[] Input)
         {
             return Input.HasSingle();
@@ -37,6 +40,14 @@ namespace KlotosLib.UnitTests
             Assert.That(input1.HasSingle()==false);
             input1 = Enumerable.Range(1, 1);
             Assert.That(input1.HasSingle() == true);
+            List<string> input2 = new List<string>();
+            Assert.That(((IEnumerable<String>)input2).HasSingle() == false);
+            input2.Add("a");
+            Assert.That(((IEnumerable<String>)input2).HasSingle() == true);
+            input2.Add("b");
+            Assert.That(((IEnumerable<String>)input2).HasSingle() == false);
+            input2 = null;
+            Assert.That(((IEnumerable<String>)input2).HasSingle() == false);
         }
 
         [Test]
@@ -192,6 +203,20 @@ namespace KlotosLib.UnitTests
             String[] input2 = { "ab", "bc", "cd", "BC" };
             Assert.IsFalse(input2.HasDuplicatedItems(), input2.ConcatToString());
             Assert.IsTrue(input2.HasDuplicatedItems(StringComparer.OrdinalIgnoreCase), input2.ConcatToString());
+        }
+
+        [Test]
+        public void DistinctWithCount()
+        {
+            List<String> input1 = new List<string>(6) {"abc", "cde", "ABC", "Cde", "efg", "abc"};
+            CollectionAssert.AreEqual(new Dictionary<String, Int32>(5)
+            {
+                {"abc", 2}, {"cde", 1}, {"ABC", 1}, {"Cde", 1}, {"efg", 1}
+            }, input1.DistinctWithCount());
+            CollectionAssert.AreEqual(new Dictionary<string, int>(3)
+            {
+                {"abc", 3}, {"cde", 2}, {"efg", 1}
+            }, input1.DistinctWithCount(StringComparer.OrdinalIgnoreCase));
         }
 
         [Test]

@@ -21,7 +21,7 @@ namespace KlotosLib
         /// <returns>Если возвращает "true" — коллекция NULL или пустая. Если "false" — коллекция содержит минимум 1 элемент.</returns>
         public static Boolean IsNullOrEmpty<T>(this IEnumerable<T> Source)
         {
-            return Source == null || !Source.Any();
+            return Object.ReferenceEquals(Source, null) || !Source.Any();
         }
 
         /// <summary>
@@ -33,21 +33,17 @@ namespace KlotosLib
         /// <returns>Если 'true' — последовательность содержит один и только один элемент. Если NULL, пустая или больше одного элемента - возвращается 'false'.</returns>
         public static Boolean HasSingle<TItem>(this IEnumerable<TItem> Source)
         {
-            if (Source == null || Source.Any<TItem>() == false) { return false; }
+            if (Object.ReferenceEquals(Source, null) == true) {return false;}
             ICollection<TItem> temp = Source as ICollection<TItem>;
-            if (temp.IsNull() == false)
+            if (temp != null)
             {
                 if (temp.Count == 1) { return true; }
                 else { return false; }
             }
             using (IEnumerator<TItem> enumerator = Source.GetEnumerator())
             {
-                try
-                {
-                    enumerator.Reset();
-                }
-                catch { }
                 Boolean first = enumerator.MoveNext();
+                if (first == false) {return false;}
                 Boolean second = enumerator.MoveNext();
                 return !second;
             }
@@ -685,7 +681,7 @@ namespace KlotosLib
             else { return val + Divider + key; }
         }
 
-        #region DuplicatedDetection
+        #region Duplicated
         /// <summary>
         /// Внутренний метод, предназначенный для поиска дубликатов с указанным компаратором. Применяется, если входная последовательность имеет незначительный размер. 
         /// Неэффективен по времени и нагрузке на CPU, но эффективен в плане использования памяти.
@@ -775,6 +771,50 @@ namespace KlotosLib
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Возвращает различающиеся (уникальные) элементы списка вместе с количеством их появлений, используя указанный компаратор
+        /// </summary>
+        /// <typeparam name="TItem">Тип элемента входного списка, должен поддерживать сравнение со своим типом 
+        /// через реализацию интерфейса IEquatable&#60;TItem&#62;</typeparam>
+        /// <param name="Source">Входной список. Если NULL - будет выброшено исключение.</param>
+        /// <param name="EqualityComp">Компаратор проверки на равенство элементов типа <typeparamref name="TItem"/>. Если NULL - будет выброшено исключение.</param>
+        /// <returns></returns>
+        public static Dictionary<TItem, Int32> DistinctWithCount<TItem>(this IList<TItem> Source, IEqualityComparer<TItem> EqualityComp)
+            where TItem : IEquatable<TItem>
+        {
+            if(Source.IsNull()==true) {throw new ArgumentNullException("Source");}
+            if(EqualityComp.IsNull() == true) {throw new ArgumentNullException("EqualityComp");}
+            Dictionary<TItem, Int32> output = new Dictionary<TItem, int>(Source.Count, EqualityComp);
+            if (Source.Count == 0) {return output;}
+            output.Add(Source[0], 1);
+            for (Int32 i = 1; i < Source.Count; i++)
+            {
+                TItem current = Source[i];
+                if (output.ContainsKey(current) == true)
+                {
+                    output[current] = output[current] + 1;
+                }
+                else
+                {
+                    output.Add(current, 1);
+                }
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Возвращает различающиеся (уникальные) элементы списка вместе с количеством их появлений, используя компаратор по умолчанию для типа элементов списка
+        /// </summary>
+        /// <typeparam name="TItem">Тип элемента входного списка, должен поддерживать сравнение со своим типом 
+        /// через реализацию интерфейса IEquatable&#60;TItem&#62;</typeparam>
+        /// <param name="Source">Входной список. Если NULL - будет выброшено исключение.</param>
+        /// <returns></returns>
+        public static Dictionary<TItem, Int32> DistinctWithCount<TItem>(this IList<TItem> Source)
+            where TItem : IEquatable<TItem>
+        {
+            return DistinctWithCount(Source, EqualityComparer<TItem>.Default);
         }
         #endregion
 

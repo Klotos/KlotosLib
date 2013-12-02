@@ -37,35 +37,43 @@ namespace KlotosLib.UnitTests
             Assert.AreEqual(" inner2 ", output2);
             Assert.AreEqual(25, pos);
         }
-
+        
         [Test]
-        public void GetInnerStringsBetweenTokens1()
-        {
-            const string input1 = "abcd Start inner1 enDStartinner2enD other";
-            List<String> output1 = new List<string>(2) { " inner1 ", "inner2" };
-            CollectionAssert.AreEqual(output1, StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input1, "Start", "enD", StringComparison.Ordinal));
-            CollectionAssert.AreEqual(output1, StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input1, "StarT", "END", StringComparison.OrdinalIgnoreCase));
-        }
-
-        [Test]
-        public void GetInnerStringsBetweenTokens2()
+        public void GetInnerStringsBetweenTokens()
         {
             const String input1 = "abcd Start inner1 Endstartinner2end other";
-            Dictionary<Int32, String> output1 = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input1, "Start", "End", 0, StringComparison.Ordinal);
-            CollectionAssert.AreEqual(new Dictionary<int, string>(1) {{10, " inner1 "}}, output1, 
-                output1.ConcatToString((int k) => k.ToString(), (String v)=>v, "=>", "; "));
+            List<Substring> output1 = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input1, "Start", "End", 0, StringComparison.Ordinal);
+            CollectionAssert.AreEqual(new List<Substring>(1) { new Substring(input1, 10, 8) }, output1, 
+                "Output1 = "+output1.ConcatToString(", "));
 
-            Dictionary<Int32, String> output2 = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input1, "Start", "End", 0, StringComparison.OrdinalIgnoreCase);
-            CollectionAssert.AreEqual(new Dictionary<int, string>(2) { { 10, " inner1 " }, {26, "inner2"} }, output2,
-                output2.ConcatToString((int k) => k.ToString(), (String v) => v, "=>", "; "));
+            List<Substring> output2 = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input1, "Start", "End", 0, StringComparison.OrdinalIgnoreCase);
+            CollectionAssert.AreEqual(new List<Substring>(2) { new Substring(input1, 10, 8), new Substring(input1, 26, 6) }, output2,
+                "Output2 = " + output2.ConcatToString(", "));
 
-            Dictionary<Int32, String> output3 = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input1, "Start", "End", 15, StringComparison.OrdinalIgnoreCase);
-            CollectionAssert.AreEqual(new Dictionary<int, string>(1) { { 26, "inner2" } }, output3,
-                output3.ConcatToString((int k) => k.ToString(), (String v) => v, "=>", "; "));
+            List<Substring> output3 = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input1, "Start", "End", 15, StringComparison.OrdinalIgnoreCase);
+            CollectionAssert.AreEqual(new List<Substring>(1) { new Substring(input1, 26, 6) }, output3,
+                "Output3 = " + output3.ConcatToString("; "));
 
             const string input4 = "<br>< a href> <<>";
-            Dictionary<Int32, String> output4 = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input4, "<", ">", 0, StringComparison.Ordinal);
-            CollectionAssert.AreEqual(new Dictionary<int, string>(){{1, "br"}, {5, " a href"}, {15, "<"}}, output4, output4.ConcatToString());
+            List<Substring> output4 = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input4, "<", ">", 0, StringComparison.Ordinal);
+            CollectionAssert.AreEqual(new List<Substring>(3) { new Substring(input4, 1, 2), new Substring(input4, 5, 7), new Substring(input4, 15, 1) }, output4,
+                "Output4 = " + output4.ConcatToString());
+
+            const string input5 = "abcd Start inner1 enDStartinner2enD other";
+            List<Substring> output5_1 = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input5, "Start", "enD", 0, StringComparison.Ordinal);
+            CollectionAssert.AreEqual(new List<Substring>(2) { new Substring(input5, 10, 8), new Substring(input5, 26, 6) }, output5_1, 
+                "Output5_1 = "+output5_1.ConcatToString());
+            List<Substring> output5_2 = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input5, "StarT", "END", 0, StringComparison.OrdinalIgnoreCase);
+            CollectionAssert.AreEqual(new List<Substring>(2) { new Substring(input5, 10, 8), new Substring(input5, 26, 6) }, output5_2,
+                "Output5_2 = "+output5_2.ConcatToString());
+
+            const String input6 = "012<a>45</a><b>bb</b><a></a><A>ttt</A><a></a><a></A>";
+            List<Substring> output6_1 = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input6, "<a>", "</a>", 3, StringComparison.OrdinalIgnoreCase);
+            CollectionAssert.AreEqual(new List<Substring>(5){new Substring(input6, 6, 2), null, new Substring(input6, 31, 3), null, null}, output6_1, 
+                "Output6_1 = "+output6_1.ConcatToString("", "", ", ", false, true));
+            List<Substring> output6_2 = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input6, "<a>", "</a>", 4, StringComparison.OrdinalIgnoreCase);
+            CollectionAssert.AreEqual(new List<Substring>(4) { null, new Substring(input6, 31, 3), null, null }, output6_2,
+                "Output6_2 = " + output6_2.ConcatToString("", "", ", ", false, true));
         }
 
         [TestCase("1234abcd123", "cd", StringTools.Direction.FromStartToEnd, StringComparison.Ordinal, ExpectedResult = "1234ab")]

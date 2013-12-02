@@ -1228,53 +1228,6 @@ namespace KlotosLib
                 Position = start_token_start_pos + StartToken.Length;
                 return Input.SubstringWithEnd(start_token_start_pos + StartToken.Length, end_token_start_pos);
             }
-
-            /// <summary>
-            /// Возвращает подстроку, которая находится в искомой строке между указанными начальным и конечным токеном. 
-            /// Возвращается столько подстрок, сколько в искомой строке встречается начальных и конечных токенов в прямом порядке.
-            /// </summary>
-            /// <param name="Input">Входная строка, содержащая токены, и внутри которой происходит поиск</param>
-            /// <param name="StartToken">Начальный токен</param>
-            /// <param name="EndToken">Конечный токен</param>
-            /// <param name="CompOpt"></param>
-            /// <returns>Список подстрок, находящихся между указанными токенами</returns>
-            public static List<string> GetInnerStringsBetweenTokens(String Input, String StartToken, String EndToken, StringComparison CompOpt)
-            {
-                if (Input.IsStringNullEmptyWhiteSpace() == true) throw new ArgumentException("Входная строка не может быть NULL, пустой или состоящей из одних пробелов", "Input");
-                if (StartToken.IsStringNullOrEmpty() == true) throw new ArgumentException("Начальный токен не может быть NULL или пустой строкой", "StartToken");
-                if (EndToken.IsStringNullOrEmpty() == true) throw new ArgumentException("Конечный токен не может быть NULL или пустой строкой", "EndToken");
-                List<string> output = new List<string>();
-                Int32 start_token_length = StartToken.Length;
-                Int32 end_token_length = EndToken.Length;
-
-                Int32 start_token_index;
-                Int32 end_token_index;
-                Int32 offset = 0;
-
-                while (true)
-                {
-                    start_token_index = Input.IndexOf(StartToken, offset, CompOpt);
-                    if (start_token_index < 0) { break; }
-                    end_token_index = Input.IndexOf(EndToken, start_token_index + start_token_length, CompOpt);
-                    if ((end_token_index > 0) && (start_token_index < end_token_index))
-                    { //устанавливаем сдвиг (offset) и добавляем в выходной список найденную подстроку
-                        offset = end_token_index + end_token_length;
-                        if (start_token_index + start_token_length == end_token_index)
-                        {
-                            output.Add(String.Empty);
-                        }
-                        else
-                        {
-                            output.Add(Input.SubstringWithEnd(start_token_index + start_token_length, end_token_index));
-                        }
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                return output;
-            }
             
             /// <summary>
             /// Возвращает все искомые подстроки вместе с их позициями из указанной строки, которые находятся между указанными начальными и конечными токенами. 
@@ -1284,38 +1237,48 @@ namespace KlotosLib
             /// <param name="Input">Входная строка, содержащая токены, и внутри которой происходит поиск. Входная строка не может быть NULL, пустой или состоящей из одних пробелов.</param>
             /// <param name="StartToken">Начальный токен, не может быть NULL или пустой строкой</param>
             /// <param name="EndToken">Конечный токен, не может быть NULL или пустой строкой</param>
-            /// <param name="Offset">Позиция исходной строки. Если 0 - поиск ведётся с начала. Если меньше 0 или больше длины исходной строки, выбрасывается исключение.</param>
-            /// <param name="ComparisionOptions">Опции сравнения строк между собой</param>
-            /// <returns>Словарь ключей и значений, где ключ - это позиция начала вхождения искомой строки в указанную, а значение - сама искомая строка. Если ничего не найдено, является пустым.</returns>
-            public static Dictionary<int, string> GetInnerStringsBetweenTokens(String Input, String StartToken, String EndToken, Int32 Offset, StringComparison ComparisionOptions)
+            /// <param name="StartIndex">Позиция (включительная) начала поиска во входной строке. Если 0 - поиск ведётся с начала. 
+            /// Если меньше 0 или больше длины входной строки - выбрасывается исключение.</param>
+            /// <param name="CompOpt">Опции сравнения строк между собой</param>
+            /// <returns>Список подстрок. Если какая-либо из подстрок является пустой (т.е. между начальным и конечным токеном нет ни одного символа), 
+            /// в списке она будет представлена значением NULL.</returns>
+            public static List<Substring> GetInnerStringsBetweenTokens(String Input, String StartToken, String EndToken, Int32 StartIndex, StringComparison CompOpt)
             {
-                if (Input.IsStringNullEmptyWhiteSpace() == true) throw new ArgumentException("Входная строка не может быть NULL, пустой или состоящей из одних пробелов", "Input");
-                if (StartToken.IsStringNullOrEmpty() == true) throw new ArgumentException("Начальный токен не может быть NULL или пустой строкой", "StartToken");
-                if (EndToken.IsStringNullOrEmpty() == true) throw new ArgumentException("Конечный токен не может быть NULL или пустой строкой", "EndToken");
-                if (Offset < 0) { throw new ArgumentOutOfRangeException("Offset", "Позиция не может быть меньше 0"); }
-                if (Offset >= Input.Length)
-                { throw new ArgumentOutOfRangeException("Offset", String.Format("Позиция начала поиска ('{0}') не может быть больше или равна длине строки ('{1}')", Offset, Input.Length)); }
-                if (Enum.IsDefined(typeof(StringComparison), (Int32)ComparisionOptions) == false)
-                { throw new InvalidEnumArgumentException("ComparisionOptions", (Int32)ComparisionOptions, typeof(StringComparison)); }
+                if (Input.IsStringNullEmptyWhiteSpace() == true) 
+                {throw new ArgumentException("Входная строка не может быть NULL, пустой или состоящей из одних пробелов", "Input");}
+                if (StartToken.IsStringNullOrEmpty() == true) {throw new ArgumentException("Начальный токен не может быть NULL или пустой строкой", "StartToken");}
+                if (EndToken.IsStringNullOrEmpty() == true) {throw new ArgumentException("Конечный токен не может быть NULL или пустой строкой", "EndToken");}
+                if (StartIndex < 0) { throw new ArgumentOutOfRangeException("StartIndex", StartIndex, "Позиция начала поиска не может быть меньше 0"); }
+                if (StartIndex >= Input.Length)
+                { throw new ArgumentOutOfRangeException("StartIndex", StartIndex, 
+                    String.Format("Позиция начала поиска ('{0}') не может быть больше или равна длине строки ('{1}')", StartIndex, Input.Length)); }
+                if (Enum.IsDefined(typeof(StringComparison), (Int32)CompOpt) == false)
+                { throw new InvalidEnumArgumentException("CompOpt", (Int32)CompOpt, typeof(StringComparison)); }
 
-                Dictionary<int, string> output = new Dictionary<int, string>();
+                List<Substring> output = new List<Substring>();
 
-                Int32 internal_offset = Offset;
+                Int32 internal_offset = StartIndex;
 
                 while (true)
                 {
-                    Int32 start_token_start_pos = Input.IndexOf(StartToken, internal_offset, ComparisionOptions);
+                    Int32 start_token_start_pos = Input.IndexOf(StartToken, internal_offset, CompOpt);
                     if (start_token_start_pos == -1)
                     {
                         return output;
                     }
-                    Int32 end_token_start_pos = Input.IndexOf(EndToken, (start_token_start_pos + StartToken.Length), ComparisionOptions);
+                    Int32 end_token_start_pos = Input.IndexOf(EndToken, (start_token_start_pos + StartToken.Length), CompOpt);
                     if (end_token_start_pos == -1)
                     {
                         return output;
                     }
-                    String inner = Input.SubstringWithEnd(start_token_start_pos + StartToken.Length, end_token_start_pos);//искомая подстрока между токенами
-                    output.Add(start_token_start_pos + StartToken.Length, inner);
+                    if (start_token_start_pos + StartToken.Length == end_token_start_pos)
+                    {
+                        output.Add(null);
+                    }
+                    else
+                    {
+                        output.Add(Substring.CreateWithEndIndex(Input, start_token_start_pos + StartToken.Length, end_token_start_pos - 1));
+                    }
                     internal_offset = end_token_start_pos + EndToken.Length;//обновление смещения
                 }
             }

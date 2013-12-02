@@ -25,22 +25,22 @@ namespace KlotosLib
         {
             if (InputHTML.HasVisibleChars() == false) { return InputHTML; }
             if (StringTools.ContainsHelpers.ContainsAllOf(InputHTML, new char[] { '<', '>' }) == false) { return InputHTML; }
-            Dictionary<Int32, String> tags_with_positions = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(InputHTML, "<", ">", 0, StringComparison.OrdinalIgnoreCase);
+            List<Substring> tags_with_positions = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(InputHTML, "<", ">", 0, StringComparison.OrdinalIgnoreCase);
             if (tags_with_positions.Any() == false) { return InputHTML; }
 
             StringBuilder temp = new StringBuilder(InputHTML.Length);
             Int32 start_position = 0;
 
-            foreach (KeyValuePair<int, string> one_possible_tag in tags_with_positions)
+            foreach (Substring one_possible_tag in tags_with_positions)
             {
-                if (CommonTools.AreAllEqual<Int32>(start_position, one_possible_tag.Key - 1, 0) == true ||
-                    start_position == one_possible_tag.Key - 1)
+                if (CommonTools.AreAllEqual<Int32>(start_position, one_possible_tag.StartIndex - 1, 0) == true ||
+                    start_position == one_possible_tag.StartIndex - 1)
                 {
-                    start_position = one_possible_tag.Key + one_possible_tag.Value.Length + 1;
+                    start_position = one_possible_tag.StartIndex + one_possible_tag.Value.Length + 1;
                     continue;
                 }
-                temp.Append(InputHTML.SubstringWithEnd(start_position, one_possible_tag.Key - 1, true, false, true));
-                start_position = one_possible_tag.Key + one_possible_tag.Value.Length + 1;
+                temp.Append(InputHTML.SubstringWithEnd(start_position, one_possible_tag.StartIndex - 1, true, false, true));
+                start_position = one_possible_tag.StartIndex + one_possible_tag.Value.Length + 1;
             }
             String temp2 = InputHTML.Substring(start_position);
             if (temp2.HasVisibleChars() == true)
@@ -65,7 +65,8 @@ namespace KlotosLib
         {
             if (InputHTML.HasVisibleChars() == false) { return InputHTML; }
             if (StringTools.ContainsHelpers.ContainsAllOf(InputHTML, new char[] { '<', '>' }) == false) { return InputHTML; }
-            Dictionary<Int32, String> tags_with_positions = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(InputHTML, "<", ">", 0, StringComparison.OrdinalIgnoreCase);
+            List<Substring> tags_with_positions = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens
+                (InputHTML, "<", ">", 0, StringComparison.OrdinalIgnoreCase);
             if (tags_with_positions.Any() == false) { return InputHTML; }
             
             const String combined_enter = "\r\n", space = " ";
@@ -73,18 +74,18 @@ namespace KlotosLib
             StringBuilder temp = new StringBuilder(InputHTML.Length);
             Int32 start_position = 0;
 
-            foreach (KeyValuePair<int, string> one_possible_tag in tags_with_positions)
+            foreach (Substring one_possible_tag in tags_with_positions)
             {
-                if (start_position < one_possible_tag.Key - 1)
+                if (start_position < one_possible_tag.StartIndex - 1)
                 {
-                    temp.Append(InputHTML.SubstringWithEnd(start_position, one_possible_tag.Key - 1, true, false, true));
+                    temp.Append(InputHTML.SubstringWithEnd(start_position, one_possible_tag.StartIndex - 1, true, false, true));
                 }
                 if (one_possible_tag.Value.Contains("br", StringComparison.OrdinalIgnoreCase)==true
                     && StringTools.ContainsHelpers.ContainsOnlyAllowed(one_possible_tag.Value, new char[] { ' ', '/', 'b', 'r', 'B', 'R' }) == true)
                 {
                     temp.Append(combined_enter);
                 }
-                start_position = one_possible_tag.Key + one_possible_tag.Value.Length + 1;
+                start_position = one_possible_tag.StartIndex + one_possible_tag.Value.Length + 1;
             }
             String temp2 = InputHTML.Substring(start_position);
             if (temp2.HasVisibleChars() == true)
@@ -237,23 +238,24 @@ namespace KlotosLib
             if (InputXML.IsStringNullEmptyWhiteSpace() == true) { return InputXML; }
             if (StringTools.ContainsHelpers.ContainsAllOf(InputXML, new char[] { '<', '>' }) == false) { return InputXML; }
 
-            Dictionary<Int32, String> tags_with_positions = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(InputXML, "<", ">", 0, StringComparison.OrdinalIgnoreCase);
+            List<Substring> tags_with_positions = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens
+                (InputXML, "<", ">", 0, StringComparison.OrdinalIgnoreCase);
             if (tags_with_positions.Any() == false) { return InputXML; }
 
             StringBuilder output = new StringBuilder(InputXML.Length);
             Stack<String> open_tags = new Stack<String>();
             Int32 start_position = 0;
 
-            foreach (KeyValuePair<int, string> one_possible_tag in tags_with_positions)
+            foreach (Substring one_possible_tag in tags_with_positions)
             {
                 String tag_name;
                 HtmlTools.HtmlTagType tag_type = HtmlTools.ValidateHtmlTag("<" + one_possible_tag.Value + ">", out tag_name);
                 if (tag_type != HtmlTagType.PairClose)//если предполагаемый тэг не является тэгом, или одиночный, или парный открывающий
                 {
                     //добавляем в выводную строку часть исходной строки, начиная от позиции поиска и заканчивая концом просканированной части
-                    output.Append(InputXML.SubstringWithEnd(start_position, one_possible_tag.Key + one_possible_tag.Value.Length + 1));
+                    output.Append(InputXML.SubstringWithEnd(start_position, one_possible_tag.StartIndex + one_possible_tag.Value.Length + 1));
                     //устанавливаем новое значение позиции поиска, равное позиции начала вхождения тела потенциального тэга и заканчивая концом закрывающей скобки, следуемой после тела потенциального тэга
-                    start_position = one_possible_tag.Key + one_possible_tag.Value.Length + 1;
+                    start_position = one_possible_tag.StartIndex + one_possible_tag.Value.Length + 1;
                     if (tag_type == HtmlTagType.PairOpen)//если предполагаемый тэг является парным открывающим
                     {
                         open_tags.Push(tag_name);//добавляем его в стэк
@@ -264,23 +266,23 @@ namespace KlotosLib
                     if (open_tags.Any() == false || open_tags.Peek() != tag_name)//закрывающий тэг не соответствует последнему открывающему или нет незакрытых тэгов
                     {
                         //добавляем в выводную строку часть исходной строки, начиная от позиции поиска и заканчивая началом открывающей скобки неоткрытого закрывающего тэга
-                        if (one_possible_tag.Key - 1 > start_position)
+                        if (one_possible_tag.StartIndex - 1 > start_position)
                         {
-                            output.Append(InputXML.SubstringWithEnd(start_position, one_possible_tag.Key - 1));
+                            output.Append(InputXML.SubstringWithEnd(start_position, one_possible_tag.StartIndex - 1));
                         }
                         //устанавливаем новое значение позиции поиска, равное позиции начала вхождения тела потенциального тэга и заканчивая концом закрывающей скобки, 
                         //следуемой после тела потенциального тэга
-                        start_position = one_possible_tag.Key + one_possible_tag.Value.Length + 1;
+                        start_position = one_possible_tag.StartIndex + one_possible_tag.Value.Length + 1;
                     }
                     else//закрывающий тэг соответствует последнему открывающему
                     {
                         //удалить открывающий из стэка
                         open_tags.Pop();
                         //добавляем в выводную строку часть исходной строки, начиная от позиции поиска и заканчивая концом просканированной части
-                        output.Append(InputXML.SubstringWithEnd(start_position, one_possible_tag.Key + one_possible_tag.Value.Length + 1));
+                        output.Append(InputXML.SubstringWithEnd(start_position, one_possible_tag.StartIndex + one_possible_tag.Value.Length + 1));
                         //устанавливаем новое значение позиции поиска, равное позиции начала вхождения тела потенциального тэга и заканчивая концом закрывающей скобки, 
                         //следуемой после тела потенциального тэга
-                        start_position = one_possible_tag.Key + one_possible_tag.Value.Length + 1;
+                        start_position = one_possible_tag.StartIndex + one_possible_tag.Value.Length + 1;
                     }
                 }
             }
@@ -337,13 +339,13 @@ namespace KlotosLib
             if (StringTools.StringAnalyzers.GetNumberOfOccurensesInString(tag_temp, '<') != 1 ||
                 StringTools.StringAnalyzers.GetNumberOfOccurensesInString(tag_temp, '>') != 1) { return HtmlTagType.NotTag; }
             //На данном этапе тэг коректен. Находим TagName.
-            TagName = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(Tag, "<", ">", StringComparison.OrdinalIgnoreCase).Single();
+            TagName = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(Tag, "<", ">", 0, StringComparison.OrdinalIgnoreCase).Single().Value;
             TagName = TagName.Replace("/", String.Empty);
             if (TagName.Contains(" ", StringComparison.OrdinalIgnoreCase) == true)
             {
                 TagName = TagName.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).First();
             }
-            tag_temp = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(tag_temp, "<", ">", StringComparison.OrdinalIgnoreCase).Single().Trim();
+            tag_temp = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(tag_temp, "<", ">", 0, StringComparison.OrdinalIgnoreCase).Single().Value.Trim();
             if (tag_temp.IndexOf('/') == 0 && tag_temp.LastIndexOf('/') == tag_temp.Length - 1)
             {
                 return HtmlTagType.NotTag;
@@ -368,35 +370,35 @@ namespace KlotosLib
         {
             if (InputHTML.HasVisibleChars() == false) { return InputHTML; }
             if (StringTools.ContainsHelpers.ContainsAllOf(InputHTML, new char[] { '<', '>' }) == false) { return InputHTML; }
-            Dictionary<Int32, String> tags_with_positions = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(InputHTML, "<", ">", 0, StringComparison.OrdinalIgnoreCase);
+            List<Substring> tags_with_positions = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(InputHTML, "<", ">", 0, StringComparison.OrdinalIgnoreCase);
             if (tags_with_positions.Any() == false) { return InputHTML; }
 
             StringBuilder output = new StringBuilder(InputHTML.Length);
             Int32 start_position = 0;
 
-            foreach (KeyValuePair<int, string> one_possible_tag in tags_with_positions)
+            foreach (Substring one_possible_tag in tags_with_positions)
             {
                 String tag_name;
                 HtmlTools.HtmlTagType tag_type = HtmlTools.ValidateHtmlTag("<" + one_possible_tag.Value + ">", out tag_name);
                 if (tag_type == HtmlTagType.NotTag || tag_name.Equals("script", StringComparison.OrdinalIgnoreCase) == false)
                 {
-                    output.Append(InputHTML.SubstringWithEnd(start_position, one_possible_tag.Key + one_possible_tag.Value.Length + 1));
+                    output.Append(InputHTML.SubstringWithEnd(start_position, one_possible_tag.StartIndex + one_possible_tag.Value.Length + 1));
                 }
                 else
                 {
                     if (tag_type == HtmlTagType.PairOpen)
                     {
-                        output.Append(InputHTML.Substring(start_position, one_possible_tag.Key - 1 - start_position));
+                        output.Append(InputHTML.Substring(start_position, one_possible_tag.StartIndex - 1 - start_position));
                         output.Append("&lt;script&gt;");
                     }
                     else if (tag_type == HtmlTagType.PairClose)
                     {
-                        output.Append(InputHTML.Substring(start_position, one_possible_tag.Key - 1 - start_position));
+                        output.Append(InputHTML.Substring(start_position, one_possible_tag.StartIndex - 1 - start_position));
                         output.Append("&lt;/script&gt;");
                     }
                     else if (tag_type == HtmlTagType.Single)
                     {
-                        output.Append(InputHTML.Substring(start_position, one_possible_tag.Key - 1 - start_position));
+                        output.Append(InputHTML.Substring(start_position, one_possible_tag.StartIndex - 1 - start_position));
                         output.Append("&lt;script/&gt;");
                     }
                     else
@@ -404,7 +406,7 @@ namespace KlotosLib
                         throw new UnreachableCodeException();
                     }
                 }
-                start_position = one_possible_tag.Key + one_possible_tag.Value.Length + 1;
+                start_position = one_possible_tag.StartIndex + one_possible_tag.Value.Length + 1;
             }
             output.Append(InputHTML.Substring(start_position));
             return output.ToString();
