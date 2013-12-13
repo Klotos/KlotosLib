@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
   <TopNode>[0-1000]C:\Users\neD\Documents\Visual Studio 2010\Projects\KlotosLib\KlotosLib.UnitTests\KlotosLibUnitTests.nunit</TopNode>
-  <SelectedNode>[0-1880]C:\Users\neD\Documents\Visual Studio 2010\Projects\KlotosLib\KlotosLib.UnitTests\bin\Debug\KlotosLib.UnitTests.dll</SelectedNode>
+  <SelectedNode>[0-1851]KlotosLib.UnitTests.CollectionsToolsTests</SelectedNode>
   <ExcludeCategories>false</ExcludeCategories>
   <Nodes>
     <Node UniqueName="[0-1000]C:\Users\neD\Documents\Visual Studio 2010\Projects\KlotosLib\KlotosLib.UnitTests\KlotosLibUnitTests.nunit" Expanded="true" />
-    <Node UniqueName="[0-1880]C:\Users\neD\Documents\Visual Studio 2010\Projects\KlotosLib\KlotosLib.UnitTests\bin\Debug\KlotosLib.UnitTests.dll" Expanded="true" />
-    <Node UniqueName="[0-1881]KlotosLib" Expanded="true" />
-    <Node UniqueName="[0-1882]KlotosLib.UnitTests" Expanded="true" />
+    <Node UniqueName="[0-1892]C:\Users\neD\Documents\Visual Studio 2010\Projects\KlotosLib\KlotosLib.UnitTests\bin\Debug\KlotosLib.UnitTests.dll" Expanded="true" />
+    <Node UniqueName="[0-1893]KlotosLib" Expanded="true" />
+    <Node UniqueName="[0-1894]KlotosLib.UnitTests" Expanded="true" />
+    <Node UniqueName="[0-1885]KlotosLib.UnitTests.CollectionsToolsTests.ItemFromEnd" Expanded="true" />
+    <Node UniqueName="[0-1071]KlotosLib.UnitTests.NumericToolsTests" Expanded="true" />
+    <Node UniqueName="[0-1118]KlotosLib.UnitTests.NumericToolsTests.AreEqual" Expanded="true" />
   </Nodes>
 </VisualState>

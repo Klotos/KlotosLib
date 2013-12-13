@@ -867,6 +867,7 @@ namespace KlotosLib
             return Source;
         }
 
+        #region Equatable
         /// <summary>
         /// Сравнивает два словаря с идентичными типами ключей и значений на наличие идентичных пар с идентичными ключами и значениями. 
         /// При этом порядок вхождения элементов в словари игнорируется.
@@ -1025,6 +1026,7 @@ namespace KlotosLib
             if (first.Count() != second.Count()) { return false; }
             return null;
         }
+        #endregion
 
         /// <summary>
         /// Сортирует входной словарь по значению элементов в указанном порядке, используя для значений компаратор по умолчанию и возвращает новый словарь с отсортированными элементами первого
@@ -1346,6 +1348,7 @@ namespace KlotosLib
             return output;
         }
 
+        #region Random
         /// <summary>
         /// Выполняет перемешивание (тасование) элементов в данном массиве и записывает изменение в этот же экземпляр, возвращая ссылку на него. Использует указанный ГПСЧ.
         /// </summary>
@@ -1437,6 +1440,24 @@ namespace KlotosLib
                 }
                 return current;
             }
+        }
+        #endregion
+
+        /// <summary>
+        /// Возвращает один элемент из списка по его индексу, отсчитываемому с конца
+        /// </summary>
+        /// <typeparam name="TItem">Тип элемента списка - без ограничений</typeparam>
+        /// <param name="Source">Входной список. Если NULL или пустой - будет выброшено исключение.</param>
+        /// <param name="IndexFromEnd">Индекс элемента, который требуется возвратить, отсчитываемый с конца списка. Начинается с 0 включительно. 
+        /// Если превышает общее количество элементов списка - выбрасывается исключение.</param>
+        /// <returns></returns>
+        public static TItem ItemFromEnd<TItem>(this IList<TItem> Source, Int32 IndexFromEnd)
+        {
+            if(Source == null) {throw new ArgumentNullException("Source");}
+            if(Source.Any()==false) {throw new ArgumentException("Входной список пуст", "Source");}
+            if(IndexFromEnd >= Source.Count) {throw new IndexOutOfRangeException
+                (String.Format("Указанный индекс {0} выходит за пределы списка,который содержит {1} элементов", IndexFromEnd, Source.Count));}
+            return Source[Source.Count - 1 - IndexFromEnd];
         }
     }
 }

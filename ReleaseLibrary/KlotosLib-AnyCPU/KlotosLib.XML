@@ -371,7 +371,7 @@
         </member>
         <member name="P:KlotosLib.Substring.EndIndex">
             <summary>
-            Индекс последнего символа данной подстроки в базовой строке
+            Индекс последнего символа данной подстроки в базовой строке (конечный индекс)
             </summary>
         </member>
         <member name="P:KlotosLib.Substring.Length">
@@ -2526,6 +2526,24 @@
             <param name="Number"></param>
             <returns></returns>
         </member>
+        <member name="M:KlotosLib.NumericTools.AreEqual(System.Double,System.Double,System.Double)">
+            <summary>
+            Сравнивает два двоичных числа с плавающей запятой двойной точности с учётом указанного порогового значения
+            </summary>
+            <param name="Threshold">Пороговое значение для сравнения. Если отрицательное - будет взят модуль.</param>
+            <param name="First">Первое сравниваемое число</param>
+            <param name="Second">Второе сравниваемое число</param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.NumericTools.AreEqual(System.Single,System.Single,System.Single)">
+            <summary>
+            Сравнивает два двоичных числа с плавающей запятой одинарной точности с учётом указанного порогового значения
+            </summary>
+            <param name="Threshold">Пороговое значение для сравнения. Если отрицательное - будет взят модуль.</param>
+            <param name="First">Первое сравниваемое число</param>
+            <param name="Second">Второе сравниваемое число</param>
+            <returns></returns>
+        </member>
         <member name="T:KlotosLib.HtmlTools">
             <summary>
             Содержит статические чистые методы по работе с XML и HTML
@@ -3481,6 +3499,16 @@
             <typeparam name="TItem">Тип элемента последовательности - без ограничений</typeparam>
             <param name="Source">Входная последовательность. Если null или пустая - будет выброшено исключение. Если содержит один элемент - он будет возвращён.</param>
             <param name="RandomInstance">Экземпляр ГПСЧ. Если null - будет выброшено исключение.</param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.CollectionTools.ItemFromEnd``1(System.Collections.Generic.IList{``0},System.Int32)">
+            <summary>
+            Возвращает один элемент из списка по его индексу, отсчитываемому с конца
+            </summary>
+            <typeparam name="TItem">Тип элемента списка - без ограничений</typeparam>
+            <param name="Source">Входной список. Если NULL или пустой - будет выброшено исключение.</param>
+            <param name="IndexFromEnd">Индекс элемента, который требуется возвратить, отсчитываемый с конца списка. Начинается с 0 включительно. 
+            Если превышает общее количество элементов списка - выбрасывается исключение.</param>
             <returns></returns>
         </member>
         <member name="T:KlotosLib.CollectionTools.SplitterDisposition">

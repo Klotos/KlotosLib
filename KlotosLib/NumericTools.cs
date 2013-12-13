@@ -82,7 +82,7 @@ namespace KlotosLib
         /// <returns></returns>
         public static String GetFraction(this Single Number, Byte FractionDigits)
         {
-            String output = Number.ToString(CultureInfo.InvariantCulture).Split(new Char[2] { ',', '.' }, StringSplitOptions.RemoveEmptyEntries).Last();
+            String output = Number.ToString(CultureInfo.InvariantCulture).Split(new Char[1] { '.' }, StringSplitOptions.RemoveEmptyEntries).Last();
             if (FractionDigits == 0)
             {
                 return output;
@@ -104,7 +104,7 @@ namespace KlotosLib
         /// <returns></returns>
         public static String GetFraction(this Double Number, Byte FractionDigits)
         {
-            String output = Number.ToString(CultureInfo.InvariantCulture).Split(new Char[2] { ',', '.' }, StringSplitOptions.RemoveEmptyEntries).Last();
+            String output = Number.ToString(CultureInfo.InvariantCulture).Split(new Char[1] { '.' }, StringSplitOptions.RemoveEmptyEntries).Last();
             if (FractionDigits == 0)
             {
                 return output;
@@ -126,7 +126,7 @@ namespace KlotosLib
         /// <returns></returns>
         public static String GetFraction(this Decimal Number, Byte FractionDigits)
         {
-            String output = Number.ToString().Split(new Char[2] { ',', '.' }, StringSplitOptions.RemoveEmptyEntries).Last();
+            String output = Number.ToString(CultureInfo.InvariantCulture).Split(new Char[1] { '.' }, StringSplitOptions.RemoveEmptyEntries).Last();
             if (FractionDigits == 0)
             {
                 return output;
@@ -308,5 +308,33 @@ namespace KlotosLib
             }
         }
         #endregion
+
+        /// <summary>
+        /// Сравнивает два двоичных числа с плавающей запятой двойной точности с учётом указанного порогового значения
+        /// </summary>
+        /// <param name="Threshold">Пороговое значение для сравнения. Если отрицательное - будет взят модуль.</param>
+        /// <param name="First">Первое сравниваемое число</param>
+        /// <param name="Second">Второе сравниваемое число</param>
+        /// <returns></returns>
+        public static Boolean AreEqual(Double Threshold, Double First, Double Second)
+        {
+            Double difference = Math.Abs(First - Second);
+            if (difference > Math.Abs(Threshold)) {return false;}
+            return true;
+        }
+
+        /// <summary>
+        /// Сравнивает два двоичных числа с плавающей запятой одинарной точности с учётом указанного порогового значения
+        /// </summary>
+        /// <param name="Threshold">Пороговое значение для сравнения. Если отрицательное - будет взят модуль.</param>
+        /// <param name="First">Первое сравниваемое число</param>
+        /// <param name="Second">Второе сравниваемое число</param>
+        /// <returns></returns>
+        public static Boolean AreEqual(Single Threshold, Single First, Single Second)
+        {
+            Single difference = Math.Abs(First - Second);
+            if (difference > Math.Abs(Threshold)) { return false; }
+            return true;
+        }
     }
 }

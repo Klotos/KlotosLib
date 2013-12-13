@@ -101,7 +101,7 @@ namespace KlotosLib
         public Int32 StartIndex { get { return this._startIndex; } }
 
         /// <summary>
-        /// Индекс последнего символа данной подстроки в базовой строке
+        /// Индекс последнего символа данной подстроки в базовой строке (конечный индекс)
         /// </summary>
         public Int32 EndIndex { get { return this._startIndex + this._length - 1; } }
 

@@ -447,5 +447,16 @@ namespace KlotosLib.UnitTests
             IEnumerable<Int32> input1 = new Int32[2] { 1, 2 }.AsEnumerable().Where(elem => elem > 1);
             Assert.AreEqual(2, input1.RandomItem(new Random()));
         }
+
+        [TestCase(0, new double[3] { 1.0, 2.0, 3.0 }, ExpectedResult = 3.0)]
+        [TestCase(1, new double[3] { 1.0, 2.0, 3.0 }, ExpectedResult = 2.0)]
+        [TestCase(2, new double[3] { 1.0, 2.0, 3.0 }, ExpectedResult = 1.0)]
+        [TestCase(3, new double[3] { 1.0, 2.0, 3.0 }, ExpectedException = typeof(IndexOutOfRangeException))]
+        [TestCase(0, new double[1] { 1.0 }, ExpectedResult = 1.0)]
+        [TestCase(0, new double[0] { }, ExpectedException = typeof(ArgumentException))]
+        public Double ItemFromEnd(Int32 index, Double[] Source)
+        {
+            return Source.ItemFromEnd(index);
+        }
     }
 }
