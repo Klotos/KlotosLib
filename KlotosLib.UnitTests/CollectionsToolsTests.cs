@@ -10,7 +10,7 @@ namespace KlotosLib.UnitTests
     public class CollectionsToolsTests
     {
         [Test]
-        public void IsCollectionNullOrEmpty()
+        public void IsNullOrEmpty()
         {
             List<Int32> test1 = new List<int>(3) { 0, 5, 0 };
             Assert.AreEqual(false, test1.IsNullOrEmpty());
@@ -20,6 +20,31 @@ namespace KlotosLib.UnitTests
             Assert.AreEqual(true, test1.IsNullOrEmpty());
             test1 = null;
             Assert.AreEqual(true, test1.IsNullOrEmpty());
+        }
+
+        [Test]
+        public void IsEmpty()
+        {
+            List<Int32> input1 = new List<int>();
+            Assert.IsTrue(input1.IsEmpty());
+            input1.Add(5);
+            Assert.IsFalse(input1.IsEmpty());
+            input1 = null;
+            Assert.IsFalse(input1.IsEmpty());
+
+            Stack<String> input2 = new Stack<String>();
+            input2.Push("a");
+            Assert.IsFalse(input2.IsEmpty());
+            input2.Push("b");
+            Assert.IsFalse(input2.IsEmpty());
+            input2.Pop();
+            input2.Pop();
+            Assert.IsTrue(input2.IsEmpty());
+
+            IEnumerable<Int32> input3 = Enumerable.Range(1, 2);
+            Assert.IsFalse(input3.IsEmpty());
+            input3 = Enumerable.Range(5, 0);
+            Assert.IsTrue(input3.IsEmpty());
         }
 
         [TestCase(4, 5, 6, Result=false)]

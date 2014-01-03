@@ -45,7 +45,7 @@ namespace KlotosLib
             String temp2 = InputHTML.Substring(start_position);
             if (temp2.HasVisibleChars() == true)
             {
-                String temp3 = StringTools.SubstringHelpers.GetSubstringToToken(temp2, "<", StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase);
+                String temp3 = StringTools.SubstringHelpers.GetSubstringToToken(temp2, "<", false, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase);
                 temp.Append(temp3);
             }
             else
@@ -90,7 +90,7 @@ namespace KlotosLib
             String temp2 = InputHTML.Substring(start_position);
             if (temp2.HasVisibleChars() == true)
             {
-                String temp3 = StringTools.SubstringHelpers.GetSubstringToToken(temp2, "<", StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase);
+                String temp3 = StringTools.SubstringHelpers.GetSubstringToToken(temp2, "<", false, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase);
                 temp.Append(temp3);
             }
             else
@@ -185,7 +185,7 @@ namespace KlotosLib
             const String html_enter = "<br/>";
 
             String temp = InputHTML
-                .Replace(combined_enter.ToString(), html_enter)
+                .Replace(combined_enter, html_enter)
                 .Replace(carriage_return.ToString(), html_enter)
                 .Replace(new_line.ToString(), html_enter);
             StringBuilder output = new StringBuilder(temp.Length);

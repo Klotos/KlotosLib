@@ -16,17 +16,17 @@ namespace KlotosLib
     public static class StringTools
     {
         /// <summary>
-        /// Определяет направление поиска подстроки в строке
+        /// Определяет направление поиска или выдачи подстроки в строке
         /// </summary>
         public enum Direction : byte
         {
             /// <summary>
-            /// Искать от начала до конца строки
+            /// Искать/выдавать в направлении от начала до конца строки
             /// </summary>
             FromStartToEnd,
 
             /// <summary>
-            /// Искать с конца в начало строки
+            /// Искать/выдавать в направлении с конца к началу строки
             /// </summary>
             FromEndToStart
         };
@@ -1288,26 +1288,31 @@ namespace KlotosLib
             /// </summary>
             /// <param name="Input">Входящая строка, из которой надо извлечь подстроку</param>
             /// <param name="Token">Токен, который определяет конец подстроки</param>
+            /// <param name="LeaveToken">Если "true" - ближайший токен будет оставлен. Если "false" - он тоже будет удалён.</param>
             /// <param name="Dir">Направление, с которого будет возвращена подстрока: из начала или из конца</param>
             /// <param name="CompareOptions">Опции сравнения строк между собой</param>
             /// <returns></returns>
-            public static String GetSubstringToToken(String Input, String Token, Direction Dir, StringComparison CompareOptions)
+            public static String GetSubstringToToken(String Input, String Token, Boolean LeaveToken, Direction Dir, StringComparison CompareOptions)
             {
                 if (Input.IsStringNullEmptyWhiteSpace() == true) { throw new ArgumentException("Входная строка не может быть NULL, пустой или состоящей из одних пробелов", "Input"); }
                 if (Token.IsStringNullOrEmpty() == true) { throw new ArgumentException("Токен не может быть NULL или пустой строкой", "Token"); }
                 if (String.Compare(Input, Token, CompareOptions) == 0) { throw new ArgumentException("Входная строка не может быть равна токену"); }
                 if (Input.Contains(Token, CompareOptions) == false) { return Input; }
                 Int32 input_length = Input.Length;
+                String temp;
                 switch (Dir)
                 {
                     case Direction.FromStartToEnd:
                         Int32 index_of_first_token = Input.IndexOf(Token, CompareOptions);
-                        return Input.Substring(0, index_of_first_token);
+                        temp = Input.Substring(0, index_of_first_token);
+                        if (LeaveToken == false) {return temp;}
+                        else { return temp + Token;}
                     case Direction.FromEndToStart:
                         Int32 token_length = Token.Length;
                         Int32 index_of_last_token = Input.LastIndexOf(Token, CompareOptions);
-                        return SubstringFromEnd
-                            (Input, (input_length - (index_of_last_token + token_length)), true, Direction.FromStartToEnd);
+                        temp = SubstringFromEnd(Input, (input_length - (index_of_last_token + token_length)), true, Direction.FromStartToEnd);
+                        if (LeaveToken == false) {return temp;}
+                        else {return Token + temp;}
                     default:
                         throw new InvalidEnumArgumentException("Dir", (Int32)Dir, Dir.GetType());
                 }
@@ -1318,7 +1323,7 @@ namespace KlotosLib
             /// </summary>
             /// <param name="Input">Входящая строка, из которой надо извлечь подстроку</param>
             /// <param name="Token">Токен, который определяет точку обрезания и также обрезается</param>
-            /// <param name="LeaveToken">Если "true" - ближайший токен будет оставлен. Иначе он тоже будет удалён.</param>
+            /// <param name="LeaveToken">Если "true" - ближайший токен будет оставлен. Если "false" - он тоже будет удалён.</param>
             /// <param name="Dir">Направление, с которого будет обрезана подстрока: из начала или из конца</param>
             /// <param name="CompareOptions">Опции сравнения строк между собой</param>
             /// <returns></returns>

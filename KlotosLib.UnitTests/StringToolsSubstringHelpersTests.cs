@@ -76,15 +76,27 @@ namespace KlotosLib.UnitTests
                 "Output6_2 = " + output6_2.ConcatToString("", "", ", ", false, true));
         }
 
-        [TestCase("1234abcd123", "cd", StringTools.Direction.FromStartToEnd, StringComparison.Ordinal, ExpectedResult = "1234ab")]
-        [TestCase("1234abcd123", "CD", StringTools.Direction.FromStartToEnd, StringComparison.Ordinal, ExpectedResult = "1234abcd123")]
-        [TestCase("1234abcd123", "CD", StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedResult = "1234ab")]
-        [TestCase("1234abcd123", "cd", StringTools.Direction.FromEndToStart, StringComparison.Ordinal, ExpectedResult = "123")]
-        [TestCase("1234abcd123", "CD", StringTools.Direction.FromEndToStart, StringComparison.Ordinal, ExpectedResult = "1234abcd123")]
-        [TestCase("1234abcd123", "CD", StringTools.Direction.FromEndToStart, StringComparison.OrdinalIgnoreCase, ExpectedResult = "123")]
-        public String GetSubstringToToken(String Input, String Token, StringTools.Direction Dir, StringComparison CompareOptions)
+        [TestCase("1234abcd123", "cd", false, StringTools.Direction.FromStartToEnd, StringComparison.Ordinal, ExpectedResult = "1234ab")]
+        [TestCase("1234abcd123", "CD", false, StringTools.Direction.FromStartToEnd, StringComparison.Ordinal, ExpectedResult = "1234abcd123")]
+        [TestCase("1234abcd123", "CD", false, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedResult = "1234ab")]
+        [TestCase("1234abcd123", "cd", false, StringTools.Direction.FromEndToStart, StringComparison.Ordinal, ExpectedResult = "123")]
+        [TestCase("1234abcd123", "CD", false, StringTools.Direction.FromEndToStart, StringComparison.Ordinal, ExpectedResult = "1234abcd123")]
+        [TestCase("1234abcd123", "CD", false, StringTools.Direction.FromEndToStart, StringComparison.OrdinalIgnoreCase, ExpectedResult = "123")]
+        [TestCase("1234abcd123", "12", false, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedResult = "")]
+        [TestCase("1234abcd123", "12", false, StringTools.Direction.FromEndToStart, StringComparison.OrdinalIgnoreCase, ExpectedResult = "3")]
+        [TestCase("1234abcd123", "1", false, StringTools.Direction.FromEndToStart, StringComparison.OrdinalIgnoreCase, ExpectedResult = "23")]
+        [TestCase("1234abcd123", "1", true, StringTools.Direction.FromEndToStart, StringComparison.OrdinalIgnoreCase, ExpectedResult = "123")]
+        [TestCase("1234abcd123", "1", false, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedResult = "")]
+        [TestCase("1234abcd123", "1", true, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedResult = "1")]
+        [TestCase("1234abcd123", "3", true, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedResult = "123")]
+
+        [TestCase("  ", "3", true, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedException = typeof(ArgumentException))]
+        [TestCase("1234abcd123", "", true, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedException = typeof(ArgumentException))]
+        [TestCase("1234abcd123", "1234ABCD123", true, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedException = typeof(ArgumentException))]
+        [TestCase("1234abcd123", "1234ABCD123", true, StringTools.Direction.FromStartToEnd, StringComparison.Ordinal, ExpectedResult = "1234abcd123")]
+        public String GetSubstringToToken(String Input, String Token, Boolean LeaveToken, StringTools.Direction Dir, StringComparison CompareOptions)
         {
-            return StringTools.SubstringHelpers.GetSubstringToToken(Input, Token, Dir, CompareOptions);
+            return StringTools.SubstringHelpers.GetSubstringToToken(Input, Token, LeaveToken, Dir, CompareOptions);
         }
 
         [TestCase("1234abcd123", "3", true, StringTools.Direction.FromStartToEnd, StringComparison.Ordinal, ExpectedResult = "34abcd123")]

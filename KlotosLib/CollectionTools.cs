@@ -16,12 +16,33 @@ namespace KlotosLib
         /// <summary>
         /// Определяет, является ли последовательность NULL или пустой
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">Тип элементов последовательности - без ограничений</typeparam>
         /// <param name="Source">Любая последовательность, реализующая обобщённый интерфейс IEnumerable&#60;T&#62;</param>
-        /// <returns>Если возвращает "true" — коллекция NULL или пустая. Если "false" — коллекция содержит минимум 1 элемент.</returns>
+        /// <returns>Если возвращает "true" — последовательность NULL или пустая. Если "false" — последовательность содержит минимум 1 элемент.</returns>
         public static Boolean IsNullOrEmpty<T>(this IEnumerable<T> Source)
         {
             return Object.ReferenceEquals(Source, null) || !Source.Any();
+        }
+
+        /// <summary>
+        /// Определяет, является ли последовательность пустой
+        /// </summary>
+        /// <typeparam name="TItem">Тип элементов последовательности - без ограничений</typeparam>
+        /// <param name="Source">Любая последовательность, реализующая обобщённый интерфейс IEnumerable&#60;T&#62;</param>
+        /// <returns>Если возвращает "true" — пустая. Если "false" — последовательность является NULL или содержит минимум 1 элемент.</returns>
+        public static Boolean IsEmpty<TItem>(this IEnumerable<TItem> Source)
+        {
+            if (Object.ReferenceEquals(Source, null) == true) {return false;}
+            ICollection<TItem> temp = Source as ICollection<TItem>;
+            if (temp != null)
+            {
+                return temp.Count == 0;
+            }
+            using (IEnumerator<TItem> enumerator = Source.GetEnumerator())
+            {
+                Boolean first = enumerator.MoveNext();
+                return !first;
+            }
         }
 
         /// <summary>
