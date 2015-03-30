@@ -1680,6 +1680,27 @@ namespace KlotosLib
                 }
                 return output;
             }
+        }//end of class ParsingHelpers
+
+        /// <summary>
+        /// Содержит статические методы, изменяющие строки с той или иной целью
+        /// </summary>
+        public static class StringModifiers
+        {
+            /// <summary>
+            /// Изменяет первый символ строки на заглавный
+            /// </summary>
+            /// <param name="Input">Входная строка.</param>
+            /// <returns></returns>
+            public static String FirstLetterToUpper(String Input)
+            {
+                if(Input.IsStringNullEmptyWS()==true) {return Input;}
+
+                if (Input.Length > 1)
+                {return Char.ToUpper(Input[0]) + Input.Substring(1);}
+                else
+                {return Input.ToUpper();}
+            }
         }
     }
 }

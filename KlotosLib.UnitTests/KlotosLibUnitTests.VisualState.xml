@@ -5,9 +5,10 @@
   <ExcludeCategories>false</ExcludeCategories>
   <Nodes>
     <Node UniqueName="[0-1000]C:\Users\neD\Documents\Visual Studio 2010\Projects\KlotosLib\KlotosLib.UnitTests\KlotosLibUnitTests.nunit" Expanded="true" />
-    <Node UniqueName="[0-1904]C:\Users\neD\Documents\Visual Studio 2010\Projects\KlotosLib\KlotosLib.UnitTests\bin\Debug\KlotosLib.UnitTests.dll" Expanded="true" />
-    <Node UniqueName="[0-1905]KlotosLib" Expanded="true" />
-    <Node UniqueName="[0-1906]KlotosLib.UnitTests" Expanded="true" />
+    <Node UniqueName="[0-1920]C:\Users\neD\Documents\Visual Studio 2010\Projects\KlotosLib\KlotosLib.UnitTests\bin\Debug\KlotosLib.UnitTests.dll" Expanded="true" />
+    <Node UniqueName="[0-1921]KlotosLib" Expanded="true" />
+    <Node UniqueName="[0-1922]KlotosLib.UnitTests" Expanded="true" />
+    <Node UniqueName="[0-1082]KlotosLib.UnitTests.NumericToolsTests" Expanded="true" />
     <Node UniqueName="[0-1001]KlotosLib.UnitTests.StringToolsSubstringHelpersTests" Expanded="true" />
   </Nodes>
 </VisualState>

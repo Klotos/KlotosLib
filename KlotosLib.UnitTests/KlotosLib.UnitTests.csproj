@@ -57,6 +57,7 @@
     <Compile Include="StringToolsContainsHelpersTests.cs" />
     <Compile Include="StringToolsParsingHelpersTest.cs" />
     <Compile Include="StringToolsStringAnalyzersTests.cs" />
+    <Compile Include="StringToolsStringModifiersTests.cs" />
     <Compile Include="StringToolsSubstringHelpersTests.cs" />
     <Compile Include="StringToolsValidatorHelpersTests.cs" />
     <Compile Include="SubstringTest.cs" />

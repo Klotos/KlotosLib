@@ -10,17 +10,20 @@ namespace KlotosLib
     public struct ByteQuantity : IEquatable<ByteQuantity>, IComparable<ByteQuantity>, IComparable, IConvertible, ICloneable
     {
         #region Constants
-        private const Int64 _x1Bin = 1024L;
-        private const Int64 _x2Bin = 1024L * 1024L;
-        private const Int64 _x3Bin = 1024L * 1024L * 1024L;
-        private const Int64 _x4Bin = 1024L * 1024L * 1024L * 1024L;
-        private const Int64 _x5Bin = 1024L * 1024L * 1024L * 1024L * 1024L;
+        private const Int64 _1024 = 1024L;
+        private const Int64 _1000 = 1000L;
 
-        private const Int64 _x1Dec = 1000L;
-        private const Int64 _x2Dec = 1000L * 1000L;
-        private const Int64 _x3Dec = 1000L * 1000L * 1000L;
-        private const Int64 _x4Dec = 1000L * 1000L * 1000L * 1000L;
-        private const Int64 _x5Dec = 1000L * 1000L * 1000L * 1000L * 1000L;
+        private const Int64 _x1Bin = _1024;
+        private const Int64 _x2Bin = _1024 * _1024;
+        private const Int64 _x3Bin = _1024 * _1024 * _1024;
+        private const Int64 _x4Bin = _1024 * _1024 * _1024 * _1024;
+        private const Int64 _x5Bin = _1024 * _1024 * _1024 * _1024 * _1024;
+
+        private const Int64 _x1Dec = _1000;
+        private const Int64 _x2Dec = _1000 * _1000;
+        private const Int64 _x3Dec = _1000 * _1000 * _1000;
+        private const Int64 _x4Dec = _1000 * _1000 * _1000 * _1000;
+        private const Int64 _x5Dec = _1000 * _1000 * _1000 * _1000 * _1000;
         #endregion
 
         private readonly Int64 _value;
@@ -225,7 +228,7 @@ namespace KlotosLib
 
             if (this._value < _x1Bin)
             {
-                return this._value.ToString(CultureInfo.InvariantCulture);
+                return this._value.ToString(CultureInfo.InvariantCulture) + " B";
             }
             if (this._value < _x2Bin && this._value >= _x1Bin)
             {
@@ -264,7 +267,7 @@ namespace KlotosLib
 
             if (this._value < _x1Dec)
             {
-                return this._value.ToString(CultureInfo.InvariantCulture);
+                return this._value.ToString(CultureInfo.InvariantCulture) + " B";
             }
             if (this._value < _x2Dec && this._value >= _x1Dec)
             {

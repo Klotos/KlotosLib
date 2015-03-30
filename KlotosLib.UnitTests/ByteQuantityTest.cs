@@ -75,6 +75,8 @@ namespace KlotosLib.UnitTests
         [TestCase(1024L * 1024L * 1024L * 1024L * 1024L + 1024L * 1024L * 1024L * 1024L * 1020L, 3, true, Result = "1.996 PiB")]
         [TestCase(1024L * 1024L * 1024L * 1024L * 1024L + 1024L * 1024L * 1024L * 1024L * 1020L, 4, true, Result = "1.9961 PiB")]
         [TestCase(1024L * 1024L * 1024L * 1024L * 1024L + 1024L * 1024L * 1024L * 1024L * 1020L, 140, true, Result = "1.99609375 PiB")]
+        [TestCase(43, 3, true, Result = "43 B")]
+        [TestCase(43, 3, false, Result = "43 B")]
         public String ToStringWithBinaryPrefix(Int64 Bytes, Byte Precision, Boolean Separator)
         {
             return ByteQuantity.FromBytes(Bytes).ToStringWithBinaryPrefix(Precision, Separator);
@@ -93,6 +95,8 @@ namespace KlotosLib.UnitTests
         [TestCase(1000L * 1000L * 1000L * 1000L * 1000L * 5 + 1000L * 1000L * 1000L * 1000L * 800L, 1, true, Result = "5.8 PB")]
         [TestCase(1000L * 1000L * 1000L * 1000L * 1000L * 5 + 1000L * 1000L * 1000L * 1000L * 800L, 2, true, Result = "5.8 PB")]
         [TestCase(1000L * 1000L * 1000L * 1000L * 1000L * 5 + 1000L * 1000L * 1000L * 1000L * 800L, 3, true, Result = "5.8 PB")]
+        [TestCase(43, 3, true, Result = "43 B")]
+        [TestCase(43, 3, false, Result = "43 B")]
         public String ToStringWithDecimalPrefixTest(Int64 Bytes, Byte Precision, Boolean Separator)
         {
             return ByteQuantity.FromBytes(Bytes).ToStringWithDecimalPrefix(Precision, Separator);

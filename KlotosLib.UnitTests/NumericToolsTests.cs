@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using KlotosLib;
 
 namespace KlotosLib.UnitTests
 {
@@ -126,6 +127,26 @@ namespace KlotosLib.UnitTests
         public Boolean AreEqual(Double Threshold, Double First, Double Second)
         {
             return NumericTools.AreEqual(Threshold, First, Second);
+        }
+
+        [Test]
+        public void Clusterize()
+        {
+            List<List<Double>> actual_result = NumericTools.Clusterize(0.6, new Double[7] {-0.2, 0, 0.1, 1, 2, 2.6, 2.7});
+            List<List<Double>> expected_result = new List<List<double>>(3)
+            {
+                new List<double>(3){-0.2, 0, 0.1},
+                new List<double>(2){2.6, 2.7},
+                new List<double>(1){1},
+                new List<double>(1){2}
+            };
+
+            Assert.IsTrue(actual_result.Count == expected_result.Count, "Actual count = " + actual_result.Count + "; "+
+                actual_result.ConcatToString(delegate(List<double> list) { return list.ConcatToString(); }, "", "", " || ", true));
+            CollectionAssert.AreEqual(expected_result[0], actual_result[0]);
+            CollectionAssert.AreEqual(expected_result[1], actual_result[1], "Actual = " + actual_result[1].ConcatToString("; "));
+            CollectionAssert.AreEqual(expected_result[2], actual_result[2]);
+            CollectionAssert.AreEqual(expected_result[3], actual_result[3]);
         }
     }
 }

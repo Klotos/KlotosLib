@@ -280,6 +280,7 @@ namespace KlotosLib
         {
             return Substring.AreEqual(First, Second);
         }
+
         /// <summary>
         /// Определяет, не равны ли два указанных экземпляра подстрок между собой
         /// </summary>

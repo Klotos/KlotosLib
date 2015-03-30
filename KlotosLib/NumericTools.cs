@@ -74,7 +74,7 @@ namespace KlotosLib
 
         /// <summary>
         /// Возвращает дробную часть числа с плавающей запятой одинарной точности без десятичного разделителя в виде строки. 
-        /// В зависимости от значения параметра дробная часть возвращается полностью или с указанным количеством цифр, начиная со страших разрядов.
+        /// В зависимости от значения параметра дробная часть возвращается полностью или с указанным количеством цифр, начиная со старших разрядов.
         /// </summary>
         /// <param name="Number"></param>
         /// <param name="FractionDigits">Количество цифр в дробной части, начиная со страших разрядов, которое требуется возвратить. 
@@ -96,7 +96,7 @@ namespace KlotosLib
 
         /// <summary>
         /// Возвращает дробную часть числа с плавающей запятой двойной точности без десятичного разделителя в виде строки. 
-        /// В зависимости от значения параметра дробная часть возвращается полностью или с указанным количеством цифр, начиная со страших разрядов.
+        /// В зависимости от значения параметра дробная часть возвращается полностью или с указанным количеством цифр, начиная со старших разрядов.
         /// </summary>
         /// <param name="Number"></param>
         /// <param name="FractionDigits">Количество цифр в дробной части, начиная со страших разрядов, которое требуется возвратить. 
@@ -118,7 +118,7 @@ namespace KlotosLib
 
         /// <summary>
         /// Возвращает дробную часть числа с фиксированной запятой без десятичного разделителя в виде строки. 
-        /// В зависимости от значения параметра дробная часть возвращается полностью или с указанным количеством цифр, начиная со страших разрядов.
+        /// В зависимости от значения параметра дробная часть возвращается полностью или с указанным количеством цифр, начиная со старших разрядов.
         /// </summary>
         /// <param name="Number"></param>
         /// <param name="FractionDigits">Количество цифр в дробной части, начиная со страших разрядов, которое требуется возвратить. 
@@ -335,6 +335,36 @@ namespace KlotosLib
             Single difference = Math.Abs(First - Second);
             if (difference > Math.Abs(Threshold)) { return false; }
             return true;
+        }
+
+        /// <summary>
+        /// Выполняет кластеризацию указанного набора чисел (в одном измерении) с указанным пороговым значением. Самостоятельно определяет количество кластеров.
+        /// </summary>
+        /// <param name="Threshold">Пороговое значение</param>
+        /// <param name="Data">Набор чисел. Если NULL или пустой, будет выброшено исключение.</param>
+        /// <returns></returns>
+        public static List<List<Double>> Clusterize(Double Threshold, IEnumerable<Double> Data)
+        {
+            Data.ThrowIfNullOrEmpty("Набор чисел является NULL", "Набор чисел пуст", "Data");
+            if (Data.HasSingle() == true) { return new List<List<Double>>(1) { new List<Double>(1) { Data.Single() } }; }
+
+            List<Double> sorted_data = (from Double x in Data orderby x ascending select x).ToList();
+            List<List<Double>> output = new List<List<Double>>();
+            List<Double> first_cluster = new List<Double>() { sorted_data[0] };
+            output.Add(first_cluster);
+            for (Int32 i = 1; i < sorted_data.Count; i++)
+            {
+                Double current = sorted_data[i];
+                if (NumericTools.AreEqual(Threshold, output.ItemFromEnd(0).Last(), current) == true)
+                {
+                    output.ItemFromEnd(0).Add(current);
+                }
+                else
+                {
+                    output.Add(new List<Double>() { current });
+                }
+            }
+            return output.OrderByDescending(item => item.Count).ToList();
         }
     }
 }
