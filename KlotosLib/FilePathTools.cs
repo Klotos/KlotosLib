@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,25 @@ namespace KlotosLib
     /// </summary>
     public static class FilePathTools
     {
+        #region Constants
+        //http://blogs.msdn.com/b/bclteam/archive/2007/02/13/long-paths-in-net-part-1-of-3-kim-hamilton.aspx
+
+        /// <summary>
+        /// Максимально допустимая длина полного пути
+        /// </summary>
+        public const Int32 MAX_PATH = 260;
+
+        /// <summary>
+        /// Максимально допустимая длина имени файла
+        /// </summary>
+        public const Int32 MAX_FILENAME = 255;
+
+        /// <summary>
+        /// Максимально допустимая длина имени директории
+        /// </summary>
+        public const Int32 MAX_DIRECTORYNAME = 248;
+        #endregion
+
         /// <summary>
         /// Удаляет расширение из имени файла, если находит точку и перед ней есть какие-нибудь символы
         /// </summary>
@@ -26,7 +46,10 @@ namespace KlotosLib
             { return Filename; }
         }
 
-        private static readonly String[] IllegalFilenames = new string[] 
+        /// <summary>
+        /// Список строк, которые недопустимы в качестве имён файлов
+        /// </summary>
+        public static readonly String[] IllegalFilenames = new string[] 
         { "CON", "PRN", "AUX", "NUL", 
             "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", 
             "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9" };
@@ -40,6 +63,7 @@ namespace KlotosLib
         {
             if (Input.HasVisibleChars() == false) { return false; }
             if (Input.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0) { return false; }
+            if (Input.Length > MAX_FILENAME) { return false; }
             if (Input.EndsWith(" ", StringComparison.InvariantCultureIgnoreCase) == true) { return false; }
             String part = Input.Trim().Split(new char[1] { '.' }, StringSplitOptions.RemoveEmptyEntries)[0].Trim();
             if (part.IsIn(StringComparison.OrdinalIgnoreCase, FilePathTools.IllegalFilenames) == true) { return false; }
@@ -55,10 +79,15 @@ namespace KlotosLib
         {
             if (Input.HasVisibleChars() == false) { return false; }
             if (Input.IndexOfAny(Path.GetInvalidPathChars()) >= 0) { return false; }
+            if(Input.Length >= MAX_PATH) {return false; }
             String[] parts = Input.Split(new char[1] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
             for (Int32 i = 0; i < parts.Length - 1; i++)
             {
                 String current = parts[i];
+                if (i < parts.Length - 1)
+                {
+                    if(current.Length >= MAX_DIRECTORYNAME) {return false; }
+                }
                 if (current.HasVisibleChars() == false) { return false; }
                 String first_part = current.Trim().Split(new char[1] { '.' }, StringSplitOptions.RemoveEmptyEntries)[0];
                 if (first_part.Trim().IsIn(StringComparison.OrdinalIgnoreCase, IllegalFilenames) == true) { return false; }

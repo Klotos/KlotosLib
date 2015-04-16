@@ -409,6 +409,17 @@
             Инкапсулирует байтовую величину, предоставляя различные методы преобразования
             </summary>
         </member>
+        <member name="F:KlotosLib.ByteQuantity._value">
+            <summary>
+            Содержит количество байтов
+            </summary>
+        </member>
+        <member name="M:KlotosLib.ByteQuantity.#ctor(System.Int64)">
+            <summary>
+            Создаёт экземпляр с указанным количеством байтов
+            </summary>
+            <param name="Value"></param>
+        </member>
         <member name="M:KlotosLib.ByteQuantity.GetKibibytes(System.Byte)">
             <summary>
             Возвращает текущее значение в кибибайтах (KiB), округляя его с указанной точностью
@@ -647,7 +658,7 @@
         </member>
         <member name="M:KlotosLib.ByteQuantity.ToType(System.Type,System.IFormatProvider)">
             <summary>
-            Пытае5тся выполнить преобразование данного типа на указанный
+            Пытается выполнить преобразование данного типа на указанный
             </summary>
             <param name="conversionType"></param>
             <param name="provider"></param>
@@ -893,12 +904,32 @@
             Содержит статические методы по работе с именами файлов и путями
             </summary>
         </member>
+        <member name="F:KlotosLib.FilePathTools.MAX_PATH">
+            <summary>
+            Максимально допустимая длина полного пути
+            </summary>
+        </member>
+        <member name="F:KlotosLib.FilePathTools.MAX_FILENAME">
+            <summary>
+            Максимально допустимая длина имени файла
+            </summary>
+        </member>
+        <member name="F:KlotosLib.FilePathTools.MAX_DIRECTORYNAME">
+            <summary>
+            Максимально допустимая длина имени директории
+            </summary>
+        </member>
         <member name="M:KlotosLib.FilePathTools.DeleteExtension(System.String)">
             <summary>
             Удаляет расширение из имени файла, если находит точку и перед ней есть какие-нибудь символы
             </summary>
             <param name="Filename">Имя файла</param>
             <returns>Входная строка без расширения имени файла</returns>
+        </member>
+        <member name="F:KlotosLib.FilePathTools.IllegalFilenames">
+            <summary>
+            Список строк, которые недопустимы в качестве имён файлов
+            </summary>
         </member>
         <member name="M:KlotosLib.FilePathTools.IsValidFilename(System.String)">
             <summary>
@@ -2212,7 +2243,7 @@
         </member>
         <member name="T:KlotosLib.UnreachableCodeException">
             <summary>
-            Исключение, вызов которого размещается в тех местах исходного кода, котороые в случае корректного функционирования алгоритмы должны быть недоступны для выполнения
+            Исключение, вызов которого размещается в тех местах исходного кода, котороые в случае корректного функционирования алгоритма должны быть недоступны для выполнения
             </summary>
         </member>
         <member name="M:KlotosLib.UnreachableCodeException.#ctor">
@@ -2890,7 +2921,8 @@
             <param name="Source">Исходная строка, наличие которой требуется определить</param>
             <param name="StrComp">Опция определения равенства строк, которая применяется для поиска</param>
             <param name="Sequence">Последовательность, в которой происходит поиск. Если NULL или пустая, метод выбрасывает исключение.</param>
-            <returns></returns>
+            <returns>true - присутствует, false - отсутствует</returns>
+            <exception cref="T:System.ArgumentException">Указанный массив NULL или пустой</exception>
         </member>
         <member name="M:KlotosLib.StringExtensionMethods.IsIn(System.String,System.StringComparison,System.Collections.Generic.IEnumerable{System.String})">
             <summary>
@@ -2900,6 +2932,7 @@
             <param name="StrComp">Опция определения равенства строк, которая применяется для поиска</param>
             <param name="Sequence">Последовательность, в которой происходит поиск. Если NULL или пустая, метод возвращает false (отсутствует).</param>
             <returns>true - присутствует, false - отсутствует</returns>
+            <exception cref="T:System.ArgumentException">Указанная последовательность NULL или пустая</exception>
         </member>
         <member name="M:KlotosLib.StringExtensionMethods.CleanString(System.String)">
             <summary>

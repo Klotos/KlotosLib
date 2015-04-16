@@ -156,7 +156,7 @@ namespace KlotosLib
     }
 
     /// <summary>
-    /// Исключение, вызов которого размещается в тех местах исходного кода, котороые в случае корректного функционирования алгоритмы должны быть недоступны для выполнения
+    /// Исключение, вызов которого размещается в тех местах исходного кода, котороые в случае корректного функционирования алгоритма должны быть недоступны для выполнения
     /// </summary>
     [Serializable()]
     public sealed class UnreachableCodeException : System.Exception
@@ -183,6 +183,6 @@ namespace KlotosLib
         /// <summary>
         /// Возвращает сообщение, которое описывает текущее исключение.
         /// </summary>
-        public new string Message { get { return base.Message.ToString(); } }
+        public new string Message { get { return base.Message; } }
     }
 }

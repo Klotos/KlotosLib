@@ -424,10 +424,11 @@ namespace KlotosLib
         /// <param name="Source">Исходная строка, наличие которой требуется определить</param>
         /// <param name="StrComp">Опция определения равенства строк, которая применяется для поиска</param>
         /// <param name="Sequence">Последовательность, в которой происходит поиск. Если NULL или пустая, метод выбрасывает исключение.</param>
-        /// <returns></returns>
+        /// <returns>true - присутствует, false - отсутствует</returns>
+        /// <exception cref="ArgumentException">Указанный массив NULL или пустой</exception>
         public static Boolean IsIn(this String Source, StringComparison StrComp, params String[] Sequence)
         {
-            if (Sequence.IsNullOrEmpty() == true) { throw new ArgumentException("Указанная последовательность NULL или пустая", "Sequence"); }
+            if (Sequence.IsNullOrEmpty() == true) { throw new ArgumentException("Указанный массив NULL или пустой", "Sequence"); }
             return Source.IsIn(StrComp, Sequence.AsEnumerable<String>());
         }
 
@@ -438,6 +439,7 @@ namespace KlotosLib
         /// <param name="StrComp">Опция определения равенства строк, которая применяется для поиска</param>
         /// <param name="Sequence">Последовательность, в которой происходит поиск. Если NULL или пустая, метод возвращает false (отсутствует).</param>
         /// <returns>true - присутствует, false - отсутствует</returns>
+        /// <exception cref="ArgumentException">Указанная последовательность NULL или пустая</exception>
         public static Boolean IsIn(this String source, StringComparison StrComp, IEnumerable<String> Sequence)
         {
             if (Sequence.IsNullOrEmpty() == true) { throw new ArgumentException("Указанная последовательность NULL или пустая", "Sequence"); }

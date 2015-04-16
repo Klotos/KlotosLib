@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 
 namespace KlotosLib
@@ -26,8 +27,15 @@ namespace KlotosLib
         private const Int64 _x5Dec = _1000 * _1000 * _1000 * _1000 * _1000;
         #endregion
 
+        /// <summary>
+        /// Содержит количество байтов
+        /// </summary>
         private readonly Int64 _value;
 
+        /// <summary>
+        /// Создаёт экземпляр с указанным количеством байтов
+        /// </summary>
+        /// <param name="Value"></param>
         private ByteQuantity(Int64 Value)
         {
             this._value = Value;
@@ -305,7 +313,7 @@ namespace KlotosLib
         public static ByteQuantity FromBits(Int64 BitValue)
         {
             if (BitValue < 0) { throw new ArgumentOutOfRangeException("BitValue", BitValue, "Количество бит не может быть отрицательным"); }
-            if (BitValue == 0) { return new ByteQuantity(); }
+            if (BitValue == 0) { return new ByteQuantity(0); }
             Int64 remainder;
             Int64 temp = Math.DivRem(BitValue, 8L, out remainder);
             if (remainder == 0)
@@ -322,7 +330,7 @@ namespace KlotosLib
         public static ByteQuantity FromBytes(Int64 ByteValue)
         {
             if (ByteValue < 0) { throw new ArgumentOutOfRangeException("ByteValue", ByteValue, "Количество байт не может быть отрицательным"); }
-            if (ByteValue == 0) { return new ByteQuantity(); }
+            if (ByteValue == 0) { return new ByteQuantity(0); }
             return new ByteQuantity(ByteValue);
         }
 
@@ -336,7 +344,7 @@ namespace KlotosLib
         public static ByteQuantity FromKibibytes(Decimal KibibyteValue)
         {
             if (KibibyteValue < 0) { throw new ArgumentOutOfRangeException("KibibyteValue", KibibyteValue, "Количество кибибайт не может быть отрицательным"); }
-            if (KibibyteValue == 0) { return new ByteQuantity(); }
+            if (KibibyteValue == 0) { return new ByteQuantity(0); }
             return new ByteQuantity(Convert.ToInt64(KibibyteValue * _x1Bin));
         }
 
@@ -349,7 +357,7 @@ namespace KlotosLib
         public static ByteQuantity FromMebibytes(Decimal MebibyteValue)
         {
             if (MebibyteValue < 0) { throw new ArgumentOutOfRangeException("MebibyteValue", MebibyteValue, "Количество мебибайт не может быть отрицательным"); }
-            if (MebibyteValue == 0) { return new ByteQuantity(); }
+            if (MebibyteValue == 0) { return new ByteQuantity(0); }
             return new ByteQuantity(Convert.ToInt64(MebibyteValue * _x2Bin));
         }
 
@@ -362,7 +370,7 @@ namespace KlotosLib
         public static ByteQuantity FromGibibytes(Decimal GibibyteValue)
         {
             if (GibibyteValue < 0) { throw new ArgumentOutOfRangeException("GibibyteValue", GibibyteValue, "Количество гибибайт не может быть отрицательным"); }
-            if (GibibyteValue == 0) { return new ByteQuantity(); }
+            if (GibibyteValue == 0) { return new ByteQuantity(0); }
             return new ByteQuantity(Convert.ToInt64(GibibyteValue * _x3Bin));
         }
 
@@ -375,7 +383,7 @@ namespace KlotosLib
         public static ByteQuantity FromTebibytes(Decimal TebibyteValue)
         {
             if (TebibyteValue < 0) { throw new ArgumentOutOfRangeException("TebibyteValue", TebibyteValue, "Количество тебибайт не может быть отрицательным"); }
-            if (TebibyteValue == 0) { return new ByteQuantity(); }
+            if (TebibyteValue == 0) { return new ByteQuantity(0); }
             return new ByteQuantity(Convert.ToInt64(TebibyteValue * _x4Bin));
         }
 
@@ -388,7 +396,7 @@ namespace KlotosLib
         public static ByteQuantity FromPebibytes(Decimal PebibyteValue)
         {
             if (PebibyteValue < 0) { throw new ArgumentOutOfRangeException("PebibyteValue", PebibyteValue, "Количество пебибайт не может быть отрицательным"); }
-            if (PebibyteValue == 0) { return new ByteQuantity(); }
+            if (PebibyteValue == 0) { return new ByteQuantity(0); }
             return new ByteQuantity(Convert.ToInt64(PebibyteValue * _x5Bin));
         }
         #endregion
@@ -403,7 +411,7 @@ namespace KlotosLib
         public static ByteQuantity FromKilobytes(Decimal KilobyteValue)
         {
             if (KilobyteValue < 0) { throw new ArgumentOutOfRangeException("KilobyteValue", KilobyteValue, "Количество килобайт не может быть отрицательным"); }
-            if (KilobyteValue == 0) { return new ByteQuantity(); }
+            if (KilobyteValue == 0) { return new ByteQuantity(0); }
             return new ByteQuantity(Convert.ToInt64(KilobyteValue * _x1Dec));
         }
 
@@ -416,7 +424,7 @@ namespace KlotosLib
         public static ByteQuantity FromMegabytes(Decimal MegabyteValue)
         {
             if (MegabyteValue < 0) { throw new ArgumentOutOfRangeException("MegabyteValue", MegabyteValue, "Количество мегабайт не может быть отрицательным"); }
-            if (MegabyteValue == 0) { return new ByteQuantity(); }
+            if (MegabyteValue == 0) { return new ByteQuantity(0); }
             return new ByteQuantity(Convert.ToInt64(MegabyteValue * _x2Dec));
         }
 
@@ -429,7 +437,7 @@ namespace KlotosLib
         public static ByteQuantity FromGigabytes(Decimal GigabyteValue)
         {
             if (GigabyteValue < 0) { throw new ArgumentOutOfRangeException("GigabyteValue", GigabyteValue, "Количество гигабайт не может быть отрицательным"); }
-            if (GigabyteValue == 0) { return new ByteQuantity(); }
+            if (GigabyteValue == 0) { return new ByteQuantity(0); }
             return new ByteQuantity(Convert.ToInt64(GigabyteValue * _x3Dec));
         }
 
@@ -442,7 +450,7 @@ namespace KlotosLib
         public static ByteQuantity FromTerabytes(Decimal TerabyteValue)
         {
             if (TerabyteValue < 0) { throw new ArgumentOutOfRangeException("TerabyteValue", TerabyteValue, "Количество терабайт не может быть отрицательным"); }
-            if (TerabyteValue == 0) { return new ByteQuantity(); }
+            if (TerabyteValue == 0) { return new ByteQuantity(0); }
             return new ByteQuantity(Convert.ToInt64(TerabyteValue * _x4Dec));
         }
 
@@ -455,7 +463,7 @@ namespace KlotosLib
         public static ByteQuantity FromPetabytes(Decimal PetabyteValue)
         {
             if (PetabyteValue < 0) { throw new ArgumentOutOfRangeException("PetabyteValue", PetabyteValue, "Количество петабайт не может быть отрицательным"); }
-            if (PetabyteValue == 0) { return new ByteQuantity(); }
+            if (PetabyteValue == 0) { return new ByteQuantity(0); }
             return new ByteQuantity(Convert.ToInt64(PetabyteValue * _x5Dec));
         }
         #endregion
@@ -552,7 +560,7 @@ namespace KlotosLib
             return TypeCode.Object;
         }
         /// <summary>
-        /// Пытае5тся выполнить преобразование данного типа на указанный
+        /// Пытается выполнить преобразование данного типа на указанный
         /// </summary>
         /// <param name="conversionType"></param>
         /// <param name="provider"></param>
