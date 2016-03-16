@@ -9,17 +9,17 @@ namespace KlotosLib.UnitTests
         [TestCase("ab", "c", " d ", ExpectedResult = true)]
         [TestCase("ab", "c", "  ", ExpectedResult = false)]
         [TestCase("ab", "c", "", ExpectedResult = false)]
-        public Boolean IsAllStringsNotNullEmptyWS(params String[] Input)
+        public Boolean AllStringsNotNullEmptyWS(params String[] Input)
         {
-            return StringTools.ValidatorHelpers.IsAllStringsNotNullEmptyWS(Input);
+            return StringTools.ValidatorHelpers.AllStringsNotNullEmptyWS(Input);
         }
 
         [TestCase("ab", "c", " d ", ExpectedResult = true)]
         [TestCase("ab", "c", "\r\n", ExpectedResult = null)]
         [TestCase("", "  ", "\n", ExpectedResult = false)]
-        public Nullable<Boolean> IsAllStringsHasVisibleChars(params String[] Input)
+        public Nullable<Boolean> AllStringsHaveVisibleChars(params String[] Input)
         {
-            return StringTools.ValidatorHelpers.IsAllStringsHasVisibleChars(Input);
+            return StringTools.ValidatorHelpers.AllStringsHaveVisibleChars(Input);
         }
 
         [TestCase("{42A00C74-BCAB-435E-AFD8-DDE0E12DEAE0}", ExpectedResult = true)]

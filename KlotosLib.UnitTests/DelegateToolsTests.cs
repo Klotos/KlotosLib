@@ -30,6 +30,8 @@ namespace KlotosLib.UnitTests
 
         private static Func<String, Int32> testdel4 = null;
 
+        private static Func<String, Int32> testdel5 = null;
+
         [Test]
         public void SimpleDelegatesCountTest()
         {            
@@ -52,6 +54,10 @@ namespace KlotosLib.UnitTests
             Assert.AreEqual(testdel4.IsStaticDelegateMethod(false), true);
             testdel4 += InstanceMethod;
             Assert.AreEqual(testdel4.IsStaticDelegateMethod(false), false);
+            Assert.Throws<ArgumentNullException>(delegate
+            {
+                bool res = testdel5.IsStaticDelegateMethod(true);
+            });
         }
     }
 }

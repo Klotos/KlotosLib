@@ -2,41 +2,52 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using NUnit.Framework;
 
 namespace KlotosLib.UnitTests
 {
     [TestFixture]
-    class StringExtensionMethodsTests
+    public class StringExtensionMethodsTests
     {
-        [TestCase("abcdefghijkl", 5, 9, true, false, true, Result="fghi")]
-        [TestCase("abcdefghijkl", 5, 9, false, true, false, Result = "ghij")]
-        [TestCase("abcdefghijkl", 5, 19, true, true, true, Result = "fghijkl")]
-        [TestCase("abcdefghijkl", 5, 19, true, true, false, Result = "fghijkl", ExpectedException=typeof(ArgumentOutOfRangeException))]        
+        [TestCase("abcdefghijkl", 5, 9, true, false, true, ExpectedResult = "fghi")]
+        [TestCase("abcdefghijkl", 5, 9, false, true, false, ExpectedResult = "ghij")]
+        [TestCase("abcdefghijkl", 5, 19, true, true, true, ExpectedResult = "fghijkl")]
+        [TestCase("abcdefghijkl", 2, 2, true, true, true, ExpectedResult = "c")]
+        [TestCase("abcdefghijkl", 2, 3, true, true, true, ExpectedResult = "cd")]
+        [TestCase("abcdefghijkl", 2, 3, true, false, true, ExpectedResult = "c")]
+        [TestCase("abcdefghijkl", 2, 3, false, false, true, ExpectedResult = "")]
+        [TestCase("abcdefghijkl", 2, 3, false, true, true, ExpectedResult = "d")]
+        [TestCase("abcdefghijkl", 5, 19, true, true, false, ExpectedResult = "fghijkl", ExpectedException = typeof(ArgumentOutOfRangeException))]
+        [TestCase(null, 2, 4, true, true, true, ExpectedException = typeof(ArgumentNullException))]
+        [TestCase("", 2, 4, true, true, true, ExpectedException = typeof(ArgumentException))]
+        [TestCase("abcd", -1, 4, true, true, true, ExpectedException = typeof(ArgumentOutOfRangeException))]
+        [TestCase("abcd", 4, 4, true, true, true, ExpectedException = typeof(ArgumentOutOfRangeException))]
+        [TestCase("abcd", 3, 2, true, true, true, ExpectedException = typeof(ArgumentOutOfRangeException))]
         public String SubstringWithEnd(String Input, Int32 StartIndex, Int32 EndIndex, Boolean IncludeStart, Boolean IncludeEnd, Boolean UntilEnd)
         {
             return Input.SubstringWithEnd(StartIndex, EndIndex, IncludeStart, IncludeEnd, UntilEnd);
         }
 
-        [TestCase("1234", 0, Result = "")]
-        [TestCase("1234", 2, Result="12")]
-        [TestCase("1234", 3, Result = "123")]
-        [TestCase("1234", 4, Result = "1234")]
-        [TestCase("1234", 5, Result = "1234")]
-        [TestCase("1234", -5, Result = "1234", ExpectedException=typeof(ArgumentOutOfRangeException))]
-        [TestCase(null, 5, Result = "1234", ExpectedException = typeof(ArgumentException))]
+        [TestCase("1234", 0, ExpectedResult = "")]
+        [TestCase("1234", 2, ExpectedResult = "12")]
+        [TestCase("1234", 3, ExpectedResult = "123")]
+        [TestCase("1234", 4, ExpectedResult = "1234")]
+        [TestCase("1234", 5, ExpectedResult = "1234")]
+        [TestCase("1234", -5, ExpectedException = typeof(ArgumentOutOfRangeException))]
+        [TestCase(null, 5, ExpectedException = typeof(ArgumentException))]
         public String LeftSubstring(String Input, Int32 Count)
         {
             return Input.LeftSubstring(Count);
         }
 
-        [TestCase("1234", 0, Result = "")]
-        [TestCase("1234", 2, Result = "34")]
-        [TestCase("1234", 3, Result = "234")]
-        [TestCase("1234", 4, Result = "1234")]
-        [TestCase("1234", 5, Result = "1234")]
-        [TestCase("1234", -5, Result = "1234", ExpectedException = typeof(ArgumentOutOfRangeException))]
-        [TestCase(null, 5, Result = "1234", ExpectedException = typeof(ArgumentException))]
+        [TestCase("1234", 0, ExpectedResult = "")]
+        [TestCase("1234", 2, ExpectedResult = "34")]
+        [TestCase("1234", 3, ExpectedResult = "234")]
+        [TestCase("1234", 4, ExpectedResult = "1234")]
+        [TestCase("1234", 5, ExpectedResult = "1234")]
+        [TestCase("1234", -5, ExpectedException = typeof(ArgumentOutOfRangeException))]
+        [TestCase(null, 5, ExpectedException = typeof(ArgumentException))]
         public String RightSubstring(String Input, Int32 Count)
         {
             return Input.RightSubstring(Count);
@@ -98,8 +109,12 @@ namespace KlotosLib.UnitTests
         [TestCase("abcd", new string[] { "", "aB", "bc", "Ab" }, StringComparison.Ordinal, ExpectedResult = -1)]
         [TestCase("abcd", new string[] { "", "aB", "bc", "Ab" }, StringComparison.OrdinalIgnoreCase, ExpectedResult = 1)]
         [TestCase(" abcd", new string[] { "", "aB", "bc", "Ab", "  ", " " }, StringComparison.OrdinalIgnoreCase, ExpectedResult = 5)]
-        [TestCase("", new string[] { "", "aB", "bc", "Ab" }, StringComparison.OrdinalIgnoreCase, ExpectedResult = 1, ExpectedException = typeof(ArgumentException))]
-        [TestCase("abcd", new string[0] { }, StringComparison.OrdinalIgnoreCase, ExpectedResult = 1, ExpectedException = typeof(ArgumentException))]
+        [TestCase("", new string[] { "", "aB", "bc", "Ab" }, StringComparison.OrdinalIgnoreCase, ExpectedException = typeof(ArgumentException))]
+        [TestCase("abcd", new string[0] { }, StringComparison.OrdinalIgnoreCase, ExpectedException = typeof(ArgumentException))]
+        [TestCase((String)null, new string[] { "", "ab", "bc", "ab" }, StringComparison.OrdinalIgnoreCase, ExpectedException = typeof(ArgumentNullException))]
+        [TestCase("abcd", null, StringComparison.OrdinalIgnoreCase, ExpectedException = typeof(ArgumentNullException))]
+        [TestCase("abcd", new string[] { "", "aB", "bc", "Ab" }, 7, ExpectedException = typeof(InvalidEnumArgumentException))]
+
         public Int32 StartsWithOneOf(String Input, String[] Prefixes, StringComparison StrComp)
         {
             return Input.StartsWithOneOf(Prefixes, StrComp);
@@ -107,7 +122,14 @@ namespace KlotosLib.UnitTests
 
         [TestCase("12345", new string[]{"", null, "1234567", "123456", "12345", "1234"}, StringComparison.Ordinal, ExpectedResult = 4)]
         [TestCase("12345", new string[] { "", null, "1234567", "123456", "1234" }, StringComparison.Ordinal, ExpectedResult = -1)]
+        [TestCase("abcd", new string[] { "1234567", "cD" }, StringComparison.Ordinal, ExpectedResult = -1)]
+        [TestCase("abcd", new string[] { "1234567", "cD" }, StringComparison.OrdinalIgnoreCase, ExpectedResult = 1)]
         [TestCase("12345", new string[] { "445", null, "45" }, StringComparison.Ordinal, ExpectedResult = 2)]
+        [TestCase((String)null, new string[] { "445", null, "45" }, StringComparison.Ordinal, ExpectedException = typeof(ArgumentNullException))]
+        [TestCase("12345", null, StringComparison.Ordinal, ExpectedException = typeof(ArgumentNullException))]
+        [TestCase("", new string[] { "445", null, "45" }, StringComparison.Ordinal, ExpectedException = typeof(ArgumentException))]
+        [TestCase("12345", new string[0] { }, StringComparison.Ordinal, ExpectedException = typeof(ArgumentException))]
+        [TestCase("12345", new string[] { "445", null, "45" }, 6, ExpectedException = typeof(InvalidEnumArgumentException))]
         public Int32 EndsWithOneOf(String Input, String[] Postfixes, StringComparison StrComp)
         {
             return Input.EndsWithOneOf(Postfixes, StrComp);
@@ -127,6 +149,9 @@ namespace KlotosLib.UnitTests
         [TestCase("0123456789", 5, 0, "abcde", Result = "01234abcde56789")]
         [TestCase("0123456789", 9, 0, "abcde", Result = "012345678abcde9")]
         [TestCase("0123456789", 8, 100, "abcde", Result = "01234567abcde")]
+
+        [TestCase("", 0, 100, "abcde", Result = "abcde")]
+
         [TestCase(null, 5, 4, "abcde", Result = "", ExpectedException=typeof(ArgumentNullException))]
         [TestCase("0123456789", 5, 4, null, Result = "", ExpectedException = typeof(ArgumentNullException))]
         [TestCase("0123456789", -10, 0, "abcde", Result = "", ExpectedException = typeof(ArgumentOutOfRangeException))]
@@ -146,6 +171,17 @@ namespace KlotosLib.UnitTests
         public Boolean StringEmpty(String input)
         {
             return input.IsStringNullEmptyWhiteSpace();
+        }
+
+        [TestCase(null, ExpectedResult = false)]
+        [TestCase("", ExpectedResult = false)]
+        [TestCase(" abc ", ExpectedResult = false)]
+        [TestCase(" 123 ", ExpectedResult = false)]
+        [TestCase("123", ExpectedResult = true)]
+        [TestCase("12.3", ExpectedResult = false)]
+        public Boolean IsStringDigitsOnly(String input)
+        {
+            return input.IsStringDigitsOnly();
         }
 
         [TestCaseSource("HasVisibleCharsTest_GetTestStrings")]
@@ -180,12 +216,29 @@ namespace KlotosLib.UnitTests
             yield return new TestCaseData("abcd").Returns(true);
         }
 
+        [TestCase("abc", 0, new String[3] { "abC", "bcd", "Abc" }, ExpectedResult = false)]
+        [TestCase("abc", 1, new String[3] { "abC", "bcd", "Abc" }, ExpectedResult = true)]
+        [TestCase("abc", 2, new String[3] { "abC", "bcd", "Abc" }, ExpectedResult = false)]
+        [TestCase("abc", 3, new String[3] { "abC", "bcd", "Abc" }, ExpectedResult = true)]
         [TestCase("abc", 4, new String[3] { "abc", "bcd", "abc" }, ExpectedResult = true)]
         [TestCase("Abc", 4, new String[3] { "abc", "bcd", "abc" }, ExpectedResult = false)]
         [TestCase("Abc", 5, new String[3] { "abc", "bcd", "abc" }, ExpectedResult = true)]
-        [TestCase("Abc", 5, new String[0] { }, ExpectedResult = false, ExpectedException = typeof(ArgumentException))]
+        [TestCase((String)null, 5, new String[3] { "abc", (String)null, "" }, ExpectedResult = true)]
+        [TestCase("", 5, new String[3] { "abc", (String)null, "" }, ExpectedResult = true)]
+        [TestCase("Abc", 5, new String[0] { }, ExpectedException = typeof(ArgumentException))]
+        [TestCase("Abc", 5, new String[1] {"ZZZ"}, ExpectedException = typeof(ArgumentException))]
+        [TestCase("Abc", 6, new String[3] { "abc", "bcd", "abc" }, ExpectedException = typeof(InvalidEnumArgumentException))]
         public Boolean IsIn(String Input, Int32 StrComp, params String[] Sequence)
         {
+            if (Sequence.Length == 1 && Sequence[0] == "ZZZ")
+            {
+                Sequence = null;
+            }
+            if (Sequence.IsEmpty())
+            {
+                IEnumerable<String> temp = Sequence.AsEnumerable();
+                return Input.IsIn((StringComparison)StrComp, temp);
+            }
             return Input.IsIn((StringComparison)StrComp, Sequence);
         }
 
@@ -206,11 +259,27 @@ namespace KlotosLib.UnitTests
         [TestCase("", "Ab", 5, ExpectedException = typeof(ArgumentException))]
         [TestCase(null, "Ab", 5, ExpectedException = typeof(ArgumentException))]
         [TestCase("Abcd", null, 5, ExpectedException = typeof(ArgumentException))]
-        public Boolean Contains(String Input, String ToCheck, Int32 StrComp)
+        [TestCase("Abcd", "ab", 6, ExpectedException = typeof(InvalidEnumArgumentException))]
+        public Boolean Contains1(String Input, String ToCheck, Int32 StrComp)
         {
             return Input.Contains(ToCheck, (StringComparison)StrComp);
         }
 
+
+        [TestCase("Abcd", "ab", 1, "en-US", ExpectedResult = true)]
+        [TestCase("Abcd", "ab", 1, null, ExpectedResult = true)]
+        [TestCase("Abcd", "ab", 1073741824, "en-US", ExpectedResult = false)]
+        [TestCase("ab.cd", "abc", 4, "en-US", ExpectedResult = true)]
+        [TestCase("Abcd", "ab", -5, "en-US", ExpectedException = typeof(InvalidEnumArgumentException))]
+        [TestCase("", "ab", 1, "en-US", ExpectedException = typeof(ArgumentException))]
+        [TestCase("Abcd", null, 1, "en-US", ExpectedException = typeof(ArgumentException))]
+        public Boolean Contains2(String Input, String ToCheck, Int32 CompOpt, String CultureName)
+        {
+            CompareOptions comp_opt = (CompareOptions) CompOpt;
+            CultureInfo culture = CultureName == null ? null : CultureInfo.GetCultureInfo(CultureName);
+            return Input.Contains(ToCheck, comp_opt, culture);
+        }
+        
         [TestCase("abcd", "12", new Char[3] { ' ', 'x', 'b' }, ExpectedResult = "a12cd")]
         [TestCase("abcd", "", new Char[3] { ' ', 'd', 'b' }, ExpectedResult = "ac")]
         [TestCase("abcd", "12", new Char[0] { }, ExpectedResult = "abcd")]
@@ -223,6 +292,8 @@ namespace KlotosLib.UnitTests
         }
 
         [TestCase("abcdabc", '_', new char[]{'a', 'c'}, ExpectedResult = "_b_d_b_")]
+        [TestCase("abcdabc", '_', new char[0] { }, ExpectedResult = "abcdabc")]
+        [TestCase("", '_', new char[] { 'a', 'c' }, ExpectedException = typeof(ArgumentException))]
         public String MultiReplace2(String Source, Char Destination, params Char[] Target)
         {
             return Source.MultiReplace(Destination, Target);
@@ -242,6 +313,7 @@ namespace KlotosLib.UnitTests
         [TestCase(" abcd\r\n", 2, true, StringExtensionMethods.PaddingOptions.DoNotPad, ExpectedResult = new string[] { " ", "ab", "cd", "\r\n" })]
         [TestCase(" abcd\r\n", 2, false, StringExtensionMethods.PaddingOptions.PadRight, ExpectedResult = new string[] { " a", "bc", "d\r", "\n " })]
         [TestCase("0123456", 3, false, StringExtensionMethods.PaddingOptions.DoNotPad, ExpectedResult = new string[] { "012", "345", "6" })]
+        [TestCase("0123456", 9, false, StringExtensionMethods.PaddingOptions.DoNotPad, ExpectedResult = new string[1] { "0123456" })]
         [TestCase("0123456", 3, false, StringExtensionMethods.PaddingOptions.PadLeft, ExpectedResult = new string[] { "012", "345", "  6" })]
         [TestCase("0123456", 3, false, StringExtensionMethods.PaddingOptions.PadRight, ExpectedResult = new string[] { "012", "345", "6  " })]
         [TestCase("0123456", 3, true, StringExtensionMethods.PaddingOptions.DoNotPad, ExpectedResult = new string[] { "0", "123", "456" })]
@@ -254,6 +326,7 @@ namespace KlotosLib.UnitTests
         [TestCase("1111100110011", 8, true, StringExtensionMethods.PaddingOptions.PadLeft, ExpectedResult = new string[] { "   11111", "00110011" })]
         [TestCase("abcd", 0, true, StringExtensionMethods.PaddingOptions.PadLeft, ExpectedResult = new string[] { " abcd" }, ExpectedException = typeof(ArgumentOutOfRangeException))]
         [TestCase("", 0, true, StringExtensionMethods.PaddingOptions.PadLeft, ExpectedResult = new string[] { "abcd " }, ExpectedException = typeof(ArgumentException))]
+        [TestCase((String)null, 0, true, StringExtensionMethods.PaddingOptions.PadLeft, ExpectedResult = new string[] { "abcd " }, ExpectedException = typeof(ArgumentNullException))]
         [TestCase("abcd", 4, true, (StringExtensionMethods.PaddingOptions)10, ExpectedResult = new string[] { "abcd " }, ExpectedException = typeof(InvalidEnumArgumentException))]
         public String[] Split(String Input, Int32 PartSize, Boolean SplitFromEnd, StringExtensionMethods.PaddingOptions PaddingOpt)
         {
@@ -275,6 +348,87 @@ namespace KlotosLib.UnitTests
         {
             CultureInfo cul = CultureInfo.InvariantCulture;
             return Input.TryParseNumber(StyleNum, cul, 111);
+        }
+
+        [NUnit.Framework.Test]
+        public void TryParseNumber()
+        {
+            Nullable<Int32> output1 = " \r\n ".TryParseNumber<Int32>(NumberStyles.AllowDecimalPoint, null);
+            Assert.IsFalse(output1.HasValue);
+
+            Nullable<Byte> output2 = "abcd".TryParseNumber<Byte>(NumberStyles.AllowDecimalPoint, null);
+            Assert.IsFalse(output2.HasValue);
+
+            Assert.Throws<ArgumentOutOfRangeException>(delegate
+            {
+                Nullable<DateTime> output3 = "1234".TryParseNumber<DateTime>(NumberStyles.Integer, null);
+            });
+
+            Nullable<Single> output4 = "12.34".TryParseNumber<Single>(NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
+            Assert.IsNotNull(output4);
+            Assert.AreEqual(12.34f, output4.Value);
+
+            Nullable<Double> output5 = "12.34".TryParseNumber<Double>(NumberStyles.Float, null);
+            Assert.IsNotNull(output5);
+            Assert.AreEqual(12.34, output5.Value);
+
+            Nullable<Single> output6 = "12.34".TryParseNumber<Single>(NumberStyles.Integer, CultureInfo.InvariantCulture);
+            Assert.IsFalse(output6.HasValue);
+
+            Nullable<Double> output7 = "12.34ab".TryParseNumber<Double>(NumberStyles.Float, CultureInfo.InvariantCulture);
+            Assert.IsFalse(output7.HasValue);
+
+            Nullable<Decimal> output8 = "-12.34".TryParseNumber<Decimal>(NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
+            Assert.IsFalse(output8.HasValue);
+
+            Nullable<Byte> output9 = "1234".TryParseNumber<Byte>(NumberStyles.Integer, CultureInfo.InvariantCulture);
+            Assert.IsFalse(output9.HasValue);
+
+            Nullable<Byte> output10 = "123".TryParseNumber<Byte>(NumberStyles.None, CultureInfo.InvariantCulture);
+            Assert.IsNotNull(output10);
+            Assert.AreEqual(123, output10);
+
+            Nullable<SByte> output11 = "128".TryParseNumber<SByte>(NumberStyles.None, CultureInfo.InvariantCulture);
+            Assert.IsFalse(output11.HasValue);
+
+            Nullable<SByte> output12 = "-128".TryParseNumber<SByte>(NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
+            Assert.IsNotNull(output12);
+            Assert.AreEqual(-128, output12);
+
+            Nullable<UInt16> output13 = "-123".TryParseNumber<UInt16>(NumberStyles.Integer, CultureInfo.InvariantCulture);
+            Assert.IsFalse(output13.HasValue);
+
+            Nullable<UInt16> output14 = UInt16.MaxValue.ToString().TryParseNumber<UInt16>(NumberStyles.Integer, CultureInfo.InvariantCulture);
+            Assert.IsNotNull(output14);
+            Assert.AreEqual(UInt16.MaxValue, output14);
+
+            Nullable<Int16> output15 = ((Int32)(Int16.MinValue) - 1).ToString().TryParseNumber<Int16>(NumberStyles.Integer, CultureInfo.InvariantCulture);
+            Assert.IsFalse(output15.HasValue);
+
+            Nullable<Int16> output16 = Int16.MinValue.ToString().TryParseNumber<Int16>(NumberStyles.Integer, CultureInfo.InvariantCulture);
+            Assert.IsNotNull(output16);
+            Assert.AreEqual(Int16.MinValue, output16);
+
+            Nullable<UInt32> output17 = "12.34".TryParseNumber<UInt32>(NumberStyles.Float, CultureInfo.InvariantCulture);
+            Assert.IsFalse(output17.HasValue);
+
+            Nullable<UInt32> output18 = "1234".TryParseNumber<UInt32>(NumberStyles.Float, CultureInfo.InvariantCulture);
+            Assert.IsNotNull(output18);
+            Assert.AreEqual(1234, output18);
+
+            Nullable<Int64> output19 = "-1234".TryParseNumber<Int64>(NumberStyles.None, CultureInfo.InvariantCulture);
+            Assert.IsFalse(output19.HasValue);
+
+            Nullable<Int64> output20 = "-1234".TryParseNumber<Int64>(NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
+            Assert.IsNotNull(output20);
+            Assert.AreEqual(-1234, output20);
+
+            Nullable<UInt64> output21 = (-1).ToString().TryParseNumber<UInt64>(NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture);
+            Assert.IsFalse(output21.HasValue);
+
+            Nullable<UInt64> output22 = UInt64.MaxValue.ToString().TryParseNumber<UInt64>(NumberStyles.None, CultureInfo.InvariantCulture);
+            Assert.IsNotNull(output22);
+            Assert.AreEqual(UInt64.MaxValue, output22);
         }
     }
 }

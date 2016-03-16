@@ -49,7 +49,7 @@ namespace KlotosLib
         /// <summary>
         /// Список строк, которые недопустимы в качестве имён файлов
         /// </summary>
-        public static readonly String[] IllegalFilenames = new string[] 
+        public static readonly String[] IllegalFilenames = new String[] 
         { "CON", "PRN", "AUX", "NUL", 
             "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", 
             "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9" };
@@ -106,7 +106,7 @@ namespace KlotosLib
         public static Boolean TryCleanFilename(String Input, out String FixedFilename)
         {
             FixedFilename = null;
-            if (Input.HasAlphaNumericChars() == false) { return false; }
+            if (Input.HasVisibleChars() == false) { return false; }
             StringBuilder sb = new StringBuilder(Input.Length);
             Char[] invalid_chars = Path.GetInvalidFileNameChars();
             foreach (Char current in Input)
@@ -116,9 +116,9 @@ namespace KlotosLib
                     sb.Append(current);
                 }
             }
-            if (sb.HasAlphaNumericChars() == false) { return false; }
-
             String output = sb.Trim().ToString();
+            if (output.HasVisibleChars() == false) { return false; }
+            
             String[] all_segments = output.Split(new char[1] { '.' }, StringSplitOptions.RemoveEmptyEntries);
             String first_segment = all_segments.First();
             if (first_segment.IsIn(StringComparison.OrdinalIgnoreCase, FilePathTools.IllegalFilenames) == true)

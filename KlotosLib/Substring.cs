@@ -6,7 +6,7 @@ namespace KlotosLib
     /// Представляет подстроку, привязанную к одной конкретной базовой строке. Неизменяемый класс.
     /// </summary>
     [Serializable]
-    public class Substring : IEquatable<Substring>, IComparable<Substring>, ICloneable
+    public class Substring : IEquatable<Substring>, IComparable<Substring>, IComparable, ICloneable
     {
         #region Constructors
         /// <summary>
@@ -92,7 +92,7 @@ namespace KlotosLib
         private readonly Int32 _length;
 
         private String _cachedValue;
-        #endregion
+        #endregion Fields
 
         #region Properties
         /// <summary>
@@ -160,7 +160,7 @@ namespace KlotosLib
                 return hashCode;
             }
         }
-
+        
         /// <summary>
         /// Определяет равенство данного экземпляра с указанным, предварительно пытаясь привести его к данному типу
         /// </summary>
@@ -192,6 +192,26 @@ namespace KlotosLib
         public Int32 CompareTo(Substring Other)
         {
             return Substring.Compare(this, Other);
+        }
+
+        /// <summary>
+        /// Пытается привести указанный экземпляр неизвестного типа Object к данному типу, 
+        /// а затем сравнивает его с указанным и показывает, как они соотносятся в порядке сортировки
+        /// </summary>
+        /// <param name="Other"></param>
+        /// <returns></returns>
+        public int CompareTo(Object Other)
+        {
+            if (Object.ReferenceEquals(Other, null) == true)
+            {
+                throw new ArgumentNullException("Other", "Нельзя сравнить подстроку с NULL");
+            }
+            Substring converted = Other as Substring;
+            if (converted == null)
+            {
+                throw new InvalidOperationException("Нельзя сравнить подстроку с другим типом");
+            }
+            return Substring.Compare(this, converted);
         }
 
         /// <summary>

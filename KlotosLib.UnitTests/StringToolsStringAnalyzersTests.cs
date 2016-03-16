@@ -8,10 +8,10 @@ namespace KlotosLib.UnitTests
     class StringToolsStringAnalyzersTests
     {
         [Test]
-        public void DefineContainsSymbolsTest()
+        public void DefineContainingSymbols()
         {
             String input1 = "abc123 \r\n";
-            StringTools.StringAnalyzers.ContainsEntities output1 = StringTools.StringAnalyzers.DefineContainsSymbols(input1);
+            StringTools.StringAnalyzers.ContainsEntities output1 = StringTools.StringAnalyzers.DefineContainingSymbols(input1);
             StringTools.StringAnalyzers.ContainsEntities expected1 =
                 StringTools.StringAnalyzers.ContainsEntities.Spaces |
                 StringTools.StringAnalyzers.ContainsEntities.Letters |
@@ -20,11 +20,11 @@ namespace KlotosLib.UnitTests
             Assert.AreEqual(expected1, output1);
 
             String input2 = null;
-            StringTools.StringAnalyzers.ContainsEntities output2 = StringTools.StringAnalyzers.DefineContainsSymbols(input2);
+            StringTools.StringAnalyzers.ContainsEntities output2 = StringTools.StringAnalyzers.DefineContainingSymbols(input2);
             Assert.AreEqual(StringTools.StringAnalyzers.ContainsEntities.Empty, output2);
 
             String input3 = "abc123";
-            StringTools.StringAnalyzers.ContainsEntities output3 = StringTools.StringAnalyzers.DefineContainsSymbols(input3);
+            StringTools.StringAnalyzers.ContainsEntities output3 = StringTools.StringAnalyzers.DefineContainingSymbols(input3);
             StringTools.StringAnalyzers.ContainsEntities expected3 =
                 StringTools.StringAnalyzers.ContainsEntities.Letters |
                 StringTools.StringAnalyzers.ContainsEntities.Digits;
@@ -34,7 +34,7 @@ namespace KlotosLib.UnitTests
         [TestCase(null, Result = 0, ExpectedException = typeof(ArgumentException))]
         [TestCase("abc", Result = 1)]
         [TestCase("fffbc", Result = 3)]
-        public Int32 GetStartCharsTest(String Input)
+        public Int32 GetStartChars(String Input)
         {
             KeyValuePair<Char, Int32> res = StringTools.StringAnalyzers.GetStartChars(Input);
             return res.Value;
@@ -46,7 +46,7 @@ namespace KlotosLib.UnitTests
         [TestCase("abc", 'x', Result = 0)]
         [TestCase("ffbc", 'f', Result = 2)]
         [TestCase("ffbc", 'b', Result = 0)]
-        public Int32 StartWithCountTest(String Input, Char Ch)
+        public Int32 StartWithCount(String Input, Char Ch)
         {
             return StringTools.StringAnalyzers.StartWithCount(Input, Ch);
         }
@@ -57,7 +57,7 @@ namespace KlotosLib.UnitTests
         [TestCase("abc", "ab", 5, Result = 2)]
         [TestCase("bc", "ABCD", 4, Result = 3)]
         [TestCase("bc", "ABCD", 5, Result = 1)]
-        public Byte FindAppearanceBetweenStringsTest(String Input1, String Input2, Int32 StrComp)
+        public Byte FindAppearanceBetweenStrings(String Input1, String Input2, Int32 StrComp)
         {
             StringComparison strComp = (StringComparison)StrComp;
             return (Byte)StringTools.StringAnalyzers.FindAppearanceBetweenStrings(Input1, Input2, strComp);
@@ -68,7 +68,7 @@ namespace KlotosLib.UnitTests
         [TestCase(" ", Result = 1)]
         [TestCase(" \r\n_ ", Result = 4)]
         [TestCase("abcddcba", Result = 4)]
-        public Int32 GetNumberOfSymbolsInStringTest(String Input)
+        public Int32 GetNumberOfSymbolsInString(String Input)
         {
             return StringTools.StringAnalyzers.GetNumberOfDistinctSymbolsInString(Input);
         }
@@ -92,9 +92,9 @@ namespace KlotosLib.UnitTests
         [TestCase("abababab", "baBa", StringComparison.OrdinalIgnoreCase, ExpectedResult = 1)]
         [TestCase("abababababaBABAba", "baBA", StringComparison.Ordinal, ExpectedResult = 1)]
         [TestCase("abababababaBABAba", "baBA", StringComparison.OrdinalIgnoreCase, ExpectedResult = 4)]
-        public Int32 GetNumberOfOccurensesInStringTest(String Input, String Seek, StringComparison StrComp)
+        public Int32 GetNumberOfOccurencesInString(String Input, String Seek, StringComparison StrComp)
         {
-            return StringTools.StringAnalyzers.GetNumberOfOccurensesInString(Input, Seek, StrComp);
+            return StringTools.StringAnalyzers.GetNumberOfOccurencesInString(Input, Seek, StrComp);
         }
 
         [Test]
@@ -128,10 +128,10 @@ namespace KlotosLib.UnitTests
         }
 
         [Test]
-        public void GetCharOccurensesStats()
+        public void GetCharOccurencesStats()
         {
             String input1 = " abc ab";
-            Dictionary<Char, UInt16> res1 = StringTools.StringAnalyzers.GetCharOccurensesStats(input1);
+            Dictionary<Char, UInt16> res1 = StringTools.StringAnalyzers.GetCharOccurencesStats(input1);
             CollectionAssert.AreEqual(new Dictionary<Char, UInt16>(4){
                     { ' ', 2 },
                     { 'a', 2 },
@@ -140,11 +140,11 @@ namespace KlotosLib.UnitTests
                 }, res1);
 
             String input2 = "";
-            Dictionary<Char, UInt16> res2 = StringTools.StringAnalyzers.GetCharOccurensesStats(input2);
+            Dictionary<Char, UInt16> res2 = StringTools.StringAnalyzers.GetCharOccurencesStats(input2);
             CollectionAssert.IsEmpty(res2);
 
             String input3 = "\r\n 333221 \r\n";
-            Dictionary<Char, UInt16> res3 = StringTools.StringAnalyzers.GetCharOccurensesStats(input3);
+            Dictionary<Char, UInt16> res3 = StringTools.StringAnalyzers.GetCharOccurencesStats(input3);
             CollectionAssert.AreEqual(new Dictionary<Char, UInt16>(6){
                     { '\r', 2 },
                     { '\n', 2 },
@@ -161,7 +161,7 @@ namespace KlotosLib.UnitTests
         [TestCase(" xxx54s\r ", 0, false, Result = 54)]
         [TestCase("aa11bbb-2 end", 1, false, Result = 2)]
         [TestCase("aa11bbb-2 end", 0, false, Result = 11)]
-        public Nullable<UInt32> GetNearestUnsignedIntegerFromString1Test(String Input, Byte Direction, Boolean RE)
+        public Nullable<UInt32> GetNearestUnsignedIntegerFromString1(String Input, Byte Direction, Boolean RE)
         {
             return StringTools.StringAnalyzers.GetNearestUnsignedIntegerFromString(Input, (StringTools.Direction)Direction, RE);
         }
@@ -175,14 +175,14 @@ namespace KlotosLib.UnitTests
         [TestCase("0123456\r\n", 1, Result = 123456)]
         [TestCase("0123456+100\r\n", 7, Result = 100)]
         [TestCase("0123456+100\r\n", 9, Result = 0)]
-        public Nullable<UInt32> GetNearestUnsignedIntegerFromString2Test(String Input, Int32 StartPosition)
+        public Nullable<UInt32> GetNearestUnsignedIntegerFromString2(String Input, Int32 StartPosition)
         {
             Int32 find_position;
             return StringTools.StringAnalyzers.GetNearestUnsignedIntegerFromString(Input, StartPosition, out find_position);
         }
 
         [Test]
-        public void GetPositionsOfTokenInStringTest()
+        public void GetPositionsOfTokenInString()
         {
             String input1 = "abababa";
             List<Int32> output1 = StringTools.StringAnalyzers.GetPositionsOfTokenInString(input1, "ba", StringComparison.Ordinal);
@@ -194,14 +194,14 @@ namespace KlotosLib.UnitTests
         }
 
         [Test]
-        public void IndexesOfTemplateFirstOccurenseTest()
+        public void IndexesOfTemplateFirstOccurence()
         {
             String input1 = "text start abca cadadca   end another text";
             String start_token1 = "start";
             String end_token1 = "end";
             Int32 start_index1 = 5;
             Char[] symbols1 = new Char[5] { 'a', 'b', 'c', 'd', ' ' };
-            KeyValuePair<Int32, Int32> res1 = StringTools.StringAnalyzers.IndexesOfTemplateFirstOccurense(input1, start_token1, end_token1, start_index1, symbols1);
+            KeyValuePair<Int32, Int32> res1 = StringTools.StringAnalyzers.IndexesOfTemplateFirstOccurence(input1, start_token1, end_token1, start_index1, symbols1);
             Assert.AreEqual(new KeyValuePair<Int32, Int32>(5, 29), res1);
             Assert.AreNotEqual(new KeyValuePair<Int32, Int32>(5, 28), res1);
 
@@ -210,13 +210,13 @@ namespace KlotosLib.UnitTests
             String end_token2 = "end";
             Int32 start_index2 = 6;
             Char[] symbols2 = new Char[5] { 'a', 'b', 'c', 'd', ' ' };
-            KeyValuePair<Int32, Int32> res2 = StringTools.StringAnalyzers.IndexesOfTemplateFirstOccurense(input2, start_token2, end_token2, start_index2, symbols2);
+            KeyValuePair<Int32, Int32> res2 = StringTools.StringAnalyzers.IndexesOfTemplateFirstOccurence(input2, start_token2, end_token2, start_index2, symbols2);
             Assert.AreEqual(new KeyValuePair<Int32, Int32>(-1, -1), res2);
 
         }
 
         [Test]
-        public void IndexesOfTemplateTest()
+        public void IndexesOfTemplate()
         {
             String input1 = "another text start end end start \n_  end start _\n_  endstart END another text";
             String start_token1 = "start";

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Globalization;
 
 namespace KlotosLib
@@ -10,6 +9,21 @@ namespace KlotosLib
     [Serializable()]
     public struct ByteQuantity : IEquatable<ByteQuantity>, IComparable<ByteQuantity>, IComparable, IConvertible, ICloneable
     {
+        /// <summary>
+        /// Обозначает знак десятичного разделителя
+        /// </summary>
+        public enum DecimalSeparatorSign : byte
+        {
+            /// <summary>
+            /// Запятая
+            /// </summary>
+            Comma,
+            /// <summary>
+            /// Точка
+            /// </summary>
+            Point
+        }
+
         #region Constants
         private const Int64 _1024 = 1024L;
         private const Int64 _1000 = 1000L;
@@ -227,12 +241,12 @@ namespace KlotosLib
         /// Множитель выбирается автоматически в зависимости от количества байтов
         /// </summary>
         /// <param name="Precision">Точность, определяющая количество знаков после запятой, которое будет выведено</param>
-        /// <param name="DecimalSeparator">Десятичный разделитель между целой и дробной частью. true - '.', false - ','</param>
+        /// <param name="DecimalSeparator">Десятичный разделитель между целой и дробной частью</param>
         /// <returns></returns>
-        public String ToStringWithBinaryPrefix(Byte Precision, Boolean DecimalSeparator)
+        public String ToStringWithBinaryPrefix(Byte Precision, ByteQuantity.DecimalSeparatorSign DecimalSeparator)
         {
             NumberFormatInfo nfi = (NumberFormatInfo)NumberFormatInfo.InvariantInfo.Clone();
-            nfi.NumberDecimalSeparator = DecimalSeparator == true ? "." : ",";
+            nfi.NumberDecimalSeparator = DecimalSeparator == DecimalSeparatorSign.Point ? "." : ",";
 
             if (this._value < _x1Bin)
             {
@@ -266,12 +280,12 @@ namespace KlotosLib
         /// Множитель выбирается автоматически в зависимости от количества байтов
         /// </summary>
         /// <param name="Precision">Точность, определяющая количество знаков после запятой, которое будет выведено</param>
-        /// <param name="DecimalSeparator">Десятичный разделитель между целой и дробной частью. true - '.', false - ','</param>
+        /// <param name="DecimalSeparator">Десятичный разделитель между целой и дробной частью</param>
         /// <returns></returns>
-        public String ToStringWithDecimalPrefix(Byte Precision, Boolean DecimalSeparator)
+        public String ToStringWithDecimalPrefix(Byte Precision, ByteQuantity.DecimalSeparatorSign DecimalSeparator)
         {
             NumberFormatInfo nfi = (NumberFormatInfo)NumberFormatInfo.InvariantInfo.Clone();
-            nfi.NumberDecimalSeparator = DecimalSeparator == true ? "." : ",";
+            nfi.NumberDecimalSeparator = DecimalSeparator == DecimalSeparatorSign.Point ? "." : ",";
 
             if (this._value < _x1Dec)
             {
@@ -551,6 +565,10 @@ namespace KlotosLib
         #endregion
 
         #region IConvertible
+
+        private const string _CannotConvertValueTemplate =
+            "Невозможно конвертировать значение в тип {0}, так как его максимальное значение {1} меньше текущего значения экземпляра {2}";
+
         /// <summary>
         /// Возвращает код данного типа
         /// </summary>
@@ -567,8 +585,13 @@ namespace KlotosLib
         /// <returns></returns>
         public Object ToType(Type conversionType, IFormatProvider provider)
         {
+            if (conversionType == null)
+            {
+                throw new ArgumentNullException("conversionType");
+            }
             return Convert.ChangeType(this._value, conversionType);
         }
+
         /// <summary>
         /// Возвращает количество байт в виде числа с плавающей запятой двойной точности
         /// </summary>
@@ -623,9 +646,7 @@ namespace KlotosLib
         {
             if (this._value > Int32.MaxValue)
             {
-                throw new OverflowException(String.Format(
-                    "Невозможно конвертировать значение в тип System.Int32, так как его максимальное значение {0} меньше текущего значения экземпляра {1}",
-                    Int32.MaxValue, this._value));
+                throw new OverflowException(String.Format(_CannotConvertValueTemplate, typeof(System.Int32).FullName, System.Int32.MaxValue, this._value));
             }
             return Convert.ToInt32(this._value);
         }
@@ -638,9 +659,7 @@ namespace KlotosLib
         {
             if (this._value > UInt32.MaxValue)
             {
-                throw new OverflowException(String.Format(
-                    "Невозможно конвертировать значение в тип System.UInt32, так как его максимальное значение {0} меньше текущего значения экземпляра {1}",
-                    UInt32.MaxValue, this._value));
+                throw new OverflowException(String.Format(_CannotConvertValueTemplate, typeof(System.UInt32).FullName, System.UInt32.MaxValue, this._value));
             }
             return Convert.ToUInt32(this._value);
         }
@@ -653,9 +672,7 @@ namespace KlotosLib
         {
             if (this._value > Int16.MaxValue)
             {
-                throw new OverflowException(String.Format(
-                    "Невозможно конвертировать значение в тип System.Int16, так как его максимальное значение {0} меньше текущего значения экземпляра {1}",
-                    Int16.MaxValue, this._value));
+                throw new OverflowException(String.Format(_CannotConvertValueTemplate, typeof(System.Int16).FullName, System.Int16.MaxValue, this._value));
             }
             return Convert.ToInt16(this._value);
         }
@@ -668,9 +685,7 @@ namespace KlotosLib
         {
             if (this._value > UInt16.MaxValue)
             {
-                throw new OverflowException(String.Format(
-                    "Невозможно конвертировать значение в тип System.UInt16, так как его максимальное значение {0} меньше текущего значения экземпляра {1}",
-                    UInt16.MaxValue, this._value));
+                throw new OverflowException(String.Format(_CannotConvertValueTemplate, typeof(System.UInt16).FullName, System.UInt16.MaxValue, this._value));
             }
             return Convert.ToUInt16(this._value);
         }
@@ -683,9 +698,7 @@ namespace KlotosLib
         {
             if (this._value > SByte.MaxValue)
             {
-                throw new OverflowException(String.Format(
-                    "Невозможно конвертировать значение в тип System.SByte, так как его максимальное значение {0} меньше текущего значения экземпляра {1}",
-                    SByte.MaxValue, this._value));
+                throw new OverflowException(String.Format(_CannotConvertValueTemplate, typeof(System.SByte).FullName, System.SByte.MaxValue, this._value));
             }
             return Convert.ToSByte(this._value);
         }
@@ -698,9 +711,7 @@ namespace KlotosLib
         {
             if (this._value > Byte.MaxValue)
             {
-                throw new OverflowException(String.Format(
-                    "Невозможно конвертировать значение в тип System.Byte, так как его максимальное значение {0} меньше текущего значения экземпляра {1}",
-                    Byte.MaxValue, this._value));
+                throw new OverflowException(String.Format(_CannotConvertValueTemplate, typeof(System.Byte).FullName, System.Byte.MaxValue, this._value));
             }
             return Convert.ToByte(this._value);
         }
@@ -709,6 +720,7 @@ namespace KlotosLib
         /// </summary>
         /// <param name="Provider"></param>
         /// <returns></returns>
+        /// <exception cref="InvalidCastException">Будет выброшено при вызове</exception>
         public Boolean ToBoolean(IFormatProvider Provider)
         {
             throw new InvalidCastException();
@@ -718,6 +730,7 @@ namespace KlotosLib
         /// </summary>
         /// <param name="Provider"></param>
         /// <returns></returns>
+        /// <exception cref="InvalidCastException">Будет выброшено при вызове</exception>
         public Char ToChar(IFormatProvider Provider)
         {
             throw new InvalidCastException();
@@ -727,24 +740,27 @@ namespace KlotosLib
         /// </summary>
         /// <param name="Provider"></param>
         /// <returns></returns>
+        /// <exception cref="InvalidCastException">Будет выброшено при вызове</exception>
         public DateTime ToDateTime(IFormatProvider Provider)
         {
             throw new InvalidCastException();
         }
 
         /// <summary>
-        /// Вызывает базовую реализацию метода ToString для этого типа, параметр Provider игнорируется
+        /// Возвращает строковое представление количества байт с учётом указанной культуры, определяющей строковое представление числа. 
+        /// В конце присутствует приставка 'Bytes'.
         /// </summary>
         /// <param name="Provider"></param>
         /// <returns></returns>
         public String ToString(IFormatProvider Provider)
         {
-            return this.ToString();
+            String output = this._value.ToString(Provider) + " Bytes";
+            return output;
         }
         #endregion
 
         /// <summary>
-        /// Возвращает строковое представление количества байт; разряды разделены пробелами, в конце присутствует приставка Bytes
+        /// Возвращает строковое представление количества байт; разряды разделены пробелами, в конце присутствует приставка 'Bytes'.
         /// </summary>
         /// <returns></returns>
         public override string ToString()

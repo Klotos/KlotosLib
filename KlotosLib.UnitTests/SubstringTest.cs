@@ -89,6 +89,18 @@ namespace KlotosLib.UnitTests
             Assert.IsTrue(Substring.AreEqual(s4, s5, s6));
             Assert.IsFalse(Substring.AreEqual(s6, s7));
             Assert.IsTrue(Substring.AreEqual(s4, s4, s4, s4));
+
+            Substring[] nulls = null;
+            Assert.Throws<ArgumentNullException>(delegate { Substring.AreEqual(nulls); });
+
+            Substring[] empty = new Substring[0];
+            Assert.Throws<ArgumentException>(delegate { Substring.AreEqual(empty); });
+
+            Substring[] one = new Substring[1] { s4 };
+            Assert.Throws<ArgumentException>(delegate { Substring.AreEqual(one); });
+
+            Substring[] two = new Substring[2] { s4, s6 };
+            Assert.IsTrue(Substring.AreEqual(two));
         }
 
         [Test]
@@ -114,11 +126,14 @@ namespace KlotosLib.UnitTests
         [Test]
         public void Compare()
         {
-            const string s1 = "aaa";
+            const string s1 = "aaabbb";
             const string s2 = s1;
 
             Substring ss1 = new Substring(s1, 1);
             Substring ss2 = new Substring(s2, 1);
+            Substring null_ss = null;
+            Assert.IsTrue(ss2 > null_ss);
+            Assert.IsTrue(null_ss < ss1);
             Assert.IsTrue(ss1 == ss2);
             Assert.IsTrue(ss1 >= ss2);
             Assert.IsTrue(ss1 <= ss2);
@@ -132,6 +147,30 @@ namespace KlotosLib.UnitTests
             Assert.IsTrue(ss1 >= ss3);
             Assert.IsFalse(ss1 < ss3);
             Assert.IsFalse(ss1 <= ss3);
+
+            Substring ss4 = new Substring("xyz123", 3, 2);
+            Substring ss5 = new Substring("abc123", 3, 1);
+            Assert.Less(ss5, ss4);
+            
+        }
+
+        [Test]
+        public void CompareWithExceptions()
+        {
+            Substring substring = new Substring("abcd", 2);
+            NUnit.Framework.TestDelegate comparison1 = delegate
+            {
+                const String x = "vvv";
+                Int32 result = substring.CompareTo(x);
+            };
+            NUnit.Framework.TestDelegate comparison2 = delegate
+            {
+                Object x = null;
+                Int32 result = substring.CompareTo(x);
+            };
+            Assert.Throws(typeof(InvalidOperationException), comparison1);
+            Assert.Throws(typeof(ArgumentNullException), comparison2);
+            Assert.AreEqual(0, substring.CompareTo((Object)substring));
         }
 
         [TestCase("aaa", 1, 1, "aaa", 1, 1, 0, ExpectedResult = true)]

@@ -1018,6 +1018,7 @@ namespace KlotosLib
         /// http://en.wikipedia.org/wiki/ICO_(file_format)
         /// </remarks>
         /// <param name="HeaderPart">Хидер файла - его первые 12 байт. Если содержит меньше 12 байт, выбрасывается исключение.</param>
+        /// <exception cref="ArgumentException"></exception>
         /// <returns></returns>
         public static ImageTools.ImageFormats GetImageFormat(Byte[] HeaderPart)
         {

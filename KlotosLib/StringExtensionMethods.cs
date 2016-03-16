@@ -58,9 +58,9 @@ namespace KlotosLib
                 { return Input.Substring(StartIndex, 2); }
                 else if (IncludeStart == false && IncludeEnd == false)
                 { return empty; }
-                else if (IncludeStart == true && IncludeEnd == false)
+                else if (IncludeStart == true /*&& IncludeEnd == false*/)
                 { return Input.Substring(StartIndex, 1); }
-                else
+                else /*if (IncludeStart == false && IncludeEnd == true)*/
                 { return Input.Substring(StartIndex + 1, 1); }
             }
             Int32 start_index_temp;
@@ -372,7 +372,7 @@ namespace KlotosLib
         /// <returns></returns>
         public static Boolean IsStringDigitsOnly(this String Source)
         {
-            if (Source == null)
+            if (Source.IsStringNullOrEmpty()==true)
             {
                 return false;
             }
@@ -442,7 +442,10 @@ namespace KlotosLib
         /// <exception cref="ArgumentException">Указанная последовательность NULL или пустая</exception>
         public static Boolean IsIn(this String source, StringComparison StrComp, IEnumerable<String> Sequence)
         {
-            if (Sequence.IsNullOrEmpty() == true) { throw new ArgumentException("Указанная последовательность NULL или пустая", "Sequence"); }
+            if (Sequence.IsNullOrEmpty() == true)
+            {
+                throw new ArgumentException("Указанная последовательность NULL или пустая", "Sequence");
+            }
             StringComparer comp;
             switch (StrComp)
             {
@@ -503,7 +506,6 @@ namespace KlotosLib
             if (ToCheck.IsNullOrEmpty() == true) { throw new ArgumentException("Искомая подстрока не может быть NULL или пустой", "ToCheck"); }
             if (Enum.IsDefined(StrComp.GetType(), StrComp) == false) {throw new InvalidEnumArgumentException("StrComp", (Int32)StrComp, StrComp.GetType());}
 
-
             Boolean result = Source.IndexOf(ToCheck, StrComp) >= 0;
             return result;
         }
@@ -521,6 +523,7 @@ namespace KlotosLib
         {
             if (Source.IsNullOrEmpty() == true) { throw new ArgumentException("Входная строка не может быть NULL или пустой", "Source"); }
             if (ToCheck.IsNullOrEmpty() == true) { throw new ArgumentException("Искомая подстрока не может быть NULL или пустой", "ToCheck"); }
+            if (Enum.IsDefined(CompOpt.GetType(), CompOpt) == false) { throw new InvalidEnumArgumentException("CompOpt", (Int32)CompOpt, CompOpt.GetType()); }
             if (Culture == null)
             {
                 Culture = CultureInfo.InvariantCulture;
@@ -528,18 +531,7 @@ namespace KlotosLib
             Boolean result = Culture.CompareInfo.IndexOf(Source, ToCheck, CompOpt) >= 0;
             return result;
         }
-
-        /// <summary>
-        /// Возвращает новую строку, символы в которой расположены в обратном порядке по сравнению с исходной строкой.
-        /// </summary>
-        public static String ReverseString(this String Source)
-        {
-            if (Source.IsStringNullEmptyWhiteSpace() == true) { return Source; }
-            Char[] arr = Source.ToCharArray();
-            Array.Reverse(arr);
-            return new String(arr);
-        }
-
+        
         /// <summary>
         /// Заменяет во входной строке все вхождения всех указанных (искомых) символов на целевую подстроку. Если ни одного искомого символа не найдено, возвращается копия исходной строки.
         /// </summary>

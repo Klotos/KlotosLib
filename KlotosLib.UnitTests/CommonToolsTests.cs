@@ -103,6 +103,28 @@ namespace KlotosLib.UnitTests
             return Actual.IsBetweenIB<Boolean>(First, Second, IncludeBounds);
         }
 
+        [Test]
+        public void Swap2Types()
+        {
+            String s1 = "abc";
+            String s2 = "def";
+            CommonTools.Swap2Types(ref s1, ref s2);
+            Assert.AreEqual("abc", s2);
+            Assert.AreEqual("def", s1);
+
+            String s3 = s1;
+            CommonTools.Swap2Types(ref s1, ref s3);
+            Assert.AreEqual("def", s3);
+
+            String s4 = null;
+            String s5 = null;
+            Assert.IsNull(s4);
+            Assert.IsNull(s5);
+            CommonTools.Swap2Types(ref s4, ref s5);
+            Assert.IsNull(s4);
+            Assert.IsNull(s5);
+        }
+
         [TestCase(null, Result = null)]
         [TestCase(true, Result = true)]
         [TestCase(false, Result = false)]

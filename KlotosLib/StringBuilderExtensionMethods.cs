@@ -15,7 +15,7 @@ namespace KlotosLib
         /// <returns></returns>
         public static Boolean IsNullOrEmpty(this StringBuilder Source)
         {
-            if (object.ReferenceEquals(null, Source) == true || Source.Length < 1) { return true; }
+            if (Object.ReferenceEquals(null, Source) == true || Source.Length < 1) { return true; }
             else { return false; }
         }
 
@@ -197,7 +197,7 @@ namespace KlotosLib
         /// </summary>
         /// <param name="Source">Входная изменяемая строка, обрезанную слева часть которой следует возвратить. 
         /// Если пустая - будет возвращена без изменений. Если NULL, будет выброшено исключение.</param>
-        /// <param name="Start">Строка, равная подстроке, с которой может начинаеться входная изменяемая строка и которую следует обрезать. 
+        /// <param name="Start">Строка, равная подстроке, с которой может начинаться входная изменяемая строка и которую следует обрезать. 
         /// Если NULL, пустая, или больше длины входной строки, будет возвращена входная строка без изменений.</param>
         /// <param name="IgnoreCase">Определяет, игнорировать ли при сравнении символов регистр литер. true - игнорировать, false - принимать во внимание.</param>
         /// <param name="Recursive">Определяет, необходимо ли после первой обрезки проанализировать начало строки на совпадение ещё раз</param>

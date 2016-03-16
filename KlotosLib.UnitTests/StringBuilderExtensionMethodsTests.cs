@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace KlotosLib.UnitTests
 {
@@ -133,6 +134,7 @@ namespace KlotosLib.UnitTests
         [TestCase("", "12345", true, false, Result = "")]
         [TestCase("12345", "123456", true, false, Result = "12345")]
         [TestCase(null, "abCD", true, false, Result = "AbcDAbCD", ExpectedException = typeof(ArgumentNullException))]
+        [TestCase("abcd", "xy", false, true, ExpectedResult = "abcd")]
         public String TrimEnd(String Input, String Start, Boolean IgnoreCase, Boolean Recursive)
         {
             return FromString(Input).TrimEnd(Start, IgnoreCase, Recursive).ToString();
@@ -154,6 +156,7 @@ namespace KlotosLib.UnitTests
         [TestCase("0123456789", 5, 0, "abcde", Result = "01234abcde56789")]
         [TestCase("0123456789", 9, 0, "abcde", Result = "012345678abcde9")]
         [TestCase("0123456789", 8, 100, "abcde", Result = "01234567abcde")]
+        [TestCase("", 0, 0, "abc", ExpectedResult = "abc")]
         [TestCase(null, 5, 4, "abcde", Result = "", ExpectedException = typeof(ArgumentNullException))]
         [TestCase("0123456789", 5, 4, null, Result = "", ExpectedException = typeof(ArgumentNullException))]
         [TestCase("0123456789", -10, 0, "abcde", Result = "", ExpectedException = typeof(ArgumentOutOfRangeException))]

@@ -1,14 +1,116 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace KlotosLib.UnitTests
 {
     [TestFixture]
-    class HtmlToolsTests
+    public class HtmlToolsTests
     {
+        [NUnit.Framework.Test]
+        public void GetAttributesForTag()
+        {
+            const String input_HTML_1 = "<HTML>" +
+                                  "<head>" +
+                                  "<title>title</title>" +
+                                  "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>" +
+                                  "</head>" +
+                                  "<body>" +
+                                  "<meta charset=\"utf-8\" />" +
+                                  "</body>" +
+                                  "</HTML>";
+            Dictionary<String, String> output1_1 = HtmlTools.GetAttributesForTag(input_HTML_1, "meta", 0);
+            Dictionary<String, String> output1_2 = HtmlTools.GetAttributesForTag(input_HTML_1, "meta", 50);
+            Dictionary<String, String> output1_3 = HtmlTools.GetAttributesForTag(input_HTML_1, "head", 0);
+            Dictionary<String, String> output1_4 = HtmlTools.GetAttributesForTag(input_HTML_1, "head", 50);
+
+            Dictionary<String, String> expected1_1 = new Dictionary<string, string>()
+            {
+                {"http-equiv", "Content-Type"},
+                {"content", "text/html; charset=utf-8"}
+            };
+            
+            Dictionary<String, String> expected1_2 = new Dictionary<string, string>()
+            {
+                {"charset", "utf-8"}
+            };
+
+            Dictionary<String, String> expected1_3 = new Dictionary<string, string>(0);
+            Dictionary<String, String> expected1_4 = null;
+
+            CollectionAssert.AreEqual(expected1_1, output1_1);
+            CollectionAssert.AreEqual(expected1_2, output1_2);
+            CollectionAssert.AreEqual(expected1_3, output1_3);
+            CollectionAssert.AreEqual(expected1_4, output1_4);
+
+            const String input_HTML_2 = "<p><select SIZE=\"3\" size = \"4\" name=\"hero\">"+
+                "<option ID= \"x\" disabled=disabled>Выберите героя</option>"+
+                "<option value=\"t1\" selected id = 2 other = \"3\" other = 4>Чебурашка</option>"+
+                "<option value=\"t2\" selected disabled other=4>Крокодил Гена</option>" +
+                "<option value = \" t3 \" id= 2 disabled other = '3' another = 4 disabled = 'disabled' >Зло</option>" +
+                "</select></p>";
+            Dictionary<String, String> output2_1 = HtmlTools.GetAttributesForTag(input_HTML_2, " select", 0);
+            Dictionary<String, String> output2_2 = HtmlTools.GetAttributesForTag(input_HTML_2, " option ", 36);
+            Dictionary<String, String> output2_3 = HtmlTools.GetAttributesForTag(input_HTML_2, "option", 80);
+            Dictionary<String, String> output2_4 = HtmlTools.GetAttributesForTag(input_HTML_2, "Option", 120);
+            Dictionary<String, String> output2_5 = HtmlTools.GetAttributesForTag(input_HTML_2, "OPTION ", 190);
+
+            Dictionary<String, String> expected2_1 = new Dictionary<string, string>(2)
+            {
+                {"SIZE", "3"},
+                {"name", "hero"}
+            };
+
+            Dictionary<String, String> expected2_2 = new Dictionary<string, string>(2)
+            {
+                {"ID", "x"},
+                {"disabled", "disabled"}
+            };
+
+            Dictionary<String, String> expected2_3 = new Dictionary<string, string>(4)
+            {
+                {"value", "t1"},
+                {"selected", ""},
+                {"id", "2"},
+                {"other", "3"}
+            };
+
+            Dictionary<String, String> expected2_4 = new Dictionary<string, string>(4)
+            {
+                {"value", "t2"},
+                {"selected", ""},
+                {"disabled", ""},
+                {"other", "4"}
+            };
+
+            Dictionary<String, String> expected2_5 = new Dictionary<string, string>(5)
+            {
+                {"value", " t3 "},
+                {"id", "2"},
+                {"disabled", ""},
+                {"other", "3"},
+                {"another", "4"}
+            };
+
+            CollectionAssert.AreEqual(expected2_1, output2_1);
+            CollectionAssert.AreEqual(expected2_2, output2_2);
+            CollectionAssert.AreEqual(expected2_3, output2_3);
+            CollectionAssert.AreEqual(expected2_4, output2_4);
+            CollectionAssert.AreEqual(expected2_5, output2_5);
+
+            Assert.Throws<ArgumentNullException>(delegate { HtmlTools.GetAttributesForTag(null, "html", 0); });
+            Assert.Throws<ArgumentException>(delegate { HtmlTools.GetAttributesForTag(" \r\n ", "html", 0); });
+            Assert.Throws<ArgumentException>(delegate { HtmlTools.GetAttributesForTag("<html id='x'></html>", " \r\n ", 0); });
+            Assert.Throws<ArgumentOutOfRangeException>(delegate { HtmlTools.GetAttributesForTag("<html id='x'></html>", "html", -1); });
+            Assert.Throws<ArgumentOutOfRangeException>(delegate { HtmlTools.GetAttributesForTag("<html id='x'></html>", "html", 20); });
+
+        }
+
         [TestCase(null, Result = null)]
         [TestCase(" \n", Result = " \n")]
         [TestCase("x", Result = "x")]
+        [TestCase("a<>b<>c", Result = "a<>b<>c")]
+        [TestCase(" <html>text</html>_<>y<>x", Result = " text_<>y<>x")]
         [TestCase("<x cc>  </x cc>", Result = "  ")]
         [TestCase("<html><body> <title>incorrect body and title</body></title> <br/> <img src = \"x\"></html>", ExpectedResult = " incorrect body and title  ")]
         [TestCase("text: <br>first line<br >second line: value<br/><br/><b><a href=\"", ExpectedResult = "text: first linesecond line: value")]

@@ -270,6 +270,14 @@
             <param name="Other"></param>
             <returns></returns>
         </member>
+        <member name="M:KlotosLib.Substring.CompareTo(System.Object)">
+            <summary>
+            Пытается привести указанный экземпляр неизвестного типа Object к данному типу, 
+            а затем сравнивает его с указанным и показывает, как они соотносятся в порядке сортировки
+            </summary>
+            <param name="Other"></param>
+            <returns></returns>
+        </member>
         <member name="M:KlotosLib.Substring.AreEqual(KlotosLib.Substring,KlotosLib.Substring)">
             <summary>
             Определяет, равны ли два указанных экземпляра подстрок между собой. Если обе подстроки являются NULL, то считается, что они равны. 
@@ -490,22 +498,22 @@
             <param name="Precision">Точность, выраженная в количестве цифр после запятой, которые будут присутствовать в возвращаемом значении</param>
             <returns></returns>
         </member>
-        <member name="M:KlotosLib.ByteQuantity.ToStringWithBinaryPrefix(System.Byte,System.Boolean)">
+        <member name="M:KlotosLib.ByteQuantity.ToStringWithBinaryPrefix(System.Byte,KlotosLib.ByteQuantity.DecimalSeparatorSign)">
             <summary>
             Возвращает строковое представление округлённой байтовой величины с заданной точностью в двоичных префиксах. 
             Множитель выбирается автоматически в зависимости от количества байтов
             </summary>
             <param name="Precision">Точность, определяющая количество знаков после запятой, которое будет выведено</param>
-            <param name="DecimalSeparator">Десятичный разделитель между целой и дробной частью. true - '.', false - ','</param>
+            <param name="DecimalSeparator">Десятичный разделитель между целой и дробной частью</param>
             <returns></returns>
         </member>
-        <member name="M:KlotosLib.ByteQuantity.ToStringWithDecimalPrefix(System.Byte,System.Boolean)">
+        <member name="M:KlotosLib.ByteQuantity.ToStringWithDecimalPrefix(System.Byte,KlotosLib.ByteQuantity.DecimalSeparatorSign)">
             <summary>
             Возвращает строковое представление округлённой байтовой величины с заданной точностью в десятичных префиксах. 
             Множитель выбирается автоматически в зависимости от количества байтов
             </summary>
             <param name="Precision">Точность, определяющая количество знаков после запятой, которое будет выведено</param>
-            <param name="DecimalSeparator">Десятичный разделитель между целой и дробной частью. true - '.', false - ','</param>
+            <param name="DecimalSeparator">Десятичный разделитель между целой и дробной частью</param>
             <returns></returns>
         </member>
         <member name="M:KlotosLib.ByteQuantity.FromBits(System.Int64)">
@@ -747,6 +755,7 @@
             </summary>
             <param name="Provider"></param>
             <returns></returns>
+            <exception cref="T:System.InvalidCastException">Будет выброшено при вызове</exception>
         </member>
         <member name="M:KlotosLib.ByteQuantity.ToChar(System.IFormatProvider)">
             <summary>
@@ -754,6 +763,7 @@
             </summary>
             <param name="Provider"></param>
             <returns></returns>
+            <exception cref="T:System.InvalidCastException">Будет выброшено при вызове</exception>
         </member>
         <member name="M:KlotosLib.ByteQuantity.ToDateTime(System.IFormatProvider)">
             <summary>
@@ -761,17 +771,19 @@
             </summary>
             <param name="Provider"></param>
             <returns></returns>
+            <exception cref="T:System.InvalidCastException">Будет выброшено при вызове</exception>
         </member>
         <member name="M:KlotosLib.ByteQuantity.ToString(System.IFormatProvider)">
             <summary>
-            Вызывает базовую реализацию метода ToString для этого типа, параметр Provider игнорируется
+            Возвращает строковое представление количества байт с учётом указанной культуры, определяющей строковое представление числа. 
+            В конце присутствует приставка 'Bytes'.
             </summary>
             <param name="Provider"></param>
             <returns></returns>
         </member>
         <member name="M:KlotosLib.ByteQuantity.ToString">
             <summary>
-            Возвращает строковое представление количества байт; разряды разделены пробелами, в конце присутствует приставка Bytes
+            Возвращает строковое представление количества байт; разряды разделены пробелами, в конце присутствует приставка 'Bytes'.
             </summary>
             <returns></returns>
         </member>
@@ -899,6 +911,21 @@
             Возвращает текущее значение в петабайтах (PB) с полной точностью
             </summary>
         </member>
+        <member name="T:KlotosLib.ByteQuantity.DecimalSeparatorSign">
+            <summary>
+            Обозначает знак десятичного разделителя
+            </summary>
+        </member>
+        <member name="F:KlotosLib.ByteQuantity.DecimalSeparatorSign.Comma">
+            <summary>
+            Запятая
+            </summary>
+        </member>
+        <member name="F:KlotosLib.ByteQuantity.DecimalSeparatorSign.Point">
+            <summary>
+            Точка
+            </summary>
+        </member>
         <member name="T:KlotosLib.FilePathTools">
             <summary>
             Содержит статические методы по работе с именами файлов и путями
@@ -980,7 +1007,7 @@
             Содержит статические методы, возвращающие те или иные данные по переданным им строкам
             </summary>
         </member>
-        <member name="M:KlotosLib.StringTools.StringAnalyzers.DefineContainsSymbols(System.String)">
+        <member name="M:KlotosLib.StringTools.StringAnalyzers.DefineContainingSymbols(System.String)">
             <summary>
             Определяет типы символов, которые содержатся в указанной строке, и возвращает их в виде перечисления с множеством флагов
             </summary>
@@ -1032,7 +1059,7 @@
             <param name="Input"></param>
             <returns></returns>
         </member>
-        <member name="M:KlotosLib.StringTools.StringAnalyzers.GetNumberOfOccurensesInString(System.String,System.String,System.StringComparison)">
+        <member name="M:KlotosLib.StringTools.StringAnalyzers.GetNumberOfOccurencesInString(System.String,System.String,System.StringComparison)">
             <summary>
             Возвращает количество вхождений указанной искомой подстроки во входной строке
             </summary>
@@ -1041,7 +1068,7 @@
             <param name="CompareOption">Опции поиска подстроки</param>
             <returns></returns>
         </member>
-        <member name="M:KlotosLib.StringTools.StringAnalyzers.GetNumberOfOccurensesInString(System.String,System.Char)">
+        <member name="M:KlotosLib.StringTools.StringAnalyzers.GetNumberOfOccurencesInString(System.String,System.Char)">
             <summary>
             Возвращает количество вхождений указанного искомого символа во входной строке
             </summary>
@@ -1070,7 +1097,7 @@
             Если меньше 0 или больше фактической длины строки - выбрасывается исключение.</param>
             <returns></returns>
         </member>
-        <member name="M:KlotosLib.StringTools.StringAnalyzers.GetCharOccurensesStats(System.String)">
+        <member name="M:KlotosLib.StringTools.StringAnalyzers.GetCharOccurencesStats(System.String)">
             <summary>
             Возвращает статистику по количеству вхождений символов в указанной строке
             </summary>
@@ -1108,7 +1135,7 @@
             <param name="CompareOption">Опция сравнения строк между собой</param>
             <returns></returns>
         </member>
-        <member name="M:KlotosLib.StringTools.StringAnalyzers.IndexesOfTemplateFirstOccurense(System.String,System.String,System.String,System.Int32,System.Char[])">
+        <member name="M:KlotosLib.StringTools.StringAnalyzers.IndexesOfTemplateFirstOccurence(System.String,System.String,System.String,System.Int32,System.Char[])">
             <summary>
             Возвращает индексы начала и конца первого вхождения указанного шаблона во входящей строке, начиная поиск с указанного индекса. 
             Подстрока считается совпавшей с шаблоном тогда и только тогда, когда она начинается с начального токена, заканчивается конечным токеном и 
@@ -1404,51 +1431,57 @@
             Содержит статические методы, возвращающие подстроки из входящих строк
             </summary>
         </member>
-        <member name="M:KlotosLib.StringTools.SubstringHelpers.SubstringFromEnd(System.String,System.Int32,System.Boolean,KlotosLib.StringTools.Direction)">
+        <member name="M:KlotosLib.StringTools.SubstringHelpers.SubstringFromEnd(System.String,System.Int32,System.Boolean)">
             <summary>
-            Возвращает подстроку входной строки указанной длины, отсчитывая её с конца. Позволяет указать порядок символов в возвращаемой подстроке, 
-            а также считывать ли строку до начала, если указанная длина превышает фактическую длину строки.
+            Возвращает подстроку входной строки указанной длины, отсчитывая её с конца. Позволяет определить, 
+            считывать ли строку до начала, если указанная длина превышает фактическую длину строки.
             </summary>
-            <param name="Input"></param>
-            <param name="Length"></param>
-            <param name="UntilStart"></param>
-            <param name="OutputDirection"></param>
+            <param name="Input">Входная строка, подстроку из которой слуедует возвратить</param>
+            <param name="Length">Желаемая длина возвращаемой подстроки</param>
+            <param name="UntilStart">Определяет поведение метода в случае, если желаемая длина больше фактической длины входной подстроки: 
+            'true' - возвратить входную строку; 'false' - выбросить исключение.</param>
             <returns></returns>
         </member>
-        <member name="M:KlotosLib.StringTools.SubstringHelpers.RemoveFromStartToEndToken(System.String,System.String,System.String,System.StringComparison)">
+        <member name="M:KlotosLib.StringTools.SubstringHelpers.RemoveFromStartToEndToken(System.String,System.String,System.String,System.Boolean,System.StringComparison)">
             <summary>
             Возвращает входную строку, из которой удалены все подстроки, начинающиеся с указанного начального токена 
             и заканчивающиеся ближайшим указанным конечным токеном. 
-            Удаляются как начальный и конечный токены, так и символы между ними.
             </summary>
             <param name="Input">Входящая строка, в которой происходит поиск.</param>
-            <param name="StartToken">Начальный токен (подстрока), которым начинается удаляемая строка</param>
-            <param name="EndToken">Конечный токен (подстрока), которым оканчивается удаляемая строка</param>
-            <param name="CompOpt"></param>
-            <returns>Новая строка. 
-            Если начальный и конечный токены одинаковы, или хотя бы один из них отсутствует в искомой строке, 
-            или исходная строка является NULL, пустой строкой либо содержит лишь пробелы, 
-            либо хотя бы один из токенов является NULL, пробелом или пустой строкой, метод выбрасывает исключение.</returns>
+            <param name="StartToken">Начальный токен (подстрока), которым начинается удаляемая подстрока. Не может быть NULL или пустым.</param>
+            <param name="EndToken">Конечный токен (подстрока), которым оканчивается удаляемая подстрока. Не может быть NULL или пустым.</param>
+            <param name="RemoveTokens">Определяет, следует ли удалить начальный и конечный токены вместе с удаляемой подстрокой (true) или же их следует оставить (false)</param>
+            <param name="CompOpt">Опции сравнения строк между собой</param>
+            <returns>Новая строка. Если не найдено ни одной пары начальныго и конечного токенов, возвращается оригинальная строка.
+            Если начальный и конечный токены одинаковы, или исходная строка является NULL, пустой строкой либо содержит лишь пробелы, 
+            либо хотя бы один из токенов является NULL или пустой строкой, метод выбрасывает исключение.</returns>
         </member>
-        <member name="M:KlotosLib.StringTools.SubstringHelpers.GetInnerStringBetweenTokens(System.String,System.String,System.String,System.Int32,System.StringComparison,System.Int32@)">
+        <member name="M:KlotosLib.StringTools.SubstringHelpers.GetInnerStringBetweenTokens(System.String,System.String,System.String,System.Int32,System.Int32,System.Boolean,KlotosLib.StringTools.Direction,System.StringComparison)">
             <summary>
-            Возвращает искомую подстроку из указанной исходной строки, которая размещена между указанным начальным и конечным токеном, причём указанные токены в неё не включаются. 
-            Ведёт поиск от начала до конца строки, начиная с указанной позиции, и возвращает первое попавшееся совпадение. 
+            Возвращает искомую подстроку из указанной исходной строки, которая размещена между указанным начальным и конечным токеном. 
+            Ведёт поиск токенов от начала или он указанной начальной позиции до конца строки, и возвращает первое попавшееся совпадение. 
             Если указанных токенов не найдено, возвращает NULL.
             </summary>
-            <param name="Input">Входная строка, содержащая токены, и внутри которой происходит поиск. Входная строка не может быть NULL, пустой или состоящей из одних пробелов.</param>
-            <param name="StartToken">Начальный токен</param>
-            <param name="EndToken">Конечный токен</param>
-            <param name="Offset">Позиция исходной строки. Если 0 - поиск ведётся с начала. Если меньше 0 или больше длины исходной строки, выбрасывается исключение.</param>
+            <param name="Input">Входная строка, содержащая токены, и внутри которой происходит поиск. Не может быть NULL, пустой или состоящей из одних пробелов.</param>
+            <param name="StartToken">Начальный токен. Не может быть NULL или пустой строкой.</param>
+            <param name="EndToken">Конечный токен. Не может быть NULL или пустой строкой.</param>
+            <param name="StartIndex">Начальная позиция исходной строки, с которой включительно начинается поиск. Если 0 - поиск ведётся с начала. 
+            Если меньше 0 или больше длины исходной строки, выбрасывается исключение.</param>
+            <param name="EndIndex">Конечная позиция исходной строки, на которой включительно останавливается поиск и за которую не выходит. 
+            Если больше фактической длины строки, 0 или меньше 0, поиск ведётся до конца строки. 
+            Если меньше или равно ненулевой начальной позиции, выбрасывается исключение.</param>
+            <param name="IncludeTokens">Определяет, следует ли включать начальный и конечный токены в возвращаемую подстроку (true) или нет (false)</param>
+            <param name="EndTokenSearchDirection">Задаёт направление поиска конечного токена после того, как найден начальный. 
+            FromEndToStart - поиск ведётся от самого конца входной строки и продвигается до найденного начального токена до тех пор, пока не найдёт конечный токен. 
+            FromStartToEnd - поиск ведётся от конца найденного начального токена до конца входной строки.</param>
             <param name="ComparisionOptions">Опции сравнения строк между собой</param>
-            <param name="Position">Выводной параметр, содержащий позицию искомой подстроки. Если токенов не найдено, или выброшено исключение, содержит -1.</param>
             <returns>NULL - если не нашло</returns>
         </member>
         <member name="M:KlotosLib.StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(System.String,System.String,System.String,System.Int32,System.StringComparison)">
             <summary>
-            Возвращает все искомые подстроки вместе с их позициями из указанной строки, которые находятся между указанными начальными и конечными токенами. 
+            Возвращает все искомые подстроки из указанной строки, которые находятся между указанными начальными и конечными токенами. 
             Поиск ведётся с начала до конца строки, начиная с указанной позиции, и возвращает все попавшиеся совпадения. 
-            Если указанных токенов не найдено, возвращает пустой словарь.
+            Если указанных токенов не найдено, возвращает пустой список подстрок.
             </summary>
             <param name="Input">Входная строка, содержащая токены, и внутри которой происходит поиск. Входная строка не может быть NULL, пустой или состоящей из одних пробелов.</param>
             <param name="StartToken">Начальный токен, не может быть NULL или пустой строкой</param>
@@ -1458,6 +1491,26 @@
             <param name="CompOpt">Опции сравнения строк между собой</param>
             <returns>Список подстрок. Если какая-либо из подстрок является пустой (т.е. между начальным и конечным токеном нет ни одного символа), 
             в списке она будет представлена значением NULL.</returns>
+        </member>
+        <member name="M:KlotosLib.StringTools.SubstringHelpers.GetInnerStringBetweenTokensSet(System.String,System.String[],System.String[],KlotosLib.StringTools.Direction,System.Int32,System.StringComparison)">
+            <summary>
+            Возвращает искомую подстроку из указанной строки, которые находятся между наборами указанных начальных и конечных токенов 
+            в правильной последовательности. Если каких-либо или всех указанных токенов не найдено, или их реальный порядок не совпадает с указанным, 
+            возвращается пустой список подстрок.
+            </summary>
+            <param name="Input">Входная строка, содержащая токены, и внутри которой происходит поиск. Входная строка не может быть NULL, пустой или состоящей из одних пробелов.</param>
+            <param name="StartTokens">Список начальных токенов в определённой последовательности, которая будет соблюдена при поиске подстрок. 
+            Не может быть NULL или пустым, но может содержать единственный элемент.</param>
+            <param name="EndTokens">Список конечных токенов в определённой последовательности, которая будет соблюдена при поиске подстрок. 
+            Не может быть NULL или пустым, но может содержать единственный элемент.</param>
+            <param name="EndTokensSearchDirection">Задаёт направление поиска конечных токенов после того, как найдены все начальные. 
+            FromEndToStart - поиск ведётся от самого конца строки и продвигается до последнего начального токена до тех пор, пока не найдёт все конечные токены. 
+            FromStartToEnd - поиск ведётся от конца последнего начального токена до конца строки.</param>
+            <param name="StartIndex">Позиция (включительная) начала поиска во входной строке. Если 0 - поиск ведётся с начала. 
+            Если меньше 0 или больше длины входной строки - выбрасывается исключение.</param>
+            <param name="CompOpt">Опции сравнения строк между собой</param>
+            <exception cref="T:System.ArgumentException"></exception>
+            <returns>Искомая подстрока. Если не найдена, возвращается NULL.</returns>
         </member>
         <member name="M:KlotosLib.StringTools.SubstringHelpers.GetSubstringToToken(System.String,System.String,System.Boolean,KlotosLib.StringTools.Direction,System.StringComparison)">
             <summary>
@@ -1551,14 +1604,14 @@
             Содержит статические методы, определяющие соответствие или несоответствие входной строки определённым критериям
             </summary>
         </member>
-        <member name="M:KlotosLib.StringTools.ValidatorHelpers.IsAllStringsNotNullEmptyWS(System.String[])">
+        <member name="M:KlotosLib.StringTools.ValidatorHelpers.AllStringsNotNullEmptyWS(System.String[])">
             <summary>
             Если метод возвращает "true" - ни одна из входных строк не является NULL, пустой или состоящей из одних пробелов. Иначе "false".
             </summary>
             <param name="Input"></param>
             <returns></returns>
         </member>
-        <member name="M:KlotosLib.StringTools.ValidatorHelpers.IsAllStringsHasVisibleChars(System.String[])">
+        <member name="M:KlotosLib.StringTools.ValidatorHelpers.AllStringsHaveVisibleChars(System.String[])">
             <summary>
             Определяет наличие видимых символов в наборе строк. Возвращает трит: если true - все до одной строки имеют видимые символы; если false - ни одна строка не имеет видимых символов; 
             если null - часть строк имеет видимые символы, а часть - нет. Для валидации строк используется метод HasVisibleChars.
@@ -1901,6 +1954,7 @@
             http://en.wikipedia.org/wiki/ICO_(file_format)
             </remarks>
             <param name="HeaderPart">Хидер файла - его первые 12 байт. Если содержит меньше 12 байт, выбрасывается исключение.</param>
+            <exception cref="T:System.ArgumentException"></exception>
             <returns></returns>
         </member>
         <member name="T:KlotosLib.ImageTools.ImageFormats">
@@ -2049,7 +2103,7 @@
             </summary>
             <param name="Source">Входная изменяемая строка, обрезанную слева часть которой следует возвратить. 
             Если пустая - будет возвращена без изменений. Если NULL, будет выброшено исключение.</param>
-            <param name="Start">Строка, равная подстроке, с которой может начинаеться входная изменяемая строка и которую следует обрезать. 
+            <param name="Start">Строка, равная подстроке, с которой может начинаться входная изменяемая строка и которую следует обрезать. 
             Если NULL, пустая, или больше длины входной строки, будет возвращена входная строка без изменений.</param>
             <param name="IgnoreCase">Определяет, игнорировать ли при сравнении символов регистр литер. true - игнорировать, false - принимать во внимание.</param>
             <param name="Recursive">Определяет, необходимо ли после первой обрезки проанализировать начало строки на совпадение ещё раз</param>
@@ -2099,7 +2153,7 @@
             <summary>
             Читает содержимое из указанного потока до достижении его конца и возвращает прочитанные данные внутри байтового массива
             </summary>
-            <remarks>Code sample: Jon Skeet http://www.yoda.arachsys.com/csharp/readbinary.html</remarks>
+            <remarks>Code sample: Jon Skeet http://www.yoda.arachsys.com/csharp/readbinary.html </remarks>
             <param name="SourceStream">Поток, из которого нужно считать данные. Должен поддерживать чтение и при определённом значении параметра должен поддерживать поиск.</param>
             <param name="ResetPosition">Определяет, необходимо ли обнулить позицию ползунка в потоке <paramref name="SourceStream"/> перед началом чтения из него. 
             Если true - позиция обнуляется и поток читается с начала, однако в этом случае поток должен поддерживать операцию поиска (перемещения ползунка). 
@@ -2109,7 +2163,7 @@
             <summary>
             Читает содержимое из указанного потока до достижении его конца и возвращает прочитанные данные внутри байтового массива. Для перекачки данных использует буфер указанного размера.
             </summary>
-            <remarks>Code sample: Jon Skeet http://www.yoda.arachsys.com/csharp/readbinary.html</remarks>
+            <remarks>Code sample: Jon Skeet http://www.yoda.arachsys.com/csharp/readbinary.html </remarks>
             <param name="SourceStream">Поток, из которого нужно считать данные. Должен поддерживать чтение и при определённом значении параметра должен поддерживать поиск.</param>
             <param name="InitialLength">приблизительный начальный размер внутреннего буфера в байтах</param>
             <param name="ResetPosition">Определяет, необходимо ли обнулить (сбросить) позицию ползунка в потоке <paramref name="SourceStream"/> перед началом чтения из него. 
@@ -2601,6 +2655,20 @@
             Содержит статические чистые методы по работе с XML и HTML
             </summary>
         </member>
+        <member name="M:KlotosLib.HtmlTools.GetAttributesForTag(System.String,System.String,System.Int32)">
+            <summary>
+            Возвращает все атрибуты вместе с их соответствующими значениями для указанного по имени тэга. 
+            Если тэгов несколько, будут возвращены атрибуты для первого встретившегося тэга.
+            </summary>
+            <param name="InputHTML">Входная HTML-содержащая строка. Не может быть NULL, пустой строкой или не содержать цифробуквенных символов.</param>
+            <param name="TargetTagName">Имя целевого тэга, все атрибуты со значениями которого следует возвратить. 
+            Не может быть NULL, пустой строкой или не содержать цифробуквенных символов.</param>
+            <param name="StartIndex">Начальная позиция входной HTML-содержащей строки, с которой следует начать поиск. Если 0 - поиск ведётся с начала. 
+            Если меньше 0 или больше длины исходной строки, выбрасывается исключение.</param>
+            <returns>Список атрибутов вместе с их соответствующими значениями для указанного тэга в виде словаря, 
+            где ключ - атрибут, а его значение - значение атрибута. Если целевой тэг не найден, возвращает NULL. 
+            Если тэг найден, но он не содержит атрибутов, возвращается пустой словарь.</returns>
+        </member>
         <member name="M:KlotosLib.HtmlTools.RemoveHTMLTags(System.String)">
             <summary>
             Удаляет из входной строки все одинарные и парные HTML-тэги с их атрибутами, оставляя их содержимое. Если входная строка не содержит HTML-тэгов, метод возвращает её без изменений. 
@@ -2962,11 +3030,6 @@
             <param name="Culture">Культура, с учётом которой ведётся поиск. Если NULL - будет применена инвариантная культура.</param>
             <returns></returns>
             <exception cref="T:System.ArgumentException">Входная строка или искомая подстрока является NULL или пустой</exception>
-        </member>
-        <member name="M:KlotosLib.StringExtensionMethods.ReverseString(System.String)">
-            <summary>
-            Возвращает новую строку, символы в которой расположены в обратном порядке по сравнению с исходной строкой.
-            </summary>
         </member>
         <member name="M:KlotosLib.StringExtensionMethods.MultiReplace(System.String,System.String,System.Char[])">
             <summary>

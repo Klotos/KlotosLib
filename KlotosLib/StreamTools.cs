@@ -11,7 +11,7 @@ namespace KlotosLib
         /// <summary>
         /// Читает содержимое из указанного потока до достижении его конца и возвращает прочитанные данные внутри байтового массива
         /// </summary>
-        /// <remarks>Code sample: Jon Skeet http://www.yoda.arachsys.com/csharp/readbinary.html</remarks>
+        /// <remarks>Code sample: Jon Skeet http://www.yoda.arachsys.com/csharp/readbinary.html </remarks>
         /// <param name="SourceStream">Поток, из которого нужно считать данные. Должен поддерживать чтение и при определённом значении параметра должен поддерживать поиск.</param>
         /// <param name="ResetPosition">Определяет, необходимо ли обнулить позицию ползунка в потоке <paramref name="SourceStream"/> перед началом чтения из него. 
         /// Если true - позиция обнуляется и поток читается с начала, однако в этом случае поток должен поддерживать операцию поиска (перемещения ползунка). 
@@ -42,7 +42,7 @@ namespace KlotosLib
         /// <summary>
         /// Читает содержимое из указанного потока до достижении его конца и возвращает прочитанные данные внутри байтового массива. Для перекачки данных использует буфер указанного размера.
         /// </summary>
-        /// <remarks>Code sample: Jon Skeet http://www.yoda.arachsys.com/csharp/readbinary.html</remarks>
+        /// <remarks>Code sample: Jon Skeet http://www.yoda.arachsys.com/csharp/readbinary.html </remarks>
         /// <param name="SourceStream">Поток, из которого нужно считать данные. Должен поддерживать чтение и при определённом значении параметра должен поддерживать поиск.</param>
         /// <param name="InitialLength">приблизительный начальный размер внутреннего буфера в байтах</param>
         /// <param name="ResetPosition">Определяет, необходимо ли обнулить (сбросить) позицию ползунка в потоке <paramref name="SourceStream"/> перед началом чтения из него. 
@@ -240,8 +240,8 @@ namespace KlotosLib
             if (SourceStream == null) { throw new ArgumentNullException("SourceStream"); }
             if (SourceStream.CanRead == false) { throw new ArgumentException("Входной поток не поддерживает чтение", "SourceStream"); }
             if (FilePath == null) { throw new ArgumentNullException("FilePath"); }
-            if (FilePath.HasAlphaNumericChars() == false) { throw new ArgumentException("Путь = '" + FilePath + "' некорректен", "FilePath"); }
-
+            if(FilePathTools.IsValidFilePath(FilePath)==false) { throw new ArgumentException("Путь = '" + FilePath + "' некорректен", "FilePath"); }
+            
             using (FileStream fs = new FileStream(FilePath, FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 fs.Seek(0, SeekOrigin.Begin);

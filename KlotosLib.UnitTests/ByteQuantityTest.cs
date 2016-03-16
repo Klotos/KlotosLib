@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Globalization;
 using NUnit.Framework;
 
 namespace KlotosLib.UnitTests
 {
-    [TestFixture]
+    [NUnit.Framework.TestFixture]
     class ByteQuantityTest
     {
         [TestCase(0L, Result="0 Bytes")]
@@ -79,7 +80,8 @@ namespace KlotosLib.UnitTests
         [TestCase(43, 3, false, Result = "43 B")]
         public String ToStringWithBinaryPrefix(Int64 Bytes, Byte Precision, Boolean Separator)
         {
-            return ByteQuantity.FromBytes(Bytes).ToStringWithBinaryPrefix(Precision, Separator);
+            return ByteQuantity.FromBytes(Bytes).ToStringWithBinaryPrefix(Precision, 
+                Separator ? ByteQuantity.DecimalSeparatorSign.Point : ByteQuantity.DecimalSeparatorSign.Comma);
         }
 
         [TestCase(1000L + 998L, 0, true, Result="2 KB")]
@@ -99,7 +101,8 @@ namespace KlotosLib.UnitTests
         [TestCase(43, 3, false, Result = "43 B")]
         public String ToStringWithDecimalPrefixTest(Int64 Bytes, Byte Precision, Boolean Separator)
         {
-            return ByteQuantity.FromBytes(Bytes).ToStringWithDecimalPrefix(Precision, Separator);
+            return ByteQuantity.FromBytes(Bytes).ToStringWithDecimalPrefix(Precision, 
+                Separator ? ByteQuantity.DecimalSeparatorSign.Point : ByteQuantity.DecimalSeparatorSign.Comma);
         }
 
         [TestCase(2048L, 2048L, true, Result = true)]
@@ -162,6 +165,50 @@ namespace KlotosLib.UnitTests
         public Int64 OperatorMinus(Int64 First, Int64 Second)
         {
             return (ByteQuantity.FromBytes(First) - ByteQuantity.FromBytes(Second)).Bytes;
+        }
+
+        [NUnit.Framework.Test]
+        public void ConversionTest()
+        {
+            ByteQuantity value = ByteQuantity.FromGibibytes(100);
+            try
+            {
+                int converted = Convert.ToInt32(value);
+            }
+            catch (OverflowException ex)
+            {
+                Assert.AreEqual("Невозможно конвертировать значение в тип System.Int32, так как его максимальное значение "+Int32.MaxValue+
+                    " меньше текущего значения экземпляра " + value.Bytes, ex.Message);
+            }
+            try
+            {
+                sbyte converted = Convert.ToSByte(value);
+            }
+            catch (OverflowException ex)
+            {
+                Assert.AreEqual("Невозможно конвертировать значение в тип System.SByte, так как его максимальное значение " + SByte.MaxValue +
+                    " меньше текущего значения экземпляра " + value.Bytes, ex.Message);
+            }
+        }
+
+        [NUnit.Framework.TestCase(100, Result = "104\u00A0857\u00A0600 Bytes")]
+        [NUnit.Framework.TestCase(200, Result = "209\u00A0715\u00A0200 Bytes")]
+        public String ToStringTest(Int32 Mebibytes)
+        {
+            ByteQuantity value = ByteQuantity.FromMebibytes(Mebibytes);
+            return value.ToString();
+        }
+
+        [NUnit.Framework.Test]
+        public void ToStringCultureTest()
+        {
+            ByteQuantity value = ByteQuantity.FromMebibytes(100);
+
+            String actual1 = value.ToString(CultureInfo.GetCultureInfo("ru-RU"));
+            Assert.AreEqual("104857600 Bytes", actual1);
+
+            String actual2 = value.ToString(CultureInfo.GetCultureInfo("en-US"));
+            Assert.AreEqual("104857600 Bytes", actual2);
         }
     }
 }

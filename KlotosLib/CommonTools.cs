@@ -121,7 +121,6 @@ namespace KlotosLib
         public static void Swap2Types<T>(ref T Value1, ref T Value2) where T : class
         {
             if (Object.ReferenceEquals(Value1, Value2) == true) { return; }
-            if (Object.ReferenceEquals(null, Value1) == true && Object.ReferenceEquals(null, Value2) == true) { return; }
             T temp = Value1;
             Value1 = Value2;
             Value2 = temp;
@@ -136,7 +135,7 @@ namespace KlotosLib
         {
             if (Source.HasVisibleChars() == false) { return null; }
             String temp = Source.CleanString().Trim();
-            StringComparison option = StringComparison.OrdinalIgnoreCase;
+            const StringComparison option = StringComparison.OrdinalIgnoreCase;
             if (temp.Equals("true", option) == true ||
                 temp.Equals("1", option) == true ||
                 temp.Equals("+", option) == true)
@@ -274,7 +273,7 @@ namespace KlotosLib
             }
             if (Source.Length < 1)
             {
-                throw new ArgumentException("невозможно сконвертировать файл, не содержащий ни одного байта", "Source");
+                throw new ArgumentException("Невозможно сконвертировать файл, не содержащий ни одного байта", "Source");
             }
             Byte[] output = new byte[Source.Length];
             using (FileStream fs = new FileStream(Source.FullName, FileMode.Open, FileAccess.Read))
