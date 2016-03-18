@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using KlotosLib.StringTools;
 using NUnit.Framework;
 
 namespace KlotosLib.UnitTests
@@ -163,7 +164,7 @@ namespace KlotosLib.UnitTests
         [TestCase("aa11bbb-2 end", 0, false, Result = 11)]
         public Nullable<UInt32> GetNearestUnsignedIntegerFromString1(String Input, Byte Direction, Boolean RE)
         {
-            return StringTools.StringAnalyzers.GetNearestUnsignedIntegerFromString(Input, (StringTools.Direction)Direction, RE);
+            return StringTools.StringAnalyzers.GetNearestUnsignedIntegerFromString(Input, (Direction)Direction, RE);
         }
 
         [TestCase(" ", 0, Result = null, ExpectedException = typeof(ArgumentException))]

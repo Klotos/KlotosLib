@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
+using System.Text;
 
-namespace KlotosLib
+namespace KlotosLib.StringTools
 {
     /// <summary>
     /// Содержит методы расширения для строкового типа

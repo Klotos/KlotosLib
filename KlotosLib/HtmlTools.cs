@@ -7,6 +7,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Web;
+using KlotosLib.StringTools;
 
 namespace KlotosLib
 {

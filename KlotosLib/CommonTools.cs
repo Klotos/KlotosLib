@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using KlotosLib.StringTools;
 
 namespace KlotosLib
 {
@@ -260,11 +261,11 @@ namespace KlotosLib
         }
 
         /// <summary>
-        /// Конвертирует входной файл в байтовый массив. Если указанный файл отсутствует или недоступен, генерируется исключение.
+        /// Конвертирует входной файл в байтовый массив. Если указанный файл отсутствует или недоступен, выбрасывается исключение.
         /// </summary>
         /// <param name="Source">Объект FileInfo, содержащимй информацию о файле, который необходимо сконвертировать</param>
         /// <returns></returns>
-        public static Byte[] ConvertToByteArray(this FileInfo Source)
+        public static Byte[] ConvertToByteArray(this System.IO.FileInfo Source)
         {
             if (Source == null) {throw new ArgumentNullException("Source");}
             if (Source.Exists == false)
@@ -273,7 +274,7 @@ namespace KlotosLib
             }
             if (Source.Length < 1)
             {
-                throw new ArgumentException("Невозможно сконвертировать файл, не содержащий ни одного байта", "Source");
+                return new Byte[0]{};
             }
             Byte[] output = new byte[Source.Length];
             using (FileStream fs = new FileStream(Source.FullName, FileMode.Open, FileAccess.Read))

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using KlotosLib.StringTools;
 
 namespace KlotosLib
 {

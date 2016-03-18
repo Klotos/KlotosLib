@@ -44,10 +44,10 @@ namespace KlotosLib.UnitTests
             return StringTools.ContainsHelpers.ContainsAllAndOnlyOf(Input, Seek);
         }
 
-        [TestCase("ef ef abcd", new Char[4] {'a', 'b', 'c', 'd'}, new Char[6] { 'e', 'f', 'g', 'h', 'i', ' ' }, Result = true)]
-        [TestCase("ef ef abcdx", new Char[4] { 'a', 'b', 'c', 'd' }, new Char[6] { 'e', 'f', 'g', 'h', 'i', ' ' }, Result = false)]
-        [TestCase("ef ef abcd", new Char[0] { }, new Char[6] { 'e', 'f', 'g', 'h', 'i', ' ' }, Result = true, ExpectedException = typeof(ArgumentException))]
-        [TestCase("", new Char[4] { 'a', 'b', 'c', 'd' }, new Char[6] { 'e', 'f', 'g', 'h', 'i', ' ' }, Result = false, ExpectedException = typeof(ArgumentException))]
+        [TestCase("ef ef abcd", new Char[4] { 'a', 'b', 'c', 'd' }, new Char[6] { 'e', 'f', 'g', 'h', 'i', ' ' }, ExpectedResult = true)]
+        [TestCase("ef ef abcdx", new Char[4] { 'a', 'b', 'c', 'd' }, new Char[6] { 'e', 'f', 'g', 'h', 'i', ' ' }, ExpectedResult = false)]
+        [TestCase("ef ef abcd", new Char[0] { }, new Char[6] { 'e', 'f', 'g', 'h', 'i', ' ' }, ExpectedException = typeof(ArgumentException))]
+        [TestCase("", new Char[4] { 'a', 'b', 'c', 'd' }, new Char[6] { 'e', 'f', 'g', 'h', 'i', ' ' }, ExpectedException = typeof(ArgumentException))]
         public Boolean ContainsAllRequiredAndOnlyAcceptedTest(String Input, Char[] Requred, Char[] Accepted)
         {
             return StringTools.ContainsHelpers.ContainsAllRequiredAndOnlyAccepted(Input, Requred, Accepted);

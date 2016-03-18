@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using Encoder = System.Drawing.Imaging.Encoder;
 using System.ComponentModel;
+using KlotosLib.StringTools;
 
 namespace KlotosLib
 {

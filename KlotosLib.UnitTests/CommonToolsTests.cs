@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
@@ -161,6 +162,15 @@ namespace KlotosLib.UnitTests
             return Input.ToStringS(IfNull, IfFail);
         }
 
+        [Test]
+        public void ConvertToByteArray()
+        {
+            System.IO.FileInfo fi1 = null;
+            Assert.Throws<ArgumentNullException>(delegate { Byte[] result = fi1.ConvertToByteArray(); });
+            fi1 = new FileInfo(@"Z:\Some\non_existing\path\to.file");
+            Assert.Throws<FileNotFoundException>(delegate { Byte[] result = fi1.ConvertToByteArray(); });
+        }
+
         [TestCase("stub1", new String[2] { "a", "a"}, Result = true)]
         [TestCase("stub2", new String[3] { "a", "a", "a" }, Result = true)]
         [TestCase("stub3", new String[3] { "a", "a", "A" }, Result = false)]        
@@ -170,25 +180,25 @@ namespace KlotosLib.UnitTests
         {
             return CommonTools.AreAllEqual(list);
         }
-
-        [TestCase('a', 'a', false, Result=true)]
-        [TestCase('a', 'A', false, Result = false)]
-        [TestCase('a', 'A', true, Result = true)]
-        [TestCase('a', 'b', false, Result = false)]
-        [TestCase('a', 'B', true, Result = false)]
+        
+        [TestCase('a', 'a', false, ExpectedResult = true)]
+        [TestCase('a', 'A', false, ExpectedResult = false)]
+        [TestCase('a', 'A', true, ExpectedResult = true)]
+        [TestCase('a', 'b', false, ExpectedResult = false)]
+        [TestCase('a', 'B', true, ExpectedResult = false)]
         public Boolean AreCharsEqual(Char First, Char Second, Boolean IgnoreCase)
         {
             return CommonTools.AreCharsEqual(First, Second, IgnoreCase);
         }
 
-        [TestCase(false, 'a', 'a', Result = true)]
-        [TestCase(false, 'a', 'a', 'a', Result=true)]
-        [TestCase(false, 'a', 'a', 'A', Result = false)]
-        [TestCase(true, 'a', 'a', 'A', Result = true)]
-        [TestCase(true, 'a', 'b', 'A', 'c', Result = false)]
-        [TestCase(true, 'x', 'x', 'X', 'X', Result = true)]
-        [TestCase(true, 'x', Result = true, ExpectedException = typeof(ArgumentException))]
-        [TestCase(true, new Char[0]{}, Result = true, ExpectedException = typeof(ArgumentException))]        
+        [TestCase(false, 'a', 'a', ExpectedResult = true)]
+        [TestCase(false, 'a', 'a', 'a', ExpectedResult = true)]
+        [TestCase(false, 'a', 'a', 'A', ExpectedResult = false)]
+        [TestCase(true, 'a', 'a', 'A', ExpectedResult = true)]
+        [TestCase(true, 'a', 'b', 'A', 'c', ExpectedResult = false)]
+        [TestCase(true, 'x', 'x', 'X', 'X', ExpectedResult = true)]
+        [TestCase(true, 'x', ExpectedException = typeof(ArgumentException))]
+        [TestCase(true, new Char[0]{}, ExpectedException = typeof(ArgumentException))]        
         public Boolean AreCharsEqual(Boolean IgnoreCase, params Char[] Chars)
         {
             return CommonTools.AreCharsEqual(IgnoreCase, Chars);

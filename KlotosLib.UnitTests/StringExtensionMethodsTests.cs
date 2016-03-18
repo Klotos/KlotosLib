@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using KlotosLib.StringTools;
 using NUnit.Framework;
 
 namespace KlotosLib.UnitTests

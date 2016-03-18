@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace KlotosLib
+namespace KlotosLib.StringTools
 {
     /// <summary>
     /// Содержит методы расширения для изменяемого строкового типа StringBuilder

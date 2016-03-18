@@ -29,6 +29,8 @@ namespace KlotosLib.UnitTests
             return StringTools.ValidatorHelpers.IsValidGuid(Input);
         }
 
+        [TestCase((String)null, Result = false)]
+        [TestCase("  ", Result = false)]
         [TestCase("ned80@i.ua", Result = true)]
         [TestCase(" ned80@i.ua  \r\n", Result = false)]
         [TestCase("ned80@ua", Result = true)]
