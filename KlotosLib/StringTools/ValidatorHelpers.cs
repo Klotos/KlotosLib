@@ -49,10 +49,11 @@ namespace KlotosLib.StringTools
                 }
             }
             Int32 input_count = Input.Length;
-            if (visible_count > 0 && invisible_count > 0) { return null; }
             if (visible_count == input_count) { return true; }
             if (invisible_count == input_count) { return false; }
-            throw new UnreachableCodeException();
+
+            //if (visible_count > 0 && invisible_count > 0)
+            return null;
         }
 
         /// <summary>

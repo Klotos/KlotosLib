@@ -60,7 +60,7 @@ namespace KlotosLib.UnitTests
 
             Substring ss6 = Substring.FromIndexToIndex(base_str1, 7, 9);
             replacement_list1.Add(ss6, "bad");
-            Assert.Throws<InvalidOperationException>(
+            Assert.Throws<ArgumentException>(
                 delegate { String output5 = StringTools.StringModifiers.ReplaceAll(base_str1, replacement_list1); });
 
             Substring ss7 = Substring.FromIndexToIndex("012345", 2, 3);
@@ -68,6 +68,18 @@ namespace KlotosLib.UnitTests
             ArgumentException expected_exception = Assert.Throws<ArgumentException>(
                 delegate { String output6 = StringTools.StringModifiers.ReplaceAll(base_str1, replacement_list1); });
             Assert.AreEqual("ReplacementList" ,expected_exception.ParamName);
+
+            const String base_str2 = "abcdefghijklmnop";
+            Substring ss8 = Substring.FromIndexToIndex(base_str2, 2, 3);
+            Substring ss9 = Substring.FromIndexToIndex(base_str2, 6, 9);
+
+            IDictionary<Substring, String> replacement_list3 = new Dictionary<Substring, string>()
+            {
+                {ss8, "_first_"},
+                {ss9, "_second_"}
+            };
+            String output7 = StringTools.StringModifiers.ReplaceAll(base_str2, replacement_list3);
+            Assert.AreEqual("ab_first_ef_second_klmnop", output7);
         }
     }
 }

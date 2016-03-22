@@ -249,13 +249,13 @@ namespace KlotosLib
             int destHeight = dest_size.Height;
 
             Bitmap b = new Bitmap(destWidth, destHeight);
-            Graphics g = Graphics.FromImage((Image)b);
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            using (Graphics g = Graphics.FromImage((Image) b))
+            {
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            g.DrawImage(ImageToResize, 0, 0, destWidth, destHeight);
-            g.Dispose();
-
+                g.DrawImage(ImageToResize, 0, 0, destWidth, destHeight);
+            }
             return b;
         }
 
@@ -493,7 +493,7 @@ namespace KlotosLib
                 case ImageFormats.JPEG:
                     return ImageFormat.Jpeg;
                 case ImageFormats.PNG:
-                    return ImageFormat.Jpeg;
+                    return ImageFormat.Png;
                 case ImageFormats.GIF:
                     return ImageFormat.Gif;
                 case ImageFormats.TIFF:

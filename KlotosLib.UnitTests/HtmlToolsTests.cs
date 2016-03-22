@@ -51,9 +51,9 @@ namespace KlotosLib.UnitTests
                 "</select></p>";
             Dictionary<String, String> output2_1 = HtmlTools.GetAttributesForTag(input_HTML_2, " select", 0);
             Dictionary<String, String> output2_2 = HtmlTools.GetAttributesForTag(input_HTML_2, " option ", 36);
-            Dictionary<String, String> output2_3 = HtmlTools.GetAttributesForTag(input_HTML_2, "option", 80);
+            Dictionary<String, String> output2_3 = HtmlTools.GetAttributesForTag(input_HTML_2, "<option", 80);
             Dictionary<String, String> output2_4 = HtmlTools.GetAttributesForTag(input_HTML_2, "Option", 120);
-            Dictionary<String, String> output2_5 = HtmlTools.GetAttributesForTag(input_HTML_2, "OPTION ", 190);
+            Dictionary<String, String> output2_5 = HtmlTools.GetAttributesForTag(input_HTML_2, "<OPTION ", 190);
 
             Dictionary<String, String> expected2_1 = new Dictionary<string, string>(2)
             {

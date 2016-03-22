@@ -38,7 +38,11 @@ namespace KlotosLib
             if (StartIndex < 0) { throw new ArgumentOutOfRangeException("StartIndex", StartIndex, "Начальная позиция не может быть меньше 0"); }
             if (StartIndex >= InputHTML.Length)
             { throw new ArgumentOutOfRangeException("StartIndex", StartIndex, String.Format("Начальная позиция ('{0}') не может быть больше или равна длине строки ('{1}')", StartIndex, InputHTML.Length)); }
-            String cleared_tag_name = "<" + TargetTagName.Trim().ToLowerInvariant();
+            String cleared_tag_name = TargetTagName.Trim().ToLowerInvariant();
+            if (cleared_tag_name.StartsWith("<") == false)
+            {
+                cleared_tag_name = "<" + cleared_tag_name;
+            }
             Int32 tag_start_pos = InputHTML.IndexOf(cleared_tag_name, StartIndex, StringComparison.OrdinalIgnoreCase);
             if (tag_start_pos == -1)
             {
@@ -183,10 +187,9 @@ namespace KlotosLib
         public static String RemoveHTMLTags(String InputHTML)
         {
             if (InputHTML.HasVisibleChars() == false) { return InputHTML; }
-            if (StringTools.ContainsHelpers.ContainsAllOf(InputHTML, new char[] { '<', '>' }) == false) { return InputHTML; }
+            
             List<Substring> tags_with_positions = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(InputHTML, "<", ">", 0, StringComparison.OrdinalIgnoreCase);
             if (tags_with_positions.Any() == false || tags_with_positions.TrueForAll((Substring item) => item == null)) { return InputHTML; }
-
             StringBuilder temp = new StringBuilder(InputHTML.Length);
             Int32 start_position = 0;
 
@@ -194,7 +197,6 @@ namespace KlotosLib
             {
                 if (one_possible_tag == null)
                 {
-                    //temp.Append(InputHTML.Substring(start_position));
                     continue;
                 }
                 if (CommonTools.AreAllEqual<Int32>(start_position, one_possible_tag.StartIndex - 1, 0) == true ||

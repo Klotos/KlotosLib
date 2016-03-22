@@ -6,22 +6,27 @@ namespace KlotosLib.UnitTests
     [TestFixture]
     class StringToolsValidatorHelpersTests
     {
-        [TestCase("ab", "c", " d ", ExpectedResult = true)]
-        [TestCase("ab", "c", "  ", ExpectedResult = false)]
-        [TestCase("ab", "c", "", ExpectedResult = false)]
-        public Boolean AllStringsNotNullEmptyWS(params String[] Input)
+        [TestCase(0, new String[]{"ab", "c", " d "}, ExpectedResult = true)]
+        [TestCase(0, "ab", "c", "  ", ExpectedResult = false)]
+        [TestCase(0, "ab", "c", "", ExpectedResult = false)]
+        [TestCase(0, new String[0]{}, ExpectedResult = false)]
+        public Boolean AllStringsNotNullEmptyWS(Int32 Dummy, params String[] Input)
         {
             return StringTools.ValidatorHelpers.AllStringsNotNullEmptyWS(Input);
         }
 
-        [TestCase("ab", "c", " d ", ExpectedResult = true)]
-        [TestCase("ab", "c", "\r\n", ExpectedResult = null)]
-        [TestCase("", "  ", "\n", ExpectedResult = false)]
-        public Nullable<Boolean> AllStringsHaveVisibleChars(params String[] Input)
+        [TestCase(0, "ab", "c", " d ", ExpectedResult = true)]
+        [TestCase(0, "ab", "c", "\r\n", ExpectedResult = null)]
+        [TestCase(0, "", "  ", "\n", ExpectedResult = false)]
+        [TestCase(0, "ab", ExpectedResult = true)]
+        [TestCase(0, new String[0] { }, ExpectedException = typeof(ArgumentException))]
+        public Nullable<Boolean> AllStringsHaveVisibleChars(Int32 Dummy, params String[] Input)
         {
             return StringTools.ValidatorHelpers.AllStringsHaveVisibleChars(Input);
         }
 
+        [TestCase((String)null, ExpectedResult = false)]
+        [TestCase("", ExpectedResult = false)]
         [TestCase("{42A00C74-BCAB-435E-AFD8-DDE0E12DEAE0}", ExpectedResult = true)]
         [TestCase("{42A00C74-435E-AFD8-DDE0E12DEAE0}", ExpectedResult = false)]
         public Boolean IsValidGuid(String Input)

@@ -28,6 +28,78 @@ namespace KlotosLib.StringTools
 
         #region Factories
         /// <summary>
+        /// Создаёт и возвращает подстроку, которая основана на указанной базовой строке, и отсчитывается от начала базовой строки на указанное количество символов. 
+        /// Дополнительный параметр позволяет определить, как поступать в случае, если указанное количество символов превышает длину базовой строки.
+        /// </summary>
+        /// <param name="BaseStr">Базовая строка. Если NULL или пустая - будет выброшено исключение.</param>
+        /// <param name="Length">Длина подстроки в базовой строке. Если 0 или меньше 0, будет выброшено исключение. 
+        /// Если больше фактической длины базовой строки, поведение метода будет зависеть от последующего параметра <paramref name="UntilEnd"/>.</param>
+        /// <param name="UntilEnd">Определяет, как поступать в случае, если указанная длина подстроки больше фактической длины базовой строки. 
+        /// Если 'true' - подстрока будет расширена до конца базовой строки, фактически занимая её всю, полностью. 
+        /// Если 'false' - будет выброшено исключение.</param>
+        /// <returns>Новая подстрока</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static Substring FromStartWithLength(String BaseStr, Int32 Length, Boolean UntilEnd)
+        {
+            if (BaseStr == null) { throw new ArgumentNullException("BaseStr", "Базовая строка не может быть NULL"); }
+            if (BaseStr.Length == 0) { throw new ArgumentException("Базовая строка не может быть пустой", "BaseStr"); }
+            if (Length < 0) { throw new ArgumentOutOfRangeException("Length", Length, "Длина подстроки не может быть отрицательным числом"); }
+            if (Length == 0) { throw new ArgumentOutOfRangeException("Length", Length, "Длина подстроки не может иметь нулевую длину"); }
+            Int32 actual_substr_len = Length;
+            if (Length > BaseStr.Length)
+            {
+                if (UntilEnd == false)
+                {
+                    throw new ArgumentOutOfRangeException("Length", Length, 
+                        String.Format("Запрошенная длина подстроки ({0} символов) превышает фактическую длину базовой строки ({1} символов)", Length, BaseStr.Length));
+                }
+                else
+                {
+                    actual_substr_len = BaseStr.Length;
+                }
+            }
+            return new Substring(BaseStr, 0, actual_substr_len);
+        }
+
+        /// <summary>
+        /// Создаёт и возвращает подстроку, которая основана на указанной базовой строке, и отсчитывается от конца базовой строки на указанное количество символов. 
+        /// Дополнительный параметр позволяет определить, как поступать в случае, если указанное количество символов превышает длину базовой строки.
+        /// </summary>
+        /// <param name="BaseStr">Базовая строка. Если NULL или пустая - будет выброшено исключение.</param>
+        /// <param name="Length">Длина подстроки в базовой строке. Если 0 или меньше 0, будет выброшено исключение. 
+        /// Если больше фактической длины базовой строки, поведение метода будет зависеть от последующего параметра <paramref name="UntilStart"/>.</param>
+        /// <param name="UntilStart">Определяет, как поступать в случае, если указанная длина подстроки больше фактической длины базовой строки. 
+        /// Если 'true' - подстрока будет расширена до начала базовой строки, фактически занимая её всю, полностью. 
+        /// Если 'false' - будет выброшено исключение.</param>
+        /// <returns>Новая подстрока</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static Substring FromEndWithLength(String BaseStr, Int32 Length, Boolean UntilStart)
+        {
+            if (BaseStr == null) { throw new ArgumentNullException("BaseStr", "Базовая строка не может быть NULL"); }
+            if (BaseStr.Length == 0) { throw new ArgumentException("Базовая строка не может быть пустой", "BaseStr"); }
+            if (Length < 0) { throw new ArgumentOutOfRangeException("Length", Length, "Длина подстроки не может быть отрицательным числом"); }
+            if (Length == 0) { throw new ArgumentOutOfRangeException("Length", Length, "Длина подстроки не может иметь нулевую длину"); }
+            Int32 actual_substr_len = Length;
+            if (Length > BaseStr.Length)
+            {
+                if (UntilStart == false)
+                {
+                    throw new ArgumentOutOfRangeException("Length", Length,
+                        String.Format("Запрошенная длина подстроки ({0} символов) превышает фактическую длину базовой строки ({1} символов)", Length, BaseStr.Length));
+                }
+                else
+                {
+                    actual_substr_len = BaseStr.Length;
+                }
+            }
+            return new Substring(BaseStr, BaseStr.Length - actual_substr_len, actual_substr_len);
+        }
+
+        /// <summary>
         /// Создаёт и возвращает подстроку, основанную на указанной базовой строке, имеющую указанные начальный индекс и длину
         /// </summary>
         /// <param name="BaseStr">Базовая строка. Если NULL или пустая - будет выброшено исключение.</param>
@@ -38,15 +110,21 @@ namespace KlotosLib.StringTools
         /// <exception cref="ArgumentException"></exception>
         public static Substring FromIndexWithLength(String BaseStr, Int32 StartIndex, Int32 Length)
         {
-            if (BaseStr == null) {throw new ArgumentNullException("BaseStr", "Базовая строка не может быть NULL");}
-            if (BaseStr.Length == 0) {throw new ArgumentException("Базовая строка не может быть пустой", "BaseStr");}
-            if (StartIndex < 0) {throw new ArgumentOutOfRangeException("StartIndex", StartIndex, "Начальный индекс подстроки не может быть отрицательным числом");}
+            if (BaseStr == null) { throw new ArgumentNullException("BaseStr", "Базовая строка не может быть NULL"); }
+            if (BaseStr.Length == 0) { throw new ArgumentException("Базовая строка не может быть пустой", "BaseStr"); }
+            if (StartIndex < 0) { throw new ArgumentOutOfRangeException("StartIndex", StartIndex, "Начальный индекс подстроки не может быть отрицательным числом"); }
             if (Length < 0) { throw new ArgumentOutOfRangeException("Length", Length, "Длина подстроки не может быть отрицательным числом"); }
             if (Length == 0) { throw new ArgumentOutOfRangeException("Length", Length, "Длина подстроки не может иметь нулевую длину"); }
-            if (StartIndex >= BaseStr.Length) {throw new ArgumentOutOfRangeException("StartIndex", StartIndex, String.Format(
-                "Начальный индекс подстроки '{0}' не может быть больше, чем максимально возможный индекс в базовой строке '{1}'", StartIndex, BaseStr.Length-1)); }
-            if (StartIndex+Length > BaseStr.Length) {throw new ArgumentException(String.Format("Результат сложения начального индекса '{0}' и длины '{1}' "+
-                "подстроки = '{2}' не может превышать длину базовой строки '{3}'", StartIndex, Length, StartIndex+Length, BaseStr.Length));}
+            if (StartIndex >= BaseStr.Length)
+            {
+                throw new ArgumentOutOfRangeException("StartIndex", StartIndex, String.Format(
+                    "Начальный индекс подстроки '{0}' не может быть больше, чем максимально возможный индекс в базовой строке '{1}'", StartIndex, BaseStr.Length - 1));
+            }
+            if (StartIndex + Length > BaseStr.Length)
+            {
+                throw new ArgumentException(String.Format("Результат сложения начального индекса '{0}' и длины '{1}' " +
+                    "подстроки = '{2}' не может превышать длину базовой строки '{3}'", StartIndex, Length, StartIndex + Length, BaseStr.Length));
+            }
 
             return new Substring(BaseStr, StartIndex, Length);
         }
@@ -171,7 +249,7 @@ namespace KlotosLib.StringTools
 
         /// <summary>
         /// Возвращает строковое представление данной подстроки, выполняя её материализацию. 
-        /// Будучи вызванным, использует единственное закэшированное матеарилизированное представление.
+        /// Будучи вызванным, использует единственное закэшированное материализированное представление.
         /// </summary>
         public String Value {
             get
@@ -228,6 +306,8 @@ namespace KlotosLib.StringTools
         /// <param name="StartIndexInSubstring">Начальная позиция в данной подстроке, с которой включительно начнётся копирование</param>
         /// <param name="SymbolsToCopy">Количество символов, которое требуется скопировать</param>
         /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentException"></exception>
         public Char[] ToCharArray(int StartIndexInSubstring, int SymbolsToCopy)
         {
             if (StartIndexInSubstring < 0) { throw new ArgumentOutOfRangeException("StartIndexInSubstring", StartIndexInSubstring, 
@@ -338,6 +418,8 @@ namespace KlotosLib.StringTools
         /// </summary>
         /// <param name="Substrings">Набор подстрок. Если NULL, пуст или содержит одну подстроку, будет выброшено исключение.</param>
         /// <returns>Если все подстроки равны - 'true', иначе 'false'</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
         public static Boolean AreEqual(params Substring[] Substrings)
         {
             if (Substrings == null) { throw new ArgumentNullException("Substrings"); }
@@ -597,10 +679,9 @@ namespace KlotosLib.StringTools
         #region Subclass
 
         /// <summary>
-        /// Представляет перечислитель для подстрок, не требующей материализации подстроки как отдельной строки. 
-        /// Перечислитель реализован как изменяемый значимый тип.
+        /// Представляет перечислитель для подстрок, не требующей материализации подстроки как отдельной строки
         /// </summary>
-        public struct SubstringCharEnumerator : ICloneable, IEnumerator<Char>
+        public sealed class SubstringCharEnumerator : ICloneable, IEnumerator<Char>
         {
             private const Char _zeroChar = (Char) 0;
 
@@ -611,6 +692,7 @@ namespace KlotosLib.StringTools
                 this._length = source._length;
                 this._currentIndex = -1;
                 this._currentElement = _zeroChar;
+                this._isDisposed = false;
             }
 
             private SubstringCharEnumerator(SubstringCharEnumerator other)
@@ -620,13 +702,17 @@ namespace KlotosLib.StringTools
                 this._length = other._length;
                 this._currentIndex = other._currentIndex;
                 this._currentElement = other._currentElement;
+                this._isDisposed = other._isDisposed;
             }
 
-            private readonly String _baseStr;
+            #region Fields
+            private String _baseStr;
             private readonly Int32 _startIndex;
             private readonly Int32 _length;
             private Int32 _currentIndex;
             private Char _currentElement;
+            private Boolean _isDisposed;
+            #endregion Fields
 
             /// <summary>
             /// Увеличивает внутренний индекс текущего перечислителя, чтобы он указывал на следующий по порядку символ в перечисляемой подстроке, 
@@ -637,6 +723,7 @@ namespace KlotosLib.StringTools
             /// </returns>
             public bool MoveNext()
             {
+                if (this._isDisposed == true) { throw new ObjectDisposedException("SubstringCharEnumerator"); }
                 if (this._currentIndex < this._length - 1)
                 {
                     this._currentIndex++;
@@ -657,6 +744,7 @@ namespace KlotosLib.StringTools
             {
                 get
                 {
+                    if (this._isDisposed == true) { throw new ObjectDisposedException("SubstringCharEnumerator"); }
                     if (this._currentIndex < 0)
                     {
                         throw new InvalidOperationException("Невозможно получить текущий элемент, так как перечисление ещё не началось. "+
@@ -676,6 +764,7 @@ namespace KlotosLib.StringTools
             /// </summary>
             public void Reset()
             {
+                if (this._isDisposed == true) { throw new ObjectDisposedException("SubstringCharEnumerator"); }
                 this._currentIndex = -1;
                 this._currentElement = _zeroChar;
             }
@@ -701,9 +790,21 @@ namespace KlotosLib.StringTools
             #endregion
 
             /// <summary>
-            /// Метод-заглушка, не выполняющий никаких дейсмтвий, т.к. SubstringCharEnumerator не имеет ресурсов, которые могут быть освобождены
+            /// Возвращает состояние данного экземлпяра: освобождены ли его ресурсы или нет
             /// </summary>
-            public void Dispose() {}
+            public Boolean IsDisposed {get { return this._isDisposed; }}
+
+            /// <summary>
+            /// Освобождает ресурсы данного перечислителя, обнуляя ссылку на базовую строку подстроки и запрещая дальнейшие операции с данным экземпляром
+            /// </summary>
+            public void Dispose()
+            {
+                if(this._isDisposed == true) {return;}
+                this._baseStr = null;
+                this._currentElement = _zeroChar;
+                this._currentIndex = -1;
+                this._isDisposed = true;
+            }
         }
         #endregion Subclass
     }

@@ -11,6 +11,36 @@ namespace KlotosLib.UnitTests
     [TestFixture]
     public class SubstringTest
     {
+        [TestCase("0123456789", 3, true, ExpectedResult = "012")]
+        [TestCase("0123456789", 10, true, ExpectedResult = "0123456789")]
+        [TestCase("0123456789", 10, false, ExpectedResult = "0123456789")]
+        [TestCase("0123456789", 1, true, ExpectedResult = "0")]
+        [TestCase((String)null, 2, true, ExpectedException = typeof(ArgumentNullException))]
+        [TestCase("", 2, true, ExpectedException = typeof(ArgumentException))]
+        [TestCase("0123456789", -1, true, ExpectedException = typeof(ArgumentOutOfRangeException))]
+        [TestCase("0123456789", 0, true, ExpectedException = typeof(ArgumentOutOfRangeException))]
+        [TestCase("0123456789", 11, false, ExpectedException = typeof(ArgumentOutOfRangeException))]
+        [TestCase("0123456789", 11, true, ExpectedResult = "0123456789")]
+        public String FromStartWithLength(String BaseStr, Int32 Length, Boolean UntilEnd)
+        {
+            return Substring.FromStartWithLength(BaseStr, Length, UntilEnd).Value;
+        }
+
+        [TestCase("0123456789", 3, true, ExpectedResult = "789")]
+        [TestCase("0123456789", 10, true, ExpectedResult = "0123456789")]
+        [TestCase("0123456789", 10, false, ExpectedResult = "0123456789")]
+        [TestCase("0123456789", 1, true, ExpectedResult = "9")]
+        [TestCase((String)null, 2, true, ExpectedException = typeof(ArgumentNullException))]
+        [TestCase("", 2, true, ExpectedException = typeof(ArgumentException))]
+        [TestCase("0123456789", -1, true, ExpectedException = typeof(ArgumentOutOfRangeException))]
+        [TestCase("0123456789", 0, true, ExpectedException = typeof(ArgumentOutOfRangeException))]
+        [TestCase("0123456789", 11, false, ExpectedException = typeof(ArgumentOutOfRangeException))]
+        [TestCase("0123456789", 11, true, ExpectedResult = "0123456789")]
+        public String FromEndWithLength(String BaseStr, Int32 Length, Boolean UntilStart)
+        {
+            return Substring.FromEndWithLength(BaseStr, Length, UntilStart).Value;
+        }
+
         [TestCase("0123456", 3, ExpectedResult = "3456")]
         [TestCase("0123456", 1, ExpectedResult = "123456")]
         [TestCase("0123456", 0, ExpectedResult = "0123456")]
@@ -436,6 +466,15 @@ namespace KlotosLib.UnitTests
             Assert.IsTrue(original.MoveNext());
             Assert.DoesNotThrow(delegate { Char c = original.Current; });
             Assert.AreEqual('2', original.Current);
+
+            Assert.IsFalse(original.IsDisposed);
+            original.Dispose();
+            Assert.IsTrue(original.IsDisposed);
+            Assert.DoesNotThrow(delegate { original.Dispose(); });
+
+            Assert.Throws<ObjectDisposedException>(delegate { original.MoveNext(); });
+            Assert.Throws<ObjectDisposedException>(delegate { Char c = original.Current; });
+            Assert.Throws<ObjectDisposedException>(delegate { original.Reset(); });
 
             Assert.Throws<InvalidOperationException>(delegate { Char c = clone1.Current; });
             Assert.Throws<InvalidOperationException>(delegate { Char c = ((Substring.SubstringCharEnumerator)clone2).Current; });

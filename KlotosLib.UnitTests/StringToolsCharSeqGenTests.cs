@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using KlotosLib.StringTools;
 using NUnit.Framework;
 
 namespace KlotosLib.UnitTests
@@ -29,6 +30,20 @@ namespace KlotosLib.UnitTests
         public Char[] FromRangeChar(Char Start, Char End)
         {
             return StringTools.CharSeqGen.FromRange(Start, End);
+        }
+
+        [Test]
+        public void DigitsOnly()
+        {
+            CollectionAssert.AreEqual(new Char[10] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }, StringTools.CharSeqGen.DigitsOnly());
+        }
+
+        [Test]
+        public void DigitsAndLatinLetters()
+        {
+            Char[] expected = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
+            CollectionAssert.AreEqual(expected, StringTools.CharSeqGen.DigitsAndLatinLetters(CharSeqGen.LettersType.OnlyCapitalCase));
         }
     }
 }

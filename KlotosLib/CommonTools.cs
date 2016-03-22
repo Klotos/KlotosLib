@@ -281,7 +281,6 @@ namespace KlotosLib
             {
                 fs.Position = 0;
                 fs.Read(output, 0, Convert.ToInt32(fs.Length));
-                fs.Close();
             }
             return output;
         }
