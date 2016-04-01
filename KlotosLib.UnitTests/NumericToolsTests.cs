@@ -119,11 +119,21 @@ namespace KlotosLib.UnitTests
             Assert.AreEqual(third4, third4_out);
             Assert.AreEqual(fourth4, fourth4_out);
         }
-
+        
         [TestCase(0.0001, 5.000001, 5.000002, ExpectedResult = true)]
         [TestCase(0.0000001, 5.000001, 5.000002, ExpectedResult = false)]
         [TestCase(0.0000001, 5, 5, ExpectedResult = true)]
         [TestCase(0.0, 1234567890.0, 1234567890.0, ExpectedResult = true)]
+
+        [TestCase(0.1, 360.0, 360.0, ExpectedResult = true)]
+        [TestCase(0.1, -360.0, -360.0, ExpectedResult = true)]
+        [TestCase(0.1, 360.0, 359.99, ExpectedResult = true)]
+        [TestCase(0.1, -360.0, 359.99, ExpectedResult = false)]
+        [TestCase(0.1, 360.0, -359.99, ExpectedResult = false)]
+        [TestCase(0.1, -360.0, -359.99, ExpectedResult = true)]
+        [TestCase(0.2, 360.0, 359.9, ExpectedResult = true)]
+        [TestCase(0.2, 360.0, 359.8, ExpectedResult = true)]
+        [TestCase(0.2, 360.0, 359.7, ExpectedResult = false)]
         public Boolean AreEqual(Double Threshold, Double First, Double Second)
         {
             return NumericTools.AreEqual(Threshold, First, Second);

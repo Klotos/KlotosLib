@@ -187,8 +187,8 @@ namespace KlotosLib
         public static String RemoveHTMLTags(String InputHTML)
         {
             if (InputHTML.HasVisibleChars() == false) { return InputHTML; }
-            
-            List<Substring> tags_with_positions = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(InputHTML, "<", ">", 0, StringComparison.OrdinalIgnoreCase);
+
+            List<Substring> tags_with_positions = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(InputHTML, "<", ">", 0, false, StringComparison.OrdinalIgnoreCase);
             if (tags_with_positions.Any() == false || tags_with_positions.TrueForAll((Substring item) => item == null)) { return InputHTML; }
             StringBuilder temp = new StringBuilder(InputHTML.Length);
             Int32 start_position = 0;
@@ -232,7 +232,7 @@ namespace KlotosLib
             if (InputHTML.HasVisibleChars() == false) { return InputHTML; }
             if (StringTools.ContainsHelpers.ContainsAllOf(InputHTML, new char[] { '<', '>' }) == false) { return InputHTML; }
             List<Substring> tags_with_positions = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens
-                (InputHTML, "<", ">", 0, StringComparison.OrdinalIgnoreCase);
+                (InputHTML, "<", ">", 0, false, StringComparison.OrdinalIgnoreCase);
             if (tags_with_positions.Any() == false) { return InputHTML; }
             
             const String combined_enter = "\r\n", space = " ";
@@ -405,7 +405,7 @@ namespace KlotosLib
             if (StringTools.ContainsHelpers.ContainsAllOf(InputXML, new char[] { '<', '>' }) == false) { return InputXML; }
 
             List<Substring> tags_with_positions = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens
-                (InputXML, "<", ">", 0, StringComparison.OrdinalIgnoreCase);
+                (InputXML, "<", ">", 0, false, StringComparison.OrdinalIgnoreCase);
             if (tags_with_positions.Any() == false) { return InputXML; }
 
             StringBuilder output = new StringBuilder(InputXML.Length);
@@ -505,13 +505,13 @@ namespace KlotosLib
             if (StringTools.StringAnalyzers.GetNumberOfOccurencesInString(tag_temp, '<') != 1 ||
                 StringTools.StringAnalyzers.GetNumberOfOccurencesInString(tag_temp, '>') != 1) { return HtmlTagType.NotTag; }
             //На данном этапе тэг коректен. Находим TagName.
-            TagName = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(Tag, "<", ">", 0, StringComparison.OrdinalIgnoreCase).Single().Value;
+            TagName = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(Tag, "<", ">", 0, false, StringComparison.OrdinalIgnoreCase).Single().Value;
             TagName = TagName.Replace("/", String.Empty);
             if (TagName.Contains(" ", StringComparison.OrdinalIgnoreCase) == true)
             {
                 TagName = TagName.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).First();
             }
-            tag_temp = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(tag_temp, "<", ">", 0, StringComparison.OrdinalIgnoreCase).Single().Value.Trim();
+            tag_temp = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(tag_temp, "<", ">", 0, false, StringComparison.OrdinalIgnoreCase).Single().Value.Trim();
             if (tag_temp.IndexOf('/') == 0 && tag_temp.LastIndexOf('/') == tag_temp.Length - 1)
             {
                 return HtmlTagType.NotTag;
@@ -536,7 +536,7 @@ namespace KlotosLib
         {
             if (InputHTML.HasVisibleChars() == false) { return InputHTML; }
             if (StringTools.ContainsHelpers.ContainsAllOf(InputHTML, new char[] { '<', '>' }) == false) { return InputHTML; }
-            List<Substring> tags_with_positions = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(InputHTML, "<", ">", 0, StringComparison.OrdinalIgnoreCase);
+            List<Substring> tags_with_positions = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(InputHTML, "<", ">", 0, false, StringComparison.OrdinalIgnoreCase);
             if (tags_with_positions.Any() == false) { return InputHTML; }
 
             StringBuilder output = new StringBuilder(InputHTML.Length);

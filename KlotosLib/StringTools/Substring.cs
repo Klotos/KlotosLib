@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace KlotosLib.StringTools
 {
@@ -252,13 +250,9 @@ namespace KlotosLib.StringTools
         /// Будучи вызванным, использует единственное закэшированное материализированное представление.
         /// </summary>
         public String Value {
-            get
-            {
-                if (this._cachedValue == null)
-                {
-                    this._cachedValue = this._baseStr.Substring(this._startIndex, this._length);
-                }
-                return this._cachedValue;
+            get {
+                return this._cachedValue ??
+                       (this._cachedValue = this._baseStr.Substring(this._startIndex, this._length));
             }
         }
 
@@ -674,14 +668,14 @@ namespace KlotosLib.StringTools
         {
             return this.Clone();
         }
-        #endregion
+        #endregion Cloning
 
         #region Subclass
 
         /// <summary>
         /// Представляет перечислитель для подстрок, не требующей материализации подстроки как отдельной строки
         /// </summary>
-        public sealed class SubstringCharEnumerator : ICloneable, IEnumerator<Char>
+        public sealed class SubstringCharEnumerator : ICloneable, System.Collections.Generic.IEnumerator<Char>
         {
             private const Char _zeroChar = (Char) 0;
 
@@ -769,7 +763,7 @@ namespace KlotosLib.StringTools
                 this._currentElement = _zeroChar;
             }
 
-            Object IEnumerator.Current
+            Object System.Collections.IEnumerator.Current
             {
                 get { return Current; }
             }

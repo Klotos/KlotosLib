@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace KlotosLib.UnitTests
 {
     [NUnit.Framework.TestFixture]
-    class ByteQuantityTest
+    public class ByteQuantityTest
     {
         [TestCase(0L, Result="0 Bytes")]
         [TestCase(100L, Result = "100 Bytes")]
@@ -26,6 +26,36 @@ namespace KlotosLib.UnitTests
         public Int64 FromBits(Int64 Value)
         {
             return ByteQuantity.FromBits(Value).Bytes;
+        }
+
+        [Test]
+        public void InstancePropertiesAndMethods()
+        {
+            ByteQuantity bq = ByteQuantity.FromMebibytes(512);
+            
+            Assert.AreEqual((Int64)1024*1024*512*8, bq.Bits);
+            Assert.AreEqual(1024 * 1024 * 512, bq.Bytes);
+            
+            Assert.AreEqual(524288m, bq.GetKibibytes(4));
+            Assert.AreEqual(524288m, bq.GetKibibytes(3));
+
+            Assert.AreEqual(512m, bq.GetMebibytes(7));
+            Assert.AreEqual(512m, bq.GetMebibytes(5));
+            Assert.AreEqual(512m, bq.Mebibytes);
+
+            Assert.AreEqual(0.5m, bq.GetGibibytes(10));
+            Assert.AreEqual(0.5m, bq.GetGibibytes(8));
+            Assert.AreEqual(0.5m, bq.Gibibytes);
+
+            Assert.AreEqual(0.00048828125m, bq.GetTebibytes(13));
+            Assert.AreEqual(0.0004882813m, bq.GetTebibytes(10));
+            Assert.AreEqual(0.0m, bq.GetTebibytes(1));
+            Assert.AreEqual(0.00048828125m, bq.Tebibytes);
+
+            Assert.AreEqual(0.000000476837158m, bq.GetPebibytes(16));
+            Assert.AreEqual(0.00048828125m, bq.GetTebibytes(15));
+            Assert.AreEqual(0.0m, bq.GetTebibytes(1));
+            Assert.AreEqual(0.000000476837158m, bq.Pebibytes);
         }
 
         [Test]
@@ -134,6 +164,8 @@ namespace KlotosLib.UnitTests
         [TestCase(2048L, 2048L, 4, Result = true)]
         [TestCase(2048L, 2047L, 4, Result = false)]
         [TestCase(2048L, 2049L, 4, Result = true)]
+
+        [TestCase(2048L, 2049L, 5, ExpectedException = typeof(InvalidOperationException))]
         public Boolean OperatorsComparabilityTest(Int64 First, Int64 Second, Byte Operator)//Operator: 1: >; 2: <; 3: >=; 4: <=
         {
             switch (Operator)
@@ -147,7 +179,7 @@ namespace KlotosLib.UnitTests
                 case 4:
                     return ByteQuantity.FromBytes(First) <= ByteQuantity.FromBytes(Second);
                 default:
-                    throw new Exception();
+                    throw new InvalidOperationException();
             }
         }
 
@@ -171,24 +203,14 @@ namespace KlotosLib.UnitTests
         public void ConversionTest()
         {
             ByteQuantity value = ByteQuantity.FromGibibytes(100);
-            try
+            Assert.Throws<OverflowException>(delegate
             {
                 int converted = Convert.ToInt32(value);
-            }
-            catch (OverflowException ex)
-            {
-                Assert.AreEqual("Невозможно конвертировать значение в тип System.Int32, так как его максимальное значение "+Int32.MaxValue+
-                    " меньше текущего значения экземпляра " + value.Bytes, ex.Message);
-            }
-            try
+            });
+            Assert.Throws<OverflowException>(delegate
             {
                 sbyte converted = Convert.ToSByte(value);
-            }
-            catch (OverflowException ex)
-            {
-                Assert.AreEqual("Невозможно конвертировать значение в тип System.SByte, так как его максимальное значение " + SByte.MaxValue +
-                    " меньше текущего значения экземпляра " + value.Bytes, ex.Message);
-            }
+            });
         }
 
         [NUnit.Framework.TestCase(100, Result = "104\u00A0857\u00A0600 Bytes")]

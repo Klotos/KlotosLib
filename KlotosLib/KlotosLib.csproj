@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Angle.cs" />
     <Compile Include="ByteQuantity.cs" />
     <Compile Include="CollectionTools.cs" />
     <Compile Include="CommonTools.cs" />

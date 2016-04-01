@@ -43,6 +43,8 @@ namespace KlotosLib.UnitTests
             testdel1 -= testdel1;
             Assert.AreEqual(0, testdel1.SimpleDelegatesCount());
             Assert.IsNull(testdel1);
+            testdel2.Invoke("123");
+            testdel3.Invoke("456");
         }
 
         [Test]
@@ -57,6 +59,14 @@ namespace KlotosLib.UnitTests
             Assert.Throws<ArgumentNullException>(delegate
             {
                 bool res = testdel5.IsStaticDelegateMethod(true);
+            });
+            Assert.Throws<FormatException>(delegate
+            {
+                testdel4.Invoke("abcd");
+            });
+            Assert.DoesNotThrow(delegate
+            {
+                testdel4.Invoke("123");
             });
         }
     }

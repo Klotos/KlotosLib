@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <VisualState xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ShowCheckBoxes="false">
   <TopNode>[0-1000]C:\Users\neD\Documents\Visual Studio 2010\Projects\KlotosLib\KlotosLib.UnitTests\KlotosLibUnitTests.nunit</TopNode>
-  <SelectedNode>[0-1000]C:\Users\neD\Documents\Visual Studio 2010\Projects\KlotosLib\KlotosLib.UnitTests\KlotosLibUnitTests.nunit</SelectedNode>
+  <SelectedNode>[0-2204]KlotosLib.UnitTests.AngleTest.ToString</SelectedNode>
   <ExcludeCategories>false</ExcludeCategories>
   <Nodes>
     <Node UniqueName="[0-1000]C:\Users\neD\Documents\Visual Studio 2010\Projects\KlotosLib\KlotosLib.UnitTests\KlotosLibUnitTests.nunit" Expanded="true" />
-    <Node UniqueName="[0-2124]C:\Users\neD\Documents\Visual Studio 2010\Projects\KlotosLib\KlotosLib.UnitTests\bin\Debug\KlotosLib.UnitTests.dll" Expanded="true" />
-    <Node UniqueName="[0-2125]KlotosLib" Expanded="true" />
-    <Node UniqueName="[0-2126]KlotosLib.UnitTests" Expanded="true" />
-    <Node UniqueName="[0-1425]KlotosLib.UnitTests.StringToolsStringModifiersTests" Expanded="true" />
+    <Node UniqueName="[0-2209]C:\Users\neD\Documents\Visual Studio 2010\Projects\KlotosLib\KlotosLib.UnitTests\bin\Debug\KlotosLib.UnitTests.dll" Expanded="true" />
+    <Node UniqueName="[0-2210]KlotosLib" Expanded="true" />
+    <Node UniqueName="[0-2211]KlotosLib.UnitTests" Expanded="true" />
+    <Node UniqueName="[0-2133]KlotosLib.UnitTests.AngleTest" Expanded="true" />
     <Node UniqueName="[0-1001]KlotosLib.UnitTests.StringToolsSubstringHelpersTests" Expanded="true" />
-    <Node UniqueName="[0-1630]KlotosLib.UnitTests.StringToolsValidatorHelpersTests" Expanded="true" />
-    <Node UniqueName="[0-1631]KlotosLib.UnitTests.StringToolsValidatorHelpersTests.AllStringsNotNullEmptyWS" Expanded="true" />
   </Nodes>
 </VisualState>

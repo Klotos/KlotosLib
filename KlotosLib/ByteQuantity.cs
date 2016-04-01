@@ -268,11 +268,10 @@ namespace KlotosLib
             {
                 return this.GetTebibytes(Precision).ToString(nfi) + " TiB";
             }
-            if (this._value >= _x5Bin)
+            //if (this._value >= _x5Bin)
             {
                 return this.GetPebibytes(Precision).ToString(nfi) + " PiB";
             }
-            throw new UnreachableCodeException();
         }
 
         /// <summary>
