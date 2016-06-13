@@ -303,6 +303,368 @@
             <param name="Expr"></param>
             <returns></returns>
         </member>
+        <member name="T:KlotosLib.GeometricAngle">
+            <summary>
+            Инкапсулирует один геометрический угол, включая его величину и единицу измерения. Поддерживает угол в рамках одного оборота. 
+            Поддерживает геометрические операции над углами. Поддерживает конвертацию угловой величины в разные единицы измерений. 
+            Неизменяемый значимый тип.
+            </summary>
+            <remarks>Для сохранения точности величины угла экземпляр содержит её в той единице измерения, в которой экземпляр был создан. 
+            Выполняет преобразования в необходимые единицы на лету, не изменяя изначально запомненную единицу измерения.</remarks>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.FromTurns(System.Double)">
+            <summary>
+            Возвращает новый экземпляр угла, заданный указанным значением в оборотах
+            </summary>
+            <param name="turns"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.FromRadians(System.Double)">
+            <summary>
+            Возвращает новый экземпляр угла, заданный указанным значением в радианах
+            </summary>
+            <param name="radians"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.FromDegrees(System.Double)">
+            <summary>
+            Возвращает новый экземпляр угла, заданный указанным значением в градусах
+            </summary>
+            <param name="degrees"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.FromBinaryDegrees(System.Double)">
+            <summary>
+            Возвращает новый экземпляр угла, заданный указанным значением в двоичных градусах
+            </summary>
+            <param name="binaryDegrees"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.FromQuadrants(System.Double)">
+            <summary>
+            Возвращает новый экземпляр угла, заданный указанным значением в квадрантах
+            </summary>
+            <param name="quadrants"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.FromSextants(System.Double)">
+            <summary>
+            Возвращает новый экземпляр угла, заданный указанным значением в секстантах
+            </summary>
+            <param name="sextants"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.FromGrads(System.Double)">
+            <summary>
+            Возвращает новый экземпляр угла, заданный указанным значением в градах (градианах, гонах)
+            </summary>
+            <param name="grads"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.FromSpecifiedUnit(System.Double,KlotosLib.GeometricAngle.MeasurementUnit)">
+            <summary>
+            Возвращает новый экземпляр угла, заданный указанным значением в указанной единице измерения углов
+            </summary>
+            <param name="inputValue">Величина угла</param>
+            <param name="measurementUnit">Единица измерения углов, в которой указана величина <paramref name="inputValue"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.GetValueInUnitType(KlotosLib.GeometricAngle.MeasurementUnit)">
+            <summary>
+            Возвращает величину данного угла в указанных единицах измерения
+            </summary>
+            <param name="measurementUnit"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.GetOneTurnValueForUnit(KlotosLib.GeometricAngle.MeasurementUnit)">
+            <summary>
+            Возвращает для указанной единицы измерения углов такое значение величины угла в этой единице, которое соответствует полному углу (одному полному обороту)
+            </summary>
+            <param name="measurementUnit">Единица измерения углов</param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.GetAngleValueForTypeAndUnit(KlotosLib.GeometricAngle.AngleType,KlotosLib.GeometricAngle.MeasurementUnit)">
+            <summary>
+            Возвращает величину указанного типа угла в указанных единицах измерения уголов
+            </summary>
+            <param name="angleType">Тип угла. Поддерживается только такой тип, который чётко описывает величину угла, например, прямой или нулевой угол. 
+            Напротив, острые и тупые углы описывают диапазоны угловых величин, поэтому недопустимы к использованию данным методом.</param>
+            <param name="measurementUnit">Единица измерения угла, в которой следует вернуть значение</param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.GetAngleTypeFromValueOfUnit(System.Double,KlotosLib.GeometricAngle.MeasurementUnit)">
+            <summary>
+            Возвращает тип угла на основании указанной его величины единицы измерения, в которой задана эта величина
+            </summary>
+            <param name="inputValue">Значение величины угла. Не может быть отрицательной или превышать один оборот угла.</param>
+            <param name="measurementUnit">Единица измерения угла, величина которого указана в параметре <paramref name="inputValue"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.AreEqual(KlotosLib.GeometricAngle,KlotosLib.GeometricAngle)">
+            <summary>
+            Определяет, равны ли два указанных угла, вне зависимости от того, в каких единицах измерения углов представлены их величины
+            </summary>
+            <param name="first">Первый сравниваемый угол</param>
+            <param name="second">Второй сравниваемый угол</param>
+            <returns>Если равны - 'true', иначе 'false'</returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.AreEqual(KlotosLib.GeometricAngle[])">
+            <summary>
+            Определяет, равны ли между собой все указанные углы, вне зависимости от того, в каких единицах измерения углов представлены их величины
+            </summary>
+            <param name="geometricAngles">Набор углов для оценки равенства. Не может быть NULL, пустым или содержать только один угол.</param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.Compare(KlotosLib.GeometricAngle,KlotosLib.GeometricAngle)">
+            <summary>
+            Сравнивает между собой два угла вне зависимости от того, в каких единицах измерения углов представлены их величины, 
+            и определяет, какой из них больше, меньше, или же они равны.
+            </summary>
+            <param name="first">Первый сравниваемый угол</param>
+            <param name="second">Второй сравниваемый угол</param>
+            <returns>'1' - первый угол больше второго; '-1' - первый угол меньше второго; '0' - оба угла равны между собой</returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.GetHashCode">
+            <summary>
+            Возвращает хэш-код данного угла
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.Equals(System.Object)">
+            <summary>
+            Определяет равенство данного экземпляра угла с указанным, предварительно пытаясь привести его к данному типу
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.Equals(KlotosLib.GeometricAngle)">
+            <summary>
+            Определяет равенство данного экземпляра угла с указанным
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.CompareTo(KlotosLib.GeometricAngle)">
+            <summary>
+            Сравнивает данный угол с указанным и определяет, какой из них больше, меньше, или же они равны.
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.CompareTo(System.Object)">
+            <summary>
+            Пытается привести указанный экземпляр неизвестного типа Object к данному типу, а затем 
+            сравнивает данный угол с указанным и определяет, какой из них больше, меньше, или же они равны.
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.op_Equality(KlotosLib.GeometricAngle,KlotosLib.GeometricAngle)">
+            <summary>
+            Определяет, равны ли два указанных экземпляра углов между собой
+            </summary>
+            <param name="first"></param>
+            <param name="second"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.op_Inequality(KlotosLib.GeometricAngle,KlotosLib.GeometricAngle)">
+            <summary>
+            Определяет, не равны ли два указанных экземпляра углов между собой
+            </summary>
+            <param name="first"></param>
+            <param name="second"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.op_GreaterThan(KlotosLib.GeometricAngle,KlotosLib.GeometricAngle)">
+            <summary>
+            Определяет, строго больше ли величина первого угла по сравнению с величиной второго
+            </summary>
+            <param name="first"></param>
+            <param name="second"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.op_LessThan(KlotosLib.GeometricAngle,KlotosLib.GeometricAngle)">
+            <summary>
+            Определяет, строго меньше ли величина первого угла по сравнению с величиной второго
+            </summary>
+            <param name="first"></param>
+            <param name="second"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.op_GreaterThanOrEqual(KlotosLib.GeometricAngle,KlotosLib.GeometricAngle)">
+            <summary>
+            Определяет, больше или равна величина первого угла по сравнению с величиной второго
+            </summary>
+            <param name="first"></param>
+            <param name="second"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.op_LessThanOrEqual(KlotosLib.GeometricAngle,KlotosLib.GeometricAngle)">
+            <summary>
+            Определяет, меньше или равна величина первого угла по сравнению с величиной второго
+            </summary>
+            <param name="first"></param>
+            <param name="second"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.op_Addition(KlotosLib.GeometricAngle,KlotosLib.GeometricAngle)">
+            <summary>
+            Возвращает угол, являющийся суммой указанных двух углов. 
+            Если результат сложения величин будет превышать величину полного угла, будет сделан перевод на новый оборот.
+            </summary>
+            <param name="first">Первый слагаемый угол</param>
+            <param name="second">Второй слагаемый угол</param>
+            <example>270° + 180° = 90°</example>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.op_Subtraction(KlotosLib.GeometricAngle,KlotosLib.GeometricAngle)">
+            <summary>
+            Возвращает угол, являющийся разностью уменьшаемого и вычитаемого углов. 
+            Если результат вычитания является отрицательным, будет сделан перевод на новый оборот. 
+            Не-ассоциативная и антикоммуникативная операция.
+            </summary>
+            <param name="first">Первый уменьшаемый угол</param>
+            <param name="second">Второй вычитаемый угол</param>
+            <example>180° - 270° (= 0° - 90° = 360° - 90°) = 270°; 90° - 270° (= 0° - 180° = 360° - 180°) = 180°</example>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.Clone">
+            <summary>
+            Возвращает глубокую копию текущего экземпляра угла
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.GeometricAngle.ToString">
+            <summary>
+            Возвращает строковое представление величины и единицы измерения данного угла
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:KlotosLib.GeometricAngle.OriginalUnit">
+            <summary>
+            Возвращает оригинальную единицу измерения угла, с который был создан данный экземпляр
+            </summary>
+        </member>
+        <member name="P:KlotosLib.GeometricAngle.Type">
+            <summary>
+            Возвращает тип данного угла
+            </summary>
+        </member>
+        <member name="P:KlotosLib.GeometricAngle.InTurns">
+            <summary>
+            Возвращает величину данного угла в оборотах
+            </summary>
+        </member>
+        <member name="P:KlotosLib.GeometricAngle.InRadians">
+            <summary>
+            Возвращает величину данного угла в радианах
+            </summary>
+        </member>
+        <member name="P:KlotosLib.GeometricAngle.InDegrees">
+            <summary>
+            Возвращает величину данного угла в градусах
+            </summary>
+        </member>
+        <member name="P:KlotosLib.GeometricAngle.InBinaryDegrees">
+            <summary>
+            Возвращает величину данного угла в двоичных градусах
+            </summary>
+        </member>
+        <member name="P:KlotosLib.GeometricAngle.InQuadrants">
+            <summary>
+            Возвращает величину данного угла в квадпрантах
+            </summary>
+        </member>
+        <member name="P:KlotosLib.GeometricAngle.InSextants">
+            <summary>
+            Возвращает величину данного угла в секстантах
+            </summary>
+        </member>
+        <member name="P:KlotosLib.GeometricAngle.InGrads">
+            <summary>
+            Возвращает величину данного угла в градах (градианах, гонах)
+            </summary>
+        </member>
+        <member name="T:KlotosLib.GeometricAngle.AngleType">
+            <summary>
+            Существующие типы углов
+            </summary>
+        </member>
+        <member name="F:KlotosLib.GeometricAngle.AngleType.Zero">
+            <summary>
+            Нулевой угол (0°)
+            </summary>
+        </member>
+        <member name="F:KlotosLib.GeometricAngle.AngleType.Acute">
+            <summary>
+            Острый угол (0°-90°)
+            </summary>
+        </member>
+        <member name="F:KlotosLib.GeometricAngle.AngleType.Right">
+            <summary>
+            Прямой угол (90°)
+            </summary>
+        </member>
+        <member name="F:KlotosLib.GeometricAngle.AngleType.Obtuse">
+            <summary>
+            Тупой угол (90°-180°)
+            </summary>
+        </member>
+        <member name="F:KlotosLib.GeometricAngle.AngleType.Straight">
+            <summary>
+            Развёрнутый угол (180°)
+            </summary>
+        </member>
+        <member name="F:KlotosLib.GeometricAngle.AngleType.Reflex">
+            <summary>
+            Невыпуклый угол (180°-360°)
+            </summary>
+        </member>
+        <member name="F:KlotosLib.GeometricAngle.AngleType.Full">
+            <summary>
+            Полный угол (360°)
+            </summary>
+        </member>
+        <member name="T:KlotosLib.GeometricAngle.MeasurementUnit">
+            <summary>
+            Поддерживаемые единицы измерения углов
+            </summary>
+        </member>
+        <member name="F:KlotosLib.GeometricAngle.MeasurementUnit.Turn">
+            <summary>
+            Обороты
+            </summary>
+        </member>
+        <member name="F:KlotosLib.GeometricAngle.MeasurementUnit.Radian">
+            <summary>
+            Радианы
+            </summary>
+        </member>
+        <member name="F:KlotosLib.GeometricAngle.MeasurementUnit.Degree">
+            <summary>
+            Градусы
+            </summary>
+        </member>
+        <member name="F:KlotosLib.GeometricAngle.MeasurementUnit.BinaryDegree">
+            <summary>
+            Двоичные градусы
+            </summary>
+        </member>
+        <member name="F:KlotosLib.GeometricAngle.MeasurementUnit.Quadrant">
+            <summary>
+            Квадранты
+            </summary>
+        </member>
+        <member name="F:KlotosLib.GeometricAngle.MeasurementUnit.Sextant">
+            <summary>
+            Секстанты
+            </summary>
+        </member>
+        <member name="F:KlotosLib.GeometricAngle.MeasurementUnit.Grad">
+            <summary>
+            Грады (градианы, гоны)
+            </summary>
+        </member>
         <member name="T:KlotosLib.ByteQuantity">
             <summary>
             Инкапсулирует байтовую величину, предоставляя различные методы преобразования
@@ -1273,6 +1635,13 @@
             <param name="Header">Хидер PNG-файла, содержащий первые 24 байта</param>
             <returns></returns>
         </member>
+        <member name="M:KlotosLib.ImageTools.GetBmpSizeFromHeader(System.Byte[])">
+            <summary>
+            Извлекает разрешение (ширину и высоту) из указанного хидера, взятого в изображения формата BMP
+            </summary>
+            <param name="Header">Хидер BMP-файла, содержащий первые 26 байт</param>
+            <returns></returns>
+        </member>
         <member name="M:KlotosLib.ImageTools.GetImageFormat(System.Byte[])">
             <summary>
             Определяет формат изображения по его хидеру и возвращает формат в виде значения перечисления. Если формат определить не удалось, возвращает None. 
@@ -1343,6 +1712,15 @@
             <param name="Style">Правила парсинга числовой строки</param>
             <param name="CultureProvider">Формат языка и региональных параметров, с применением которого будет парситься строка. Если NULL, будет применён инвариантный формат.</param>
             <returns></returns>
+        </member>
+        <member name="M:KlotosLib.StringTools.ParsingHelpers.FindIntegers(System.String,System.Int32)">
+            <summary>
+            Ищет во входной строке и возвращает все целые беззнаковые числа с определённой позиции.
+            </summary>
+            <param name="Input">Входная строка, в которой ведётся поиск.</param>
+            <param name="StartIndex">Начальный индекс, с которого включительно ведётся поиск. Если 0 - поиск ведётся с начала. 
+            Не может быть больше длины входной строки или меньше 0.</param>
+            <returns>Список найденных чисел или пустой список, если не найдено ни одного числа</returns>
         </member>
         <member name="T:KlotosLib.EnumerationTools">
             <summary>
@@ -1714,6 +2092,17 @@
             'true' - возвратить входную строку; 'false' - выбросить исключение.</param>
             <returns></returns>
         </member>
+        <member name="M:KlotosLib.StringTools.SubstringHelpers.FindSubstring(System.String,System.String,System.Int32,System.StringComparison)">
+            <summary>
+            Ищет и возвращает из входной строки все найденные подстроки, если они там присутствуют
+            </summary>
+            <param name="Input">Входная строка, в которой происходит поиск подстрок</param>
+            <param name="Target">Целевая подстрока, которая ищется во входной строке</param>
+            <param name="StartIndex">Начальная позиция входной строки, с которой включительно начинается поиск. Если 0 - поиск ведётся с начала. 
+            Если меньше 0 или больше длины входной строки, выбрасывается исключение.</param>
+            <param name="ComparisonType">Опции сравнения строк между собой, по которым будет вести поиск целевой подстроки во входной строке</param>
+            <returns>Список найденных подстрок. Если не будет найдена ни одна, метод возвратит пустой список.</returns>
+        </member>
         <member name="M:KlotosLib.StringTools.SubstringHelpers.RemoveFromStartToEndToken(System.String,System.String,System.String,System.Boolean,System.StringComparison)">
             <summary>
             Возвращает входную строку, из которой удалены все подстроки, начинающиеся с указанного начального токена 
@@ -1796,17 +2185,6 @@
             <param name="CompareOptions">Опции сравнения строк между собой</param>
             <returns></returns>
         </member>
-        <member name="M:KlotosLib.StringTools.SubstringHelpers.TruncateToClosestToken(System.String,System.String,System.Boolean,KlotosLib.StringTools.Direction,System.StringComparison)">
-            <summary>
-            Возвращает исходную строку, в которой обрезана её часть от начала или от конца до ближайшего указанного токена
-            </summary>
-            <param name="Input">Входящая строка, из которой надо извлечь подстроку</param>
-            <param name="Token">Токен, который определяет точку обрезания и также обрезается</param>
-            <param name="LeaveToken">Если "true" - ближайший токен будет оставлен. Если "false" - он тоже будет удалён.</param>
-            <param name="Dir">Направление, с которого будет обрезана подстрока: из начала или из конца</param>
-            <param name="ComparisonType">Опции сравнения строк между собой</param>
-            <returns></returns>
-        </member>
         <member name="M:KlotosLib.StringTools.SubstringHelpers.GetSubstringToTokenWithSpecifiedNumber(System.String,System.String,System.Byte,KlotosLib.StringTools.Direction,System.StringComparison)">
             <summary>
             Возвращает подстроку из входной строки, которая отчитывается от начала или от конца и до указанного вхожденя указанного токена.
@@ -1827,6 +2205,17 @@
             <param name="Number"></param>
             <param name="StartPosition"></param>
             <param name="ComparisonType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.StringTools.SubstringHelpers.TruncateToClosestToken(System.String,System.String,System.Boolean,KlotosLib.StringTools.Direction,System.StringComparison)">
+            <summary>
+            Возвращает исходную строку, в которой обрезана её часть от начала или от конца до ближайшего указанного токена
+            </summary>
+            <param name="Input">Входящая строка, из которой надо извлечь подстроку</param>
+            <param name="Token">Токен, который определяет точку обрезания и также обрезается</param>
+            <param name="LeaveToken">Если "true" - ближайший токен будет оставлен. Если "false" - он тоже будет удалён.</param>
+            <param name="Dir">Направление, с которого будет обрезана подстрока: из начала или из конца</param>
+            <param name="ComparisonType">Опции сравнения строк между собой</param>
             <returns></returns>
         </member>
         <member name="M:KlotosLib.StringTools.SubstringHelpers.DeleteStartAndEndTokens(System.String,System.String,System.String,System.StringComparison)">
@@ -2107,7 +2496,7 @@
         </member>
         <member name="M:KlotosLib.StringTools.StringExtensionMethods.MultiReplace(System.String,System.String,System.Char[])">
             <summary>
-            Заменяет во входной строке все вхождения всех указанных (искомых) символов на целевую подстроку. Если ни одного искомого символа не найдено, возвращается копия исходной строки.
+            Заменяет во входной строке все вхождения всех указанных (искомых) символов на целевую подстроку. Если ни одного искомого символа не найдено, возвращается копия входной строки.
             </summary>
             <param name="Source">Входная строка. Если NULL или пустая, выбрасывается исключение.</param>
             <param name="Destination">Новая целевая подстрока, которой требуется заменить все указнные искомые символы. Если NULL, выбрасывается исключение.</param>
@@ -2644,368 +3033,6 @@
             Закрывающая часть парного тэга
             </summary>
         </member>
-        <member name="T:KlotosLib.Angle">
-            <summary>
-            Инкапсулирует один геометрический угол, включая его величину и единицу измерения. Поддерживает угол в рамках одного оборота. 
-            Поддерживает геометрические операции над углами. Поддерживает конвертацию угловой величины в разные единицы измерений. 
-            Неизменяемый значимый тип.
-            </summary>
-            <remarks>Для сохранения точности величины угла экземпляр содержит её в той единице измерения, в которой экземпляр был создан. 
-            Выполняет преобразования в необходимые единицы на лету, не изменяя изначально запомненную единицу измерения.</remarks>
-        </member>
-        <member name="M:KlotosLib.Angle.FromTurns(System.Double)">
-            <summary>
-            Возвращает новый экземпляр угла, заданный указанным значением в оборотах
-            </summary>
-            <param name="turns"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.FromRadians(System.Double)">
-            <summary>
-            Возвращает новый экземпляр угла, заданный указанным значением в радианах
-            </summary>
-            <param name="radians"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.FromDegrees(System.Double)">
-            <summary>
-            Возвращает новый экземпляр угла, заданный указанным значением в градусах
-            </summary>
-            <param name="degrees"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.FromBinaryDegrees(System.Double)">
-            <summary>
-            Возвращает новый экземпляр угла, заданный указанным значением в двоичных градусах
-            </summary>
-            <param name="binaryDegrees"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.FromQuadrants(System.Double)">
-            <summary>
-            Возвращает новый экземпляр угла, заданный указанным значением в квадрантах
-            </summary>
-            <param name="quadrants"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.FromSextants(System.Double)">
-            <summary>
-            Возвращает новый экземпляр угла, заданный указанным значением в секстантах
-            </summary>
-            <param name="sextants"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.FromGrads(System.Double)">
-            <summary>
-            Возвращает новый экземпляр угла, заданный указанным значением в градах (градианах, гонах)
-            </summary>
-            <param name="grads"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.FromSpecifiedUnit(System.Double,KlotosLib.Angle.MeasurementUnit)">
-            <summary>
-            Возвращает новый экземпляр угла, заданный указанным значением в указанной единице измерения углов
-            </summary>
-            <param name="inputValue">Величина угла</param>
-            <param name="measurementUnit">Единица измерения углов, в которой указана величина <paramref name="inputValue"/>.</param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.GetValueInUnitType(KlotosLib.Angle.MeasurementUnit)">
-            <summary>
-            Возвращает величину данного угла в указанных единицах измерения
-            </summary>
-            <param name="measurementUnit"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.GetOneTurnValueForUnit(KlotosLib.Angle.MeasurementUnit)">
-            <summary>
-            Возвращает для указанной единицы измерения углов такое значение величины угла в этой единице, которое соответствует полному углу (одному полному обороту)
-            </summary>
-            <param name="measurementUnit">Единица измерения углов</param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.GetAngleValueForTypeAndUnit(KlotosLib.Angle.AngleType,KlotosLib.Angle.MeasurementUnit)">
-            <summary>
-            Возвращает величину указанного типа угла в указанных единицах измерения уголов
-            </summary>
-            <param name="angleType">Тип угла. Поддерживается только такой тип, который чётко описывает величину угла, например, прямой или нулевой угол. 
-            Напротив, острые и тупые углы описывают диапазоны угловых величин, поэтому недопустимы к использованию данным методом.</param>
-            <param name="measurementUnit">Единица измерения угла, в которой следует вернуть значение</param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.GetAngleTypeFromValueOfUnit(System.Double,KlotosLib.Angle.MeasurementUnit)">
-            <summary>
-            Возвращает тип угла на основании указанной его величины единицы измерения, в которой задана эта величина
-            </summary>
-            <param name="inputValue">Значение величины угла. Не может быть отрицательной или превышать один оборот угла.</param>
-            <param name="measurementUnit">Единица измерения угла, величина которого указана в параметре <paramref name="inputValue"/>.</param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.AreEqual(KlotosLib.Angle,KlotosLib.Angle)">
-            <summary>
-            Определяет, равны ли два указанных угла, вне зависимости от того, в каких единицах измерения углов представлены их величины
-            </summary>
-            <param name="first">Первый сравниваемый угол</param>
-            <param name="second">Второй сравниваемый угол</param>
-            <returns>Если равны - 'true', иначе 'false'</returns>
-        </member>
-        <member name="M:KlotosLib.Angle.AreEqual(KlotosLib.Angle[])">
-            <summary>
-            Определяет, равны ли между собой все указанные углы, вне зависимости от того, в каких единицах измерения углов представлены их величины
-            </summary>
-            <param name="angles">Набор углов для оценки равенства. Не может быть NULL, пустым или содержать только один угол.</param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.Compare(KlotosLib.Angle,KlotosLib.Angle)">
-            <summary>
-            Сравнивает между собой два угла вне зависимости от того, в каких единицах измерения углов представлены их величины, 
-            и определяет, какой из них больше, меньше, или же они равны.
-            </summary>
-            <param name="first">Первый сравниваемый угол</param>
-            <param name="second">Второй сравниваемый угол</param>
-            <returns>'1' - первый угол больше второго; '-1' - первый угол меньше второго; '0' - оба угла равны между собой</returns>
-        </member>
-        <member name="M:KlotosLib.Angle.GetHashCode">
-            <summary>
-            Возвращает хэш-код данного угла
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.Equals(System.Object)">
-            <summary>
-            Определяет равенство данного экземпляра угла с указанным, предварительно пытаясь привести его к данному типу
-            </summary>
-            <param name="other"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.Equals(KlotosLib.Angle)">
-            <summary>
-            Определяет равенство данного экземпляра угла с указанным
-            </summary>
-            <param name="other"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.CompareTo(KlotosLib.Angle)">
-            <summary>
-            Сравнивает данный угол с указанным и определяет, какой из них больше, меньше, или же они равны.
-            </summary>
-            <param name="other"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.CompareTo(System.Object)">
-            <summary>
-            Пытается привести указанный экземпляр неизвестного типа Object к данному типу, а затем 
-            сравнивает данный угол с указанным и определяет, какой из них больше, меньше, или же они равны.
-            </summary>
-            <param name="other"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.op_Equality(KlotosLib.Angle,KlotosLib.Angle)">
-            <summary>
-            Определяет, равны ли два указанных экземпляра углов между собой
-            </summary>
-            <param name="first"></param>
-            <param name="second"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.op_Inequality(KlotosLib.Angle,KlotosLib.Angle)">
-            <summary>
-            Определяет, не равны ли два указанных экземпляра углов между собой
-            </summary>
-            <param name="first"></param>
-            <param name="second"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.op_GreaterThan(KlotosLib.Angle,KlotosLib.Angle)">
-            <summary>
-            Определяет, строго больше ли величина первого угла по сравнению с величиной второго
-            </summary>
-            <param name="first"></param>
-            <param name="second"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.op_LessThan(KlotosLib.Angle,KlotosLib.Angle)">
-            <summary>
-            Определяет, строго меньше ли величина первого угла по сравнению с величиной второго
-            </summary>
-            <param name="first"></param>
-            <param name="second"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.op_GreaterThanOrEqual(KlotosLib.Angle,KlotosLib.Angle)">
-            <summary>
-            Определяет, больше или равна величина первого угла по сравнению с величиной второго
-            </summary>
-            <param name="first"></param>
-            <param name="second"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.op_LessThanOrEqual(KlotosLib.Angle,KlotosLib.Angle)">
-            <summary>
-            Определяет, меньше или равна величина первого угла по сравнению с величиной второго
-            </summary>
-            <param name="first"></param>
-            <param name="second"></param>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.op_Addition(KlotosLib.Angle,KlotosLib.Angle)">
-            <summary>
-            Возвращает угол, являющийся суммой указанных двух углов. 
-            Если результат сложения величин будет превышать величину полного угла, будет сделан перевод на новый оборот.
-            </summary>
-            <param name="first">Первый слагаемый угол</param>
-            <param name="second">Второй слагаемый угол</param>
-            <example>270° + 180° = 90°</example>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.op_Subtraction(KlotosLib.Angle,KlotosLib.Angle)">
-            <summary>
-            Возвращает угол, являющийся разностью уменьшаемого и вычитаемого углов. 
-            Если результат вычитания является отрицательным, будет сделан перевод на новый оборот. 
-            Не-ассоциативная и антикоммуникативная операция.
-            </summary>
-            <param name="first">Первый уменьшаемый угол</param>
-            <param name="second">Второй вычитаемый угол</param>
-            <example>180° - 270° (= 0° - 90° = 360° - 90°) = 270°; 90° - 270° (= 0° - 180° = 360° - 180°) = 180°</example>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.Clone">
-            <summary>
-            Возвращает глубокую копию текущего экземпляра угла
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:KlotosLib.Angle.ToString">
-            <summary>
-            Возвращает строковое представление величины и единицы измерения данного угла
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:KlotosLib.Angle.OriginalUnit">
-            <summary>
-            Возвращает оригинальную единицу измерения угла, с который был создан данный экземпляр
-            </summary>
-        </member>
-        <member name="P:KlotosLib.Angle.Type">
-            <summary>
-            Возвращает тип данного угла
-            </summary>
-        </member>
-        <member name="P:KlotosLib.Angle.InTurns">
-            <summary>
-            Возвращает величину данного угла в оборотах
-            </summary>
-        </member>
-        <member name="P:KlotosLib.Angle.InRadians">
-            <summary>
-            Возвращает величину данного угла в радианах
-            </summary>
-        </member>
-        <member name="P:KlotosLib.Angle.InDegrees">
-            <summary>
-            Возвращает величину данного угла в градусах
-            </summary>
-        </member>
-        <member name="P:KlotosLib.Angle.InBinaryDegrees">
-            <summary>
-            Возвращает величину данного угла в двоичных градусах
-            </summary>
-        </member>
-        <member name="P:KlotosLib.Angle.InQuadrants">
-            <summary>
-            Возвращает величину данного угла в квадпрантах
-            </summary>
-        </member>
-        <member name="P:KlotosLib.Angle.InSextants">
-            <summary>
-            Возвращает величину данного угла в секстантах
-            </summary>
-        </member>
-        <member name="P:KlotosLib.Angle.InGrads">
-            <summary>
-            Возвращает величину данного угла в градах (градианах, гонах)
-            </summary>
-        </member>
-        <member name="T:KlotosLib.Angle.AngleType">
-            <summary>
-            Существующие типы углов
-            </summary>
-        </member>
-        <member name="F:KlotosLib.Angle.AngleType.Zero">
-            <summary>
-            Нулевой угол (0°)
-            </summary>
-        </member>
-        <member name="F:KlotosLib.Angle.AngleType.Acute">
-            <summary>
-            Острый угол (0°-90°)
-            </summary>
-        </member>
-        <member name="F:KlotosLib.Angle.AngleType.Right">
-            <summary>
-            Прямой угол (90°)
-            </summary>
-        </member>
-        <member name="F:KlotosLib.Angle.AngleType.Obtuse">
-            <summary>
-            Тупой угол (90°-180°)
-            </summary>
-        </member>
-        <member name="F:KlotosLib.Angle.AngleType.Straight">
-            <summary>
-            Развёрнутый угол (180°)
-            </summary>
-        </member>
-        <member name="F:KlotosLib.Angle.AngleType.Reflex">
-            <summary>
-            Невыпуклый угол (180°-360°)
-            </summary>
-        </member>
-        <member name="F:KlotosLib.Angle.AngleType.Full">
-            <summary>
-            Полный угол (360°)
-            </summary>
-        </member>
-        <member name="T:KlotosLib.Angle.MeasurementUnit">
-            <summary>
-            Поддерживаемые единицы измерения углов
-            </summary>
-        </member>
-        <member name="F:KlotosLib.Angle.MeasurementUnit.Turn">
-            <summary>
-            Обороты
-            </summary>
-        </member>
-        <member name="F:KlotosLib.Angle.MeasurementUnit.Radian">
-            <summary>
-            Радианы
-            </summary>
-        </member>
-        <member name="F:KlotosLib.Angle.MeasurementUnit.Degree">
-            <summary>
-            Градусы
-            </summary>
-        </member>
-        <member name="F:KlotosLib.Angle.MeasurementUnit.BinaryDegree">
-            <summary>
-            Двоичные градусы
-            </summary>
-        </member>
-        <member name="F:KlotosLib.Angle.MeasurementUnit.Quadrant">
-            <summary>
-            Квадранты
-            </summary>
-        </member>
-        <member name="F:KlotosLib.Angle.MeasurementUnit.Sextant">
-            <summary>
-            Секстанты
-            </summary>
-        </member>
-        <member name="F:KlotosLib.Angle.MeasurementUnit.Grad">
-            <summary>
-            Грады (градианы, гоны)
-            </summary>
-        </member>
         <member name="T:KlotosLib.StringTools.Substring">
             <summary>
             Представляет подстроку, привязанную к одной конкретной базовой строке. Неизменяемый класс.
@@ -3172,11 +3199,28 @@
         </member>
         <member name="M:KlotosLib.StringTools.Substring.AreIntersecting(KlotosLib.StringTools.Substring,KlotosLib.StringTools.Substring)">
             <summary>
-            Определяет, пересекаются ли две подстроки, имеющие общую базовую строку. Идентичность подстрок также считается пересечением. 
+            Определяет, пересекаются ли между собой две подстроки, имеющие общую базовую строку. Идентичность и равность подстрок также считается пересечением. 
             Если указанные подстроки не относятся к единой базовой строке, будет выброшено исключение.
             </summary>
             <param name="First">Первая подстрока для проверки на пересечение. Не может быть NULL.</param>
             <param name="Second">Вторая подстрока для проверки на пересечение. Не может быть NULL.</param>
+            <returns>Если пересекаются или идентичны, возвращает 'true', иначе 'false'</returns>
+        </member>
+        <member name="M:KlotosLib.StringTools.Substring.AreIntersectingUnsafe(KlotosLib.StringTools.Substring,KlotosLib.StringTools.Substring)">
+            <summary>
+            Внутренний метод определения пересечений, который не содержит проверок входных параметров, проверок идентичности и равности
+            </summary>
+            <param name="First"></param>
+            <param name="Second"></param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.StringTools.Substring.AreIntersecting(KlotosLib.StringTools.Substring[])">
+            <summary>
+            Определяет, пересекаются ли между собой все подстроки, имеющие общую базовую строку. Идентичность и равность подстрок также считается пересечением. 
+            Пересечения проверяются путём проверки всех возможных комбинаций пар подстрок. 
+            </summary>
+            <param name="Substrings">Набор подстрок для проверки на пересечение. Если NULL, пуст или содержит одну подстроку, будет выброшено исключение. 
+            Если хотя бы одна подстрока из списка не относятся к единой базовой строке для всех подстрок, будет выброшено исключение.</param>
             <returns></returns>
         </member>
         <member name="M:KlotosLib.StringTools.Substring.GetHashCode">
@@ -3713,7 +3757,7 @@
             <param name="ItemsDivider">Разделитель между отдельными парами "ключ-значение". Если является NULL, в качестве такого будет использован '; '.</param>
             <returns></returns>
         </member>
-        <member name="M:KlotosLib.CollectionTools.ConcatToString``1(System.Collections.Generic.IEnumerable{``0},System.String,System.String,System.String,System.String,System.Boolean,System.Boolean)">
+        <member name="M:KlotosLib.CollectionTools.ConcatToString``1(System.Collections.Generic.IEnumerable{``0},System.String,System.String,System.String,System.String,System.Boolean)">
             <summary>
             Конкатенирует все элементы входной последовательности в одну строку в прямом порядке, от начала и до конца. 
             Использует указанный префикс, окончание, разделитель и конечный разделитель. 
@@ -3736,12 +3780,11 @@
             <param name="LastDivider">Последний разделитель - строка, которая будет помещена между последними двумя элементыми. 
             Если отдельный от разделителя последний разделитель не нужен, укажите его значение равным разделителю. 
             Если же последняя пара элементов должна быть сцеплена вплотную, используйте пустую строку. Если NULL - будет выброшено исключение.</param>
-            <param name="DeleteDuplicates">Если true - будут удалены все дублирующиеся элементы на основании сравнения их строковых представлений.</param>
             <param name="PassInvalid">Если true - при конвертации в строки входных элементов метод не выбросит исключение, 
             если какой-либо элемент не может быть конвертирован в строку, а пропустит этот элемент и перейдёт ко следующему.</param>
             <returns>Образовавшаяся строка, которая не может быть NULL</returns>
         </member>
-        <member name="M:KlotosLib.CollectionTools.ConcatToString``1(System.Collections.Generic.IEnumerable{``0},System.String,System.String,System.String,System.Boolean,System.Boolean)">
+        <member name="M:KlotosLib.CollectionTools.ConcatToString``1(System.Collections.Generic.IEnumerable{``0},System.String,System.String,System.String,System.Boolean)">
             <summary>
             Конкатенирует все элементы входной последовательности в одну строку в прямом порядке, от начала и до конца. 
             Использует указанный префикс, окончание и разделитель. 
@@ -3753,7 +3796,6 @@
             <param name="Ending"></param>
             <param name="Divider">Разделитель - строка, которая будет помещена между всеми элементами. 
             Если разделитель не нужен (элементы должны конкатенироваться вплотную), укажите пустую строку. Если NULL - будет выброшено исключение.</param>
-            <param name="DeleteDuplicates"></param>
             <param name="PassInvalid"></param>
             <returns></returns>
         </member>
@@ -3810,6 +3852,44 @@
             <param name="SplitterLocation">Указывает, включать ли элемент-разделитель входного словаря в конец первого или начало второго подсловаря, или вообще никуда не включать.</param>
             <param name="FirstPart">Выводной параметр - первый подсловарь. Если ключ-разделитель был первым элементом входного словаря и не включается в первый подсловарь, то он будет пустой.</param>
             <param name="LastPart">Выводной параметр - второй (последний) подсловарь. Если ключ-разделитель был последним элементом входного словаря и не включается в последний подсловарь, то он будет пустой.</param>
+        </member>
+        <member name="M:KlotosLib.CollectionTools.ConcatArrays``1(``0[][])">
+            <summary>
+            Возвращает новосозданный одномерный массив-вектор, содержащий все элементы из всех указанных массивов
+            </summary>
+            <typeparam name="TItem">Тип элементов массивов, без ограничений</typeparam>
+            <param name="Arrays">Массив массивов, все из которых следует конкатенировать в новый одномерный массив</param>
+            <returns>Новый одномерный массив-вектор (индексируемый с 0), размер (длина) которого точно соответствует количеству расположенных в нём элементов</returns>
+        </member>
+        <member name="M:KlotosLib.CollectionTools.ConcatDictionaries``2(System.Collections.Generic.IDictionary{``0,``1},System.Collections.Generic.IDictionary{``0,``1},System.Func{``0,``1,``1,``1})">
+            <summary>
+            Выполняет слияние двух указанных словарей с одинаковыми типами ключей и значениий в новый, третий словарь. 
+            Принимает делегат на метод, который будет вызван для разрешения возможных конфликтов при дубликации ключей в первом и втором входном словаре.
+            </summary>
+            <typeparam name="TKey">Тип ключа, который должен быть общим в первом и втором входных словарях</typeparam>
+            <typeparam name="TValue">Тип значения, который должен быть общим в первом и втором входных словарях</typeparam>
+            <param name="First">Первый входной словарь. Если NULL или пустой, будет возвращена копия второго словаря.</param>
+            <param name="Second">Второй входной словарь. Если NULL или пустой, будет возвращена копия первого словаря.</param>
+            <param name="MultipleKeysResolverFunc">Делегат на метод, которая будет вызвана в том случае, если в процессе объединения будут обнаружены 
+            дублирующиеся ключи в первом и втором словаре. Метод будет вызван столько раз, сколько раз будут встречаться дубликаты. 
+            Метод должен принимать 3 параметры: ключ (который присутствует в обих словарях), значение ключа в первом и значение ключа во втором словаре; 
+            и должен возвращать значение, которое будет помещено в выходной словарь (или же выбрасывать исключение, которое не будет обработано). 
+            Если делегат является NULL, метод будет помещать в выходной словарь значение из второго словаря.
+            </param>
+            <returns>Новый словарь, который объединяет элементы первого и второго входных словарей.</returns>
+        </member>
+        <member name="M:KlotosLib.CollectionTools.CopyAll``2(System.Collections.Generic.IDictionary{``0,``1},System.Collections.Generic.IDictionary{``0,``1},System.Boolean)">
+            <summary>
+            Копирует все элементы из входного словаря в указанный выходной словарь
+            </summary>
+            <typeparam name="TKey">Тип ключа, который должен быть общим во входном и выходном словарях</typeparam>
+            <typeparam name="TValue">Тип значения, который должен быть общим во входном и выходном словарях</typeparam>
+            <param name="Source">Входной словарь, из которого будут скопированы все элементы в выходной. 
+            Если NULL или пустой, не будет предпринято никаких действий.</param>
+            <param name="Target">Выходной словарь, в который будут скопированы все элементы из входного. Если NULL, будет выброшено исключение.</param>
+            <param name="ReplaceValueInTarget">Определяет, как следует поступать, если во входном и выходном словаре будут обнаружены идентичные ключи. 
+            'true' - оригинальное значение в выходном словаре будет заменено новым значением из входного; 
+            'false' - в выходном словаре будет оставлено оригинальное значение.</param>
         </member>
         <member name="M:KlotosLib.CollectionTools.ConvertToDictionary``2(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{``0,``1}})">
             <summary>
@@ -3979,7 +4059,7 @@
         </member>
         <member name="M:KlotosLib.CollectionTools.ShallowEqualsEnumerables``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
             <summary>
-            Выполняет мелкое сравнение двух generic-последовательностей любого типа коллекции с любым, но одинаковым для обоих коллекций типом элементов, 
+            Выполняет 'поверхностное' сравнение двух generic-последовательностей любого типа коллекции с любым, но одинаковым для обоих коллекций типом элементов, 
             и возвращает результат равенства в виде трита: равно, не равно, равенство неизвестно. Условия равенства, неравенства и неизвестности: 
             1. Если обе последовательности NULL - true; 
             2. Если одна NULL, а другая нет - false; 
@@ -4077,14 +4157,6 @@
             Если true - при появлении NULL-значения или при возникновении исключения оно будет проброшено, 
             а если false - оно будет подавлено, а данный элемент выходного словаря будет пропущен.</param>
             <returns>Новый словарь, не являющийся NULL</returns>
-        </member>
-        <member name="M:KlotosLib.CollectionTools.ConcatArrays``1(``0[][])">
-            <summary>
-            Возвращает новосозданный одномерный массив-вектор, содержащий все элементы из всех указанных массивов
-            </summary>
-            <typeparam name="TItem">Тип элементов массивов, без ограничений</typeparam>
-            <param name="Arrays">Массив массивов, все из которых следует конкатенировать в новый одномерный массив</param>
-            <returns>Новый одномерный массив, размер (длина) которого точно соответствует количеству расположенных в нём элементов</returns>
         </member>
         <member name="M:KlotosLib.CollectionTools.Shuffle``1(``0[],System.Random)">
             <summary>

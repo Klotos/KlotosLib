@@ -23,6 +23,78 @@ namespace KlotosLib.UnitTests
             return StringTools.SubstringHelpers.SubstringFromEnd(Input, Length, UntilStart);
         }
 
+        [Test]
+        public void FindSubstring()
+        {
+            String input1 = " aabaaaabaaabaaaaA aA";
+            String target1 = "aA";
+            List<Substring> found1_actual = StringTools.SubstringHelpers.FindSubstring(input1, target1, 1, StringComparison.OrdinalIgnoreCase);
+            List<Substring> found1_expected = new List<Substring>()
+            {
+                Substring.FromIndexWithLength(input1, 1, 2),
+                Substring.FromIndexWithLength(input1, 4, 2),
+                Substring.FromIndexWithLength(input1, 6, 2),
+                Substring.FromIndexWithLength(input1, 9, 2),
+                Substring.FromIndexWithLength(input1, 13, 2),
+                Substring.FromIndexWithLength(input1, 15, 2),
+                Substring.FromIndexWithLength(input1, 19, 2)
+            };
+            CollectionAssert.AreEqual(found1_expected, found1_actual);
+
+            List<Substring> found2_actual = StringTools.SubstringHelpers.FindSubstring(input1, target1, 2, StringComparison.OrdinalIgnoreCase);
+            List<Substring> found2_expected = new List<Substring>()
+            {
+                Substring.FromIndexWithLength(input1, 4, 2),
+                Substring.FromIndexWithLength(input1, 6, 2),
+                Substring.FromIndexWithLength(input1, 9, 2),
+                Substring.FromIndexWithLength(input1, 13, 2),
+                Substring.FromIndexWithLength(input1, 15, 2),
+                Substring.FromIndexWithLength(input1, 19, 2)
+            };
+            CollectionAssert.AreEqual(found2_expected, found2_actual);
+
+            List<Substring> found3_actual = StringTools.SubstringHelpers.FindSubstring(input1, target1, 20, StringComparison.OrdinalIgnoreCase);
+            List<Substring> found3_expected = new List<Substring>(0)
+            {
+
+            };
+            CollectionAssert.AreEqual(found3_expected, found3_actual);
+
+            List<Substring> found4_actual = StringTools.SubstringHelpers.FindSubstring(input1, target1, 0, StringComparison.Ordinal);
+            List<Substring> found4_expected = new List<Substring>()
+            {
+                Substring.FromIndexWithLength(input1, 16, 2),
+                Substring.FromIndexWithLength(input1, 19, 2)
+            };
+            CollectionAssert.AreEqual(found4_expected, found4_actual);
+        }
+
+        [Test]
+        public void FindSubstring_Exceptions()
+        {
+            Assert.Throws<ArgumentNullException>(delegate
+            {
+                StringTools.SubstringHelpers.FindSubstring(null, "a", 0, StringComparison.Ordinal);
+            });
+            Assert.Throws<ArgumentException>(delegate
+            {
+                StringTools.SubstringHelpers.FindSubstring("", "a", 0, StringComparison.Ordinal);
+            });
+            Assert.Throws<ArgumentException>(delegate
+            {
+                StringTools.SubstringHelpers.FindSubstring("abc", "", 0, StringComparison.Ordinal);
+            });
+
+            Assert.Throws<ArgumentOutOfRangeException>(delegate
+            {
+                StringTools.SubstringHelpers.FindSubstring("abc", "a", -1, StringComparison.Ordinal);
+            });
+            Assert.Throws<ArgumentOutOfRangeException>(delegate
+            {
+                StringTools.SubstringHelpers.FindSubstring("abc", "a", 3, StringComparison.Ordinal);
+            });
+        }
+
         [TestCase("abcdStart inner Startend end startXXXend", "Start", "end", true, StringComparison.Ordinal, ExpectedResult = "abcd end startXXXend")]
         [TestCase("abcdStart inner Startend end startXXXend", "Start", "end", true, StringComparison.OrdinalIgnoreCase, ExpectedResult = "abcd end ")]
         [TestCase("abcdStart inner Startend end start XXX enD STARTEND ZZZ", "start", "end", true, StringComparison.OrdinalIgnoreCase, ExpectedResult = "abcd end   ZZZ")]
@@ -147,16 +219,16 @@ namespace KlotosLib.UnitTests
             const String input6 = "012<a>45</a><b>bb</b><a></a><A>ttt</A><a></a><a></A>";
             List<Substring> output6_1 = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input6, "<a>", "</a>", 3, false, StringComparison.OrdinalIgnoreCase);
             CollectionAssert.AreEqual(new List<Substring>(5) { Substring.FromIndexWithLength(input6, 6, 2), null, Substring.FromIndexWithLength(input6, 31, 3), null, null }, output6_1, 
-                "Output6_1 = "+output6_1.ConcatToString("", "", ", ", false, true));
+                "Output6_1 = "+output6_1.ConcatToString("", "", ", ", true));
             List<Substring> output6_2 = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input6, "<a>", "</a>", 4, false, StringComparison.OrdinalIgnoreCase);
             CollectionAssert.AreEqual(new List<Substring>(4) { null, Substring.FromIndexWithLength(input6, 31, 3), null, null }, output6_2,
-                "Output6_2 = " + output6_2.ConcatToString("", "", ", ", false, true));
+                "Output6_2 = " + output6_2.ConcatToString("", "", ", ", true));
 
             const String input7 = "abcd Start inner1 EndStartinner2end otherStart a";
             List<Substring> output7_1 = StringTools.SubstringHelpers.GetInnerStringsBetweenTokens(input7, "Start", "End", 5, true, StringComparison.OrdinalIgnoreCase);
             CollectionAssert.AreEqual(new List<Substring>() { Substring.FromIndexWithLength(input7, 5, 16), Substring.FromIndexWithLength(input7, 21, 14) },
                 output7_1,
-                "output7_1 = " + output7_1.ConcatToString("", "", ", ", false, true));
+                "output7_1 = " + output7_1.ConcatToString("", "", ", ", true));
         }
 
         [Test]

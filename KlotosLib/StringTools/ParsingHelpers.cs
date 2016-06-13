@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 
 namespace KlotosLib.StringTools
 {
@@ -37,6 +38,47 @@ namespace KlotosLib.StringTools
                         number, i + 1, typeof(TNumber).FullName));
                 }
                 output.Add(one.Value);
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Ищет во входной строке и возвращает все целые беззнаковые числа с определённой позиции.
+        /// </summary>
+        /// <param name="Input">Входная строка, в которой ведётся поиск.</param>
+        /// <param name="StartIndex">Начальный индекс, с которого включительно ведётся поиск. Если 0 - поиск ведётся с начала. 
+        /// Не может быть больше длины входной строки или меньше 0.</param>
+        /// <returns>Список найденных чисел или пустой список, если не найдено ни одного числа</returns>
+        public static List<UInt32> FindIntegers(String Input, Int32 StartIndex)
+        {
+            if (Input.IsStringNullEmptyWS() == true) { return new List<UInt32>(0); }
+            if(StartIndex < 0) {throw new ArgumentOutOfRangeException("StartIndex", StartIndex, "Начальный индекс не может быть меньше 0");}
+            if(StartIndex >= Input.Length) {throw new ArgumentOutOfRangeException("StartIndex", StartIndex, "Начальный индекс не может превышать длину входной строки");}
+
+            List<UInt32> output = new List<UInt32>();
+            StringBuilder buffer = new StringBuilder();
+            for (Int32 index = StartIndex; index < Input.Length; index++)
+            {
+                Char current = Input[index];
+                if (Char.IsDigit(current) == false)
+                {
+                    if (buffer.IsNullOrEmpty() == false)
+                    {
+                        UInt32 integer = UInt32.Parse(buffer.ToString(), NumberStyles.None);
+                        output.Add(integer);
+                        buffer.Clean();
+                    }
+                }
+                else
+                {
+                    buffer.Append(current);
+                }
+            }
+            if (buffer.IsNullOrEmpty() == false)
+            {
+                UInt32 integer = UInt32.Parse(buffer.ToString(), NumberStyles.None);
+                output.Add(integer);
+                buffer.Clean();
             }
             return output;
         }

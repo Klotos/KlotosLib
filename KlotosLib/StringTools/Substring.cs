@@ -487,12 +487,12 @@ namespace KlotosLib.StringTools
         }
 
         /// <summary>
-        /// Определяет, пересекаются ли две подстроки, имеющие общую базовую строку. Идентичность подстрок также считается пересечением. 
+        /// Определяет, пересекаются ли между собой две подстроки, имеющие общую базовую строку. Идентичность и равность подстрок также считается пересечением. 
         /// Если указанные подстроки не относятся к единой базовой строке, будет выброшено исключение.
         /// </summary>
         /// <param name="First">Первая подстрока для проверки на пересечение. Не может быть NULL.</param>
         /// <param name="Second">Вторая подстрока для проверки на пересечение. Не может быть NULL.</param>
-        /// <returns></returns>
+        /// <returns>Если пересекаются или идентичны, возвращает 'true', иначе 'false'</returns>
         public static Boolean AreIntersecting(Substring First, Substring Second)
         {
             if(First == null) {throw new ArgumentNullException("First");}
@@ -502,9 +502,57 @@ namespace KlotosLib.StringTools
             {
                 throw new ArgumentException("Указанные подстроки не относятся к единой базовой строке");
             }
-            Boolean result = (First.EndIndex >= Second.StartIndex && First.StartIndex <= Second.StartIndex) ||
-                (Second.EndIndex >= First.StartIndex && Second.StartIndex <= First.StartIndex);
+            return Substring.AreIntersectingUnsafe(First, Second);
+        }
+
+        /// <summary>
+        /// Внутренний метод определения пересечений, который не содержит проверок входных параметров, проверок идентичности и равности
+        /// </summary>
+        /// <param name="First"></param>
+        /// <param name="Second"></param>
+        /// <returns></returns>
+        private static Boolean AreIntersectingUnsafe(Substring First, Substring Second)
+        {
+            Boolean result = (First.EndIndex >= Second._startIndex && First._startIndex <= Second._startIndex) ||
+                (Second.EndIndex >= First._startIndex && Second._startIndex <= First._startIndex);
             return result;
+        }
+
+        /// <summary>
+        /// Определяет, пересекаются ли между собой все подстроки, имеющие общую базовую строку. Идентичность и равность подстрок также считается пересечением. 
+        /// Пересечения проверяются путём проверки всех возможных комбинаций пар подстрок. 
+        /// </summary>
+        /// <param name="Substrings">Набор подстрок для проверки на пересечение. Если NULL, пуст или содержит одну подстроку, будет выброшено исключение. 
+        /// Если хотя бы одна подстрока из списка не относятся к единой базовой строке для всех подстрок, будет выброшено исключение.</param>
+        /// <returns></returns>
+        public static Boolean AreIntersecting(params Substring[] Substrings)
+        {
+            if (Substrings == null) { throw new ArgumentNullException("Substrings"); }
+            if (Substrings.Length == 0) { throw new ArgumentException("Набор подстрок не может быть пуст", "Substrings"); }
+            if (Substrings.Length == 1) { throw new ArgumentException("Набор подстрок не может содержать только одну подстроку", "Substrings"); }
+            
+            for (Int32 i = 0; i < Substrings.Length - 1; i++)
+            {
+                Substring first = Substrings[i];
+                for (Int32 j = i + 1; j < Substrings.Length; j++)
+                {
+                    Substring second = Substrings[j];
+                    if (first == second)
+                    {
+                        return true;
+                    }
+                    if (Substring.HaveCommonBaseString(first, second) == false)
+                    {
+                        throw new ArgumentException("Не все указанные подстроки относятся к единой базовой строке", "Substrings");
+                    }
+                    Boolean result = Substring.AreIntersectingUnsafe(first, second);
+                    if (result == true)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
         #endregion Static methods
 

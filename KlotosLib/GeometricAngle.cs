@@ -11,7 +11,7 @@ namespace KlotosLib
     /// </summary>
     /// <remarks>Для сохранения точности величины угла экземпляр содержит её в той единице измерения, в которой экземпляр был создан. 
     /// Выполняет преобразования в необходимые единицы на лету, не изменяя изначально запомненную единицу измерения.</remarks>
-    public struct Angle : IEquatable<Angle>, IComparable<Angle>, IComparable, ICloneable
+    public struct GeometricAngle : IEquatable<GeometricAngle>, IComparable<GeometricAngle>, IComparable, ICloneable
     {
         #region Subtypes - enumerations
         /// <summary>
@@ -99,13 +99,13 @@ namespace KlotosLib
 
         #region Constructors
 
-        private Angle(Angle other)
+        private GeometricAngle(GeometricAngle other)
         {
             this._value = other._value;
             this._measurementUnit = other._measurementUnit;
         }
 
-        private Angle(Double value, Angle.MeasurementUnit measurementUnit)
+        private GeometricAngle(Double value, GeometricAngle.MeasurementUnit measurementUnit)
         {
             this._value = value;
             this._measurementUnit = measurementUnit;
@@ -153,7 +153,7 @@ namespace KlotosLib
             }
         }
 
-        private static Double ConvertFromTo(Angle.MeasurementUnit from, Angle.MeasurementUnit to, Double inputValue)
+        private static Double ConvertFromTo(GeometricAngle.MeasurementUnit from, GeometricAngle.MeasurementUnit to, Double inputValue)
         {
             if (from == to) { return inputValue; }
             return inputValue * GetOneTurnValueForUnit(to) / GetOneTurnValueForUnit(from);
@@ -166,9 +166,9 @@ namespace KlotosLib
         /// </summary>
         /// <param name="turns"></param>
         /// <returns></returns>
-        public static Angle FromTurns(Double turns)
+        public static GeometricAngle FromTurns(Double turns)
         {
-            return new Angle(NormalizeMeasurementValue(turns, GetOneTurnValueForUnit(MeasurementUnit.Turn), _threshold), MeasurementUnit.Turn);
+            return new GeometricAngle(NormalizeMeasurementValue(turns, GetOneTurnValueForUnit(MeasurementUnit.Turn), _threshold), MeasurementUnit.Turn);
         }
 
         /// <summary>
@@ -176,9 +176,9 @@ namespace KlotosLib
         /// </summary>
         /// <param name="radians"></param>
         /// <returns></returns>
-        public static Angle FromRadians(Double radians)
+        public static GeometricAngle FromRadians(Double radians)
         {
-            return new Angle(NormalizeMeasurementValue(radians, GetOneTurnValueForUnit(MeasurementUnit.Radian), _threshold), MeasurementUnit.Radian);
+            return new GeometricAngle(NormalizeMeasurementValue(radians, GetOneTurnValueForUnit(MeasurementUnit.Radian), _threshold), MeasurementUnit.Radian);
         }
 
         /// <summary>
@@ -186,9 +186,9 @@ namespace KlotosLib
         /// </summary>
         /// <param name="degrees"></param>
         /// <returns></returns>
-        public static Angle FromDegrees(Double degrees)
+        public static GeometricAngle FromDegrees(Double degrees)
         {
-            return new Angle(NormalizeMeasurementValue(degrees, GetOneTurnValueForUnit(MeasurementUnit.Degree), _threshold), MeasurementUnit.Degree);
+            return new GeometricAngle(NormalizeMeasurementValue(degrees, GetOneTurnValueForUnit(MeasurementUnit.Degree), _threshold), MeasurementUnit.Degree);
         }
 
         /// <summary>
@@ -196,9 +196,9 @@ namespace KlotosLib
         /// </summary>
         /// <param name="binaryDegrees"></param>
         /// <returns></returns>
-        public static Angle FromBinaryDegrees(Double binaryDegrees)
+        public static GeometricAngle FromBinaryDegrees(Double binaryDegrees)
         {
-            return new Angle(NormalizeMeasurementValue(binaryDegrees, GetOneTurnValueForUnit(MeasurementUnit.BinaryDegree), _threshold), MeasurementUnit.BinaryDegree);
+            return new GeometricAngle(NormalizeMeasurementValue(binaryDegrees, GetOneTurnValueForUnit(MeasurementUnit.BinaryDegree), _threshold), MeasurementUnit.BinaryDegree);
         }
 
         /// <summary>
@@ -206,9 +206,9 @@ namespace KlotosLib
         /// </summary>
         /// <param name="quadrants"></param>
         /// <returns></returns>
-        public static Angle FromQuadrants(Double quadrants)
+        public static GeometricAngle FromQuadrants(Double quadrants)
         {
-            return new Angle(NormalizeMeasurementValue(quadrants, GetOneTurnValueForUnit(MeasurementUnit.Quadrant), _threshold), MeasurementUnit.Quadrant);
+            return new GeometricAngle(NormalizeMeasurementValue(quadrants, GetOneTurnValueForUnit(MeasurementUnit.Quadrant), _threshold), MeasurementUnit.Quadrant);
         }
 
         /// <summary>
@@ -216,9 +216,9 @@ namespace KlotosLib
         /// </summary>
         /// <param name="sextants"></param>
         /// <returns></returns>
-        public static Angle FromSextants(Double sextants)
+        public static GeometricAngle FromSextants(Double sextants)
         {
-            return new Angle(NormalizeMeasurementValue(sextants, GetOneTurnValueForUnit(MeasurementUnit.Sextant), _threshold), MeasurementUnit.Sextant);
+            return new GeometricAngle(NormalizeMeasurementValue(sextants, GetOneTurnValueForUnit(MeasurementUnit.Sextant), _threshold), MeasurementUnit.Sextant);
         }
 
         /// <summary>
@@ -226,9 +226,9 @@ namespace KlotosLib
         /// </summary>
         /// <param name="grads"></param>
         /// <returns></returns>
-        public static Angle FromGrads(Double grads)
+        public static GeometricAngle FromGrads(Double grads)
         {
-            return new Angle(NormalizeMeasurementValue(grads, GetOneTurnValueForUnit(MeasurementUnit.Grad), _threshold), MeasurementUnit.Grad);
+            return new GeometricAngle(NormalizeMeasurementValue(grads, GetOneTurnValueForUnit(MeasurementUnit.Grad), _threshold), MeasurementUnit.Grad);
         }
 
         /// <summary>
@@ -237,13 +237,13 @@ namespace KlotosLib
         /// <param name="inputValue">Величина угла</param>
         /// <param name="measurementUnit">Единица измерения углов, в которой указана величина <paramref name="inputValue"/>.</param>
         /// <returns></returns>
-        public static Angle FromSpecifiedUnit(Double inputValue, Angle.MeasurementUnit measurementUnit)
+        public static GeometricAngle FromSpecifiedUnit(Double inputValue, GeometricAngle.MeasurementUnit measurementUnit)
         {
             if (Enum.IsDefined(measurementUnit.GetType(), measurementUnit) == false)
             {
                 throw new InvalidEnumArgumentException("measurementUnit", (Int32)measurementUnit, measurementUnit.GetType());
             }
-            return new Angle(NormalizeMeasurementValue(inputValue, GetOneTurnValueForUnit(measurementUnit), _threshold), measurementUnit);
+            return new GeometricAngle(NormalizeMeasurementValue(inputValue, GetOneTurnValueForUnit(measurementUnit), _threshold), measurementUnit);
         }
         #endregion Static factories
 
@@ -251,7 +251,7 @@ namespace KlotosLib
         /// <summary>
         /// Возвращает оригинальную единицу измерения угла, с который был создан данный экземпляр
         /// </summary>
-        public Angle.MeasurementUnit OriginalUnit
+        public GeometricAngle.MeasurementUnit OriginalUnit
         {
             get { return this._measurementUnit; }
         }
@@ -259,7 +259,7 @@ namespace KlotosLib
         /// <summary>
         /// Возвращает тип данного угла
         /// </summary>
-        public Angle.AngleType Type
+        public GeometricAngle.AngleType Type
         {
             get { return GetAngleTypeFromValueOfUnit(this._value, this._measurementUnit); }
         }
@@ -348,7 +348,7 @@ namespace KlotosLib
         /// </summary>
         /// <param name="measurementUnit"></param>
         /// <returns></returns>
-        public Double GetValueInUnitType(Angle.MeasurementUnit measurementUnit)
+        public Double GetValueInUnitType(GeometricAngle.MeasurementUnit measurementUnit)
         {
             switch (measurementUnit)
             {
@@ -378,7 +378,7 @@ namespace KlotosLib
         /// </summary>
         /// <param name="measurementUnit">Единица измерения углов</param>
         /// <returns></returns>
-        public static Double GetOneTurnValueForUnit(Angle.MeasurementUnit measurementUnit)
+        public static Double GetOneTurnValueForUnit(GeometricAngle.MeasurementUnit measurementUnit)
         {
             switch (measurementUnit)
             {
@@ -409,7 +409,7 @@ namespace KlotosLib
         /// <param name="measurementUnit">Единица измерения угла, в которой следует вернуть значение</param>
         /// <returns></returns>
         public static Double GetAngleValueForTypeAndUnit
-            (Angle.AngleType angleType, Angle.MeasurementUnit measurementUnit)
+            (GeometricAngle.AngleType angleType, GeometricAngle.MeasurementUnit measurementUnit)
         {
             switch (angleType)
             {
@@ -437,7 +437,7 @@ namespace KlotosLib
         /// <param name="inputValue">Значение величины угла. Не может быть отрицательной или превышать один оборот угла.</param>
         /// <param name="measurementUnit">Единица измерения угла, величина которого указана в параметре <paramref name="inputValue"/>.</param>
         /// <returns></returns>
-        public static Angle.AngleType GetAngleTypeFromValueOfUnit(Double inputValue, Angle.MeasurementUnit measurementUnit)
+        public static GeometricAngle.AngleType GetAngleTypeFromValueOfUnit(Double inputValue, GeometricAngle.MeasurementUnit measurementUnit)
         {
             if (inputValue < 0) 
             { throw new ArgumentOutOfRangeException("inputValue", inputValue, "Величина угла не может быть отрицательной"); }
@@ -477,7 +477,7 @@ namespace KlotosLib
         /// <param name="first">Первый сравниваемый угол</param>
         /// <param name="second">Второй сравниваемый угол</param>
         /// <returns>Если равны - 'true', иначе 'false'</returns>
-        public static Boolean AreEqual(Angle first, Angle second)
+        public static Boolean AreEqual(GeometricAngle first, GeometricAngle second)
         {
             if (first._measurementUnit == second._measurementUnit)
             {
@@ -492,18 +492,18 @@ namespace KlotosLib
         /// <summary>
         /// Определяет, равны ли между собой все указанные углы, вне зависимости от того, в каких единицах измерения углов представлены их величины
         /// </summary>
-        /// <param name="angles">Набор углов для оценки равенства. Не может быть NULL, пустым или содержать только один угол.</param>
+        /// <param name="geometricAngles">Набор углов для оценки равенства. Не может быть NULL, пустым или содержать только один угол.</param>
         /// <returns></returns>
-        public static Boolean AreEqual(params Angle[] angles)
+        public static Boolean AreEqual(params GeometricAngle[] geometricAngles)
         {
-            if (angles == null) { throw new ArgumentNullException("angles"); }
-            if (angles.Length == 0) { throw new ArgumentException("Набор углов не может быть пуст", "angles"); }
-            if (angles.Length == 1) { throw new ArgumentException("Набор углов не может содержать только один угол", "angles"); }
-            if (angles.Length == 2) { return Angle.AreEqual(angles[0], angles[1]); }
+            if (geometricAngles == null) { throw new ArgumentNullException("geometricAngles"); }
+            if (geometricAngles.Length == 0) { throw new ArgumentException("Набор углов не может быть пуст", "geometricAngles"); }
+            if (geometricAngles.Length == 1) { throw new ArgumentException("Набор углов не может содержать только один угол", "geometricAngles"); }
+            if (geometricAngles.Length == 2) { return GeometricAngle.AreEqual(geometricAngles[0], geometricAngles[1]); }
 
-            for (Int32 first_index = 0, second_index = first_index + 1; second_index < angles.Length; first_index++, second_index++)
+            for (Int32 first_index = 0, second_index = first_index + 1; second_index < geometricAngles.Length; first_index++, second_index++)
             {
-                if (Angle.AreEqual(angles[first_index], angles[second_index]) == false)
+                if (GeometricAngle.AreEqual(geometricAngles[first_index], geometricAngles[second_index]) == false)
                 { return false; }
             }
             return true;
@@ -516,7 +516,7 @@ namespace KlotosLib
         /// <param name="first">Первый сравниваемый угол</param>
         /// <param name="second">Второй сравниваемый угол</param>
         /// <returns>'1' - первый угол больше второго; '-1' - первый угол меньше второго; '0' - оба угла равны между собой</returns>
-        public static Int32 Compare(Angle first, Angle second)
+        public static Int32 Compare(GeometricAngle first, GeometricAngle second)
         {
             if (first._measurementUnit == second._measurementUnit)
             {
@@ -549,8 +549,8 @@ namespace KlotosLib
         public override Boolean Equals(Object other)
         {
             if (Object.ReferenceEquals(null, other)) { return false; }
-            if (other.GetType() != typeof(Angle)) { return false; }
-            return Angle.AreEqual(this, (Angle) other);
+            if (other.GetType() != typeof(GeometricAngle)) { return false; }
+            return GeometricAngle.AreEqual(this, (GeometricAngle) other);
         }
 
         /// <summary>
@@ -558,9 +558,9 @@ namespace KlotosLib
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public Boolean Equals(Angle other)
+        public Boolean Equals(GeometricAngle other)
         {
-            return Angle.AreEqual(this, other);
+            return GeometricAngle.AreEqual(this, other);
         }
 
         /// <summary>
@@ -568,9 +568,9 @@ namespace KlotosLib
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public Int32 CompareTo(Angle other)
+        public Int32 CompareTo(GeometricAngle other)
         {
-            return Angle.Compare(this, other);
+            return GeometricAngle.Compare(this, other);
         }
 
         /// <summary>
@@ -589,7 +589,7 @@ namespace KlotosLib
             {
                 throw new InvalidOperationException("Нельзя сравнить угол с другим типом");
             }
-            return Angle.Compare(this, (Angle) other);
+            return GeometricAngle.Compare(this, (GeometricAngle) other);
         }
         #endregion Comparable and Equatable
 
@@ -600,9 +600,9 @@ namespace KlotosLib
         /// <param name="first"></param>
         /// <param name="second"></param>
         /// <returns></returns>
-        public static Boolean operator ==(Angle first, Angle second)
+        public static Boolean operator ==(GeometricAngle first, GeometricAngle second)
         {
-            return Angle.AreEqual(first, second);
+            return GeometricAngle.AreEqual(first, second);
         }
 
         /// <summary>
@@ -611,9 +611,9 @@ namespace KlotosLib
         /// <param name="first"></param>
         /// <param name="second"></param>
         /// <returns></returns>
-        public static Boolean operator !=(Angle first, Angle second)
+        public static Boolean operator !=(GeometricAngle first, GeometricAngle second)
         {
-            return !Angle.AreEqual(first, second);
+            return !GeometricAngle.AreEqual(first, second);
         }
 
         /// <summary>
@@ -622,9 +622,9 @@ namespace KlotosLib
         /// <param name="first"></param>
         /// <param name="second"></param>
         /// <returns></returns>
-        public static Boolean operator >(Angle first, Angle second)
+        public static Boolean operator >(GeometricAngle first, GeometricAngle second)
         {
-            return Angle.Compare(first, second) == 1;
+            return GeometricAngle.Compare(first, second) == 1;
         }
 
         /// <summary>
@@ -633,9 +633,9 @@ namespace KlotosLib
         /// <param name="first"></param>
         /// <param name="second"></param>
         /// <returns></returns>
-        public static Boolean operator <(Angle first, Angle second)
+        public static Boolean operator <(GeometricAngle first, GeometricAngle second)
         {
-            return Angle.Compare(first, second) == -1;
+            return GeometricAngle.Compare(first, second) == -1;
         }
 
         /// <summary>
@@ -644,9 +644,9 @@ namespace KlotosLib
         /// <param name="first"></param>
         /// <param name="second"></param>
         /// <returns></returns>
-        public static Boolean operator >=(Angle first, Angle second)
+        public static Boolean operator >=(GeometricAngle first, GeometricAngle second)
         {
-            return Angle.Compare(first, second) >= 0;
+            return GeometricAngle.Compare(first, second) >= 0;
         }
 
         /// <summary>
@@ -655,9 +655,9 @@ namespace KlotosLib
         /// <param name="first"></param>
         /// <param name="second"></param>
         /// <returns></returns>
-        public static Boolean operator <=(Angle first, Angle second)
+        public static Boolean operator <=(GeometricAngle first, GeometricAngle second)
         {
-            return Angle.Compare(first, second) <= 0;
+            return GeometricAngle.Compare(first, second) <= 0;
         }
 
         /// <summary>
@@ -668,13 +668,13 @@ namespace KlotosLib
         /// <param name="second">Второй слагаемый угол</param>
         /// <example>270° + 180° = 90°</example>
         /// <returns></returns>
-        public static Angle operator +(Angle first, Angle second)
+        public static GeometricAngle operator +(GeometricAngle first, GeometricAngle second)
         {
             if (first._measurementUnit == second._measurementUnit)
             {
-                return Angle.FromSpecifiedUnit(first._value + second._value, first._measurementUnit);
+                return GeometricAngle.FromSpecifiedUnit(first._value + second._value, first._measurementUnit);
             }
-            return Angle.FromSpecifiedUnit(first._value + second.GetValueInUnitType(first._measurementUnit), first._measurementUnit);
+            return GeometricAngle.FromSpecifiedUnit(first._value + second.GetValueInUnitType(first._measurementUnit), first._measurementUnit);
         }
 
         /// <summary>
@@ -686,13 +686,13 @@ namespace KlotosLib
         /// <param name="second">Второй вычитаемый угол</param>
         /// <example>180° - 270° (= 0° - 90° = 360° - 90°) = 270°; 90° - 270° (= 0° - 180° = 360° - 180°) = 180°</example>
         /// <returns></returns>
-        public static Angle operator -(Angle first, Angle second)
+        public static GeometricAngle operator -(GeometricAngle first, GeometricAngle second)
         {
             if (first._measurementUnit == second._measurementUnit)
             {
-                return Angle.FromSpecifiedUnit(first._value - second._value, first._measurementUnit);
+                return GeometricAngle.FromSpecifiedUnit(first._value - second._value, first._measurementUnit);
             }
-            return Angle.FromSpecifiedUnit(first._value - second.GetValueInUnitType(first._measurementUnit), first._measurementUnit);
+            return GeometricAngle.FromSpecifiedUnit(first._value - second.GetValueInUnitType(first._measurementUnit), first._measurementUnit);
         }
         #endregion Operators
 
@@ -701,9 +701,9 @@ namespace KlotosLib
         /// Возвращает глубокую копию текущего экземпляра угла
         /// </summary>
         /// <returns></returns>
-        public Angle Clone()
+        public GeometricAngle Clone()
         {
-            return new Angle(this);
+            return new GeometricAngle(this);
         }
         Object ICloneable.Clone()
         {

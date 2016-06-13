@@ -73,13 +73,21 @@ namespace KlotosLib.UnitTests
             Substring ss8 = Substring.FromIndexToIndex(base_str2, 2, 3);
             Substring ss9 = Substring.FromIndexToIndex(base_str2, 6, 9);
 
-            IDictionary<Substring, String> replacement_list3 = new Dictionary<Substring, string>()
+            IDictionary<Substring, String> replacement_list3 = new Dictionary<Substring, string>(2)
             {
                 {ss8, "_first_"},
                 {ss9, "_second_"}
             };
+
             String output7 = StringTools.StringModifiers.ReplaceAll(base_str2, replacement_list3);
             Assert.AreEqual("ab_first_ef_second_klmnop", output7);
+
+            IDictionary<Substring, String> replacement_list4 = new Dictionary<Substring, string>(1)
+            {
+                {ss8, "_first_"}
+            };
+            String output8 = StringTools.StringModifiers.ReplaceAll(base_str2, replacement_list4);
+            Assert.AreEqual("ab_first_efghijklmnop", output8);
         }
     }
 }

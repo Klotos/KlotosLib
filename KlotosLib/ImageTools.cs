@@ -1005,6 +1005,26 @@ namespace KlotosLib
 
             return new Size(width, height);
         }
+
+        /// <summary>
+        /// Извлекает разрешение (ширину и высоту) из указанного хидера, взятого в изображения формата BMP
+        /// </summary>
+        /// <param name="Header">Хидер BMP-файла, содержащий первые 26 байт</param>
+        /// <returns></returns>
+        public static System.Drawing.Size GetBmpSizeFromHeader(Byte[] Header)
+        {
+            Header.ThrowIfNullOrEmpty();
+            Byte first = Header[0];
+            Byte second = Header[1];
+            if (first != 0x42 || second != 0x4d)
+            {
+                throw new Exception("Image is not BMP");
+            }
+            Int32 width = BitConverter.ToInt32(Header, 18);
+            Int32 height = BitConverter.ToInt32(Header, 22);
+
+            return new System.Drawing.Size(width, height);
+        }
         #endregion
 
         #region Get image format from header

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -22,7 +21,7 @@ namespace KlotosLib
         /// <returns>Если возвращает "true" — последовательность NULL или пустая. Если "false" — последовательность содержит минимум 1 элемент.</returns>
         public static Boolean IsNullOrEmpty<T>(this IEnumerable<T> Source)
         {
-            return Object.ReferenceEquals(Source, null) || !Source.Any();
+            return Object.ReferenceEquals(Source, null) || CollectionTools.IsEmpty(Source);
         }
 
         /// <summary>
@@ -387,12 +386,11 @@ namespace KlotosLib
         /// <param name="LastDivider">Последний разделитель - строка, которая будет помещена между последними двумя элементыми. 
         /// Если отдельный от разделителя последний разделитель не нужен, укажите его значение равным разделителю. 
         /// Если же последняя пара элементов должна быть сцеплена вплотную, используйте пустую строку. Если NULL - будет выброшено исключение.</param>
-        /// <param name="DeleteDuplicates">Если true - будут удалены все дублирующиеся элементы на основании сравнения их строковых представлений.</param>
         /// <param name="PassInvalid">Если true - при конвертации в строки входных элементов метод не выбросит исключение, 
         /// если какой-либо элемент не может быть конвертирован в строку, а пропустит этот элемент и перейдёт ко следующему.</param>
         /// <returns>Образовавшаяся строка, которая не может быть NULL</returns>
         public static String ConcatToString<T>(this IEnumerable<T> Source,
-            String Prefix, String Ending, String Divider, String LastDivider, Boolean DeleteDuplicates, Boolean PassInvalid)
+            String Prefix, String Ending, String Divider, String LastDivider, Boolean PassInvalid)
         {
             if (Source == null) { throw new ArgumentNullException("Source", "Последовательность является NULL"); }
             if (Source.Any<T>() == false) { throw new ArgumentOutOfRangeException("Source", "Последовательность не содержит ни единого элемента"); }
@@ -418,10 +416,6 @@ namespace KlotosLib
                     }
                 }
                 counter = counter + 1;
-            }
-            if (DeleteDuplicates == true)
-            {
-                parsed_source = parsed_source.Distinct<String>().ToList<String>();
             }
             Int32 parsed_count = parsed_source.Count;
             if (parsed_count == 1)
@@ -463,13 +457,12 @@ namespace KlotosLib
         /// <param name="Ending"></param>
         /// <param name="Divider">Разделитель - строка, которая будет помещена между всеми элементами. 
         /// Если разделитель не нужен (элементы должны конкатенироваться вплотную), укажите пустую строку. Если NULL - будет выброшено исключение.</param>
-        /// <param name="DeleteDuplicates"></param>
         /// <param name="PassInvalid"></param>
         /// <returns></returns>
         public static String ConcatToString<T>(this IEnumerable<T> Source,
-            String Prefix, String Ending, String Divider, Boolean DeleteDuplicates, Boolean PassInvalid)
+            String Prefix, String Ending, String Divider, Boolean PassInvalid)
         {
-            return Source.ConcatToString<T>(Prefix, Ending, Divider, Divider, DeleteDuplicates, PassInvalid);
+            return Source.ConcatToString<T>(Prefix, Ending, Divider, Divider, PassInvalid);
         }
 
         /// <summary>
@@ -482,7 +475,7 @@ namespace KlotosLib
         /// <returns></returns>
         public static String ConcatToString<T>(this IEnumerable<T> Source, String Divider)
         {
-            return Source.ConcatToString(String.Empty, String.Empty, Divider, Divider, false, false);
+            return Source.ConcatToString(String.Empty, String.Empty, Divider, Divider, false);
         }
 
         /// <summary>
@@ -636,7 +629,120 @@ namespace KlotosLib
                 }
             }
         }
-        #endregion
+        #endregion Splitting
+
+        #region Merging
+
+        /// <summary>
+        /// Возвращает новосозданный одномерный массив-вектор, содержащий все элементы из всех указанных массивов
+        /// </summary>
+        /// <typeparam name="TItem">Тип элементов массивов, без ограничений</typeparam>
+        /// <param name="Arrays">Массив массивов, все из которых следует конкатенировать в новый одномерный массив</param>
+        /// <returns>Новый одномерный массив-вектор (индексируемый с 0), размер (длина) которого точно соответствует количеству расположенных в нём элементов</returns>
+        public static TItem[] ConcatArrays<TItem>(params TItem[][] Arrays)
+        {
+            if (Arrays == null) { return null; }
+            if (Arrays.Length == 0) { return new TItem[0] { }; }
+            Int32 total_len = 0;
+            for (Int32 i = 0; i < Arrays.Length; i++)
+            {
+                total_len = total_len + (Arrays[i] == null ? 0 : Arrays[i].Length);
+            }
+            TItem[] output = new TItem[total_len];
+            Int32 output_index = 0;
+            for (Int32 i = 0; i < Arrays.Length; i++)
+            {
+                TItem[] temp = Arrays[i];
+                if (temp == null) { continue; }
+                for (Int32 j = 0; j < temp.Length; j++)
+                {
+                    output[output_index] = temp[j];
+                    ++output_index;
+                }
+            }
+            return output;
+        }
+
+        /// <summary>
+        /// Выполняет слияние двух указанных словарей с одинаковыми типами ключей и значениий в новый, третий словарь. 
+        /// Принимает делегат на метод, который будет вызван для разрешения возможных конфликтов при дубликации ключей в первом и втором входном словаре.
+        /// </summary>
+        /// <typeparam name="TKey">Тип ключа, который должен быть общим в первом и втором входных словарях</typeparam>
+        /// <typeparam name="TValue">Тип значения, который должен быть общим в первом и втором входных словарях</typeparam>
+        /// <param name="First">Первый входной словарь. Если NULL или пустой, будет возвращена копия второго словаря.</param>
+        /// <param name="Second">Второй входной словарь. Если NULL или пустой, будет возвращена копия первого словаря.</param>
+        /// <param name="MultipleKeysResolverFunc">Делегат на метод, которая будет вызвана в том случае, если в процессе объединения будут обнаружены 
+        /// дублирующиеся ключи в первом и втором словаре. Метод будет вызван столько раз, сколько раз будут встречаться дубликаты. 
+        /// Метод должен принимать 3 параметры: ключ (который присутствует в обих словарях), значение ключа в первом и значение ключа во втором словаре; 
+        /// и должен возвращать значение, которое будет помещено в выходной словарь (или же выбрасывать исключение, которое не будет обработано). 
+        /// Если делегат является NULL, метод будет помещать в выходной словарь значение из второго словаря.
+        /// </param>
+        /// <returns>Новый словарь, который объединяет элементы первого и второго входных словарей.</returns>
+        public static Dictionary<TKey, TValue> ConcatDictionaries<TKey, TValue>
+            (IDictionary<TKey, TValue> First, IDictionary<TKey, TValue> Second, Func<TKey, TValue, TValue, TValue> MultipleKeysResolverFunc)
+        {
+            if(First.IsNullOrEmpty() && Second.IsNullOrEmpty()) {return new Dictionary<TKey, TValue>(0);}
+            if (First.IsNullOrEmpty())
+            {
+                return new Dictionary<TKey, TValue>(Second);
+            }
+            if (Second.IsNullOrEmpty())
+            {
+                return new Dictionary<TKey, TValue>(First);
+            }
+            Dictionary<TKey, TValue> output = new Dictionary<TKey, TValue>(Math.Max(First.Count, Second.Count));
+            CollectionTools.CopyAll(First, output, false);
+            foreach (KeyValuePair<TKey, TValue> oneKVP in Second)
+            {
+                if (output.ContainsKey(oneKVP.Key))
+                {
+                    output[oneKVP.Key] = MultipleKeysResolverFunc != null ? MultipleKeysResolverFunc.Invoke(oneKVP.Key, output[oneKVP.Key], oneKVP.Value) : oneKVP.Value;
+                }
+                else
+                {
+                    output.Add(oneKVP.Key, oneKVP.Value);
+                }
+            }
+            return output;
+        }
+
+        #endregion Merging
+
+        #region Copying
+        /// <summary>
+        /// Копирует все элементы из входного словаря в указанный выходной словарь
+        /// </summary>
+        /// <typeparam name="TKey">Тип ключа, который должен быть общим во входном и выходном словарях</typeparam>
+        /// <typeparam name="TValue">Тип значения, который должен быть общим во входном и выходном словарях</typeparam>
+        /// <param name="Source">Входной словарь, из которого будут скопированы все элементы в выходной. 
+        /// Если NULL или пустой, не будет предпринято никаких действий.</param>
+        /// <param name="Target">Выходной словарь, в который будут скопированы все элементы из входного. Если NULL, будет выброшено исключение.</param>
+        /// <param name="ReplaceValueInTarget">Определяет, как следует поступать, если во входном и выходном словаре будут обнаружены идентичные ключи. 
+        /// 'true' - оригинальное значение в выходном словаре будет заменено новым значением из входного; 
+        /// 'false' - в выходном словаре будет оставлено оригинальное значение.</param>
+        public static void CopyAll<TKey, TValue>(this IDictionary<TKey, TValue> Source, IDictionary<TKey, TValue> Target, Boolean ReplaceValueInTarget)
+        {
+            if(Source.IsNullOrEmpty()){return;}
+            if(Target.IsNull() == true) {throw new ArgumentNullException("Target");}
+            foreach (KeyValuePair<TKey, TValue> oneKVP in Source)
+            {
+                Boolean contains_key = Target.ContainsKey(oneKVP.Key);
+                if (contains_key == false)
+                {
+                    Target.Add(oneKVP);
+                }
+                else if (ReplaceValueInTarget == true)
+                {
+                    Target[oneKVP.Key] = oneKVP.Value;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+        }
+
+        #endregion Copying
 
         /// <summary>
         /// Конвертирует последовательность пар "ключ-значение" в словарь, заполненный этими парами. 
@@ -1024,7 +1130,7 @@ namespace KlotosLib
         }
 
         /// <summary>
-        /// Выполняет мелкое сравнение двух generic-последовательностей любого типа коллекции с любым, но одинаковым для обоих коллекций типом элементов, 
+        /// Выполняет 'поверхностное' сравнение двух generic-последовательностей любого типа коллекции с любым, но одинаковым для обоих коллекций типом элементов, 
         /// и возвращает результат равенства в виде трита: равно, не равно, равенство неизвестно. Условия равенства, неравенства и неизвестности: 
         /// 1. Если обе последовательности NULL - true; 
         /// 2. Если одна NULL, а другая нет - false; 
@@ -1043,12 +1149,12 @@ namespace KlotosLib
             if (Object.ReferenceEquals(first, second) == true) { return true; }
             if (Object.ReferenceEquals(first, null) == true && Object.ReferenceEquals(second, null) == true) { return true; }
             if (Object.ReferenceEquals(first, null) == true ^ Object.ReferenceEquals(second, null) == true) { return false; }
-            if (first.Any() == false && second.Any() == false) { return true; }
-            if (first.Any() == false ^ second.Any() == false) { return false; }
+            if (first.IsEmpty() == true && second.IsEmpty() == true) { return true; }
+            if (first.IsEmpty() == true ^ second.IsEmpty() == true) { return false; }
             if (first.Count() != second.Count()) { return false; }
             return null;
         }
-        #endregion
+        #endregion Equatable
 
         /// <summary>
         /// Сортирует входной словарь по значению элементов в указанном порядке, используя для значений компаратор по умолчанию и возвращает новый словарь с отсортированными элементами первого
@@ -1340,36 +1446,6 @@ namespace KlotosLib
             return output;
         }
 
-        /// <summary>
-        /// Возвращает новосозданный одномерный массив-вектор, содержащий все элементы из всех указанных массивов
-        /// </summary>
-        /// <typeparam name="TItem">Тип элементов массивов, без ограничений</typeparam>
-        /// <param name="Arrays">Массив массивов, все из которых следует конкатенировать в новый одномерный массив</param>
-        /// <returns>Новый одномерный массив, размер (длина) которого точно соответствует количеству расположенных в нём элементов</returns>
-        public static TItem[] ConcatArrays<TItem>(params TItem[][] Arrays)
-        {
-            if (Arrays == null) { return null; }
-            if (Arrays.Length == 0) { return new TItem[0] { }; }
-            Int32 total_len = 0;
-            for (Int32 i = 0; i < Arrays.Length; i++)
-            {
-                total_len = total_len + (Arrays[i] == null ? 0 : Arrays[i].Length);
-            }
-            TItem[] output = new TItem[total_len];
-            Int32 output_index = 0;
-            for (Int32 i = 0; i < Arrays.Length; i++)
-            {
-                TItem[] temp = Arrays[i];
-                if (temp == null) { continue; }
-                for (Int32 j = 0; j < temp.Length; j++)
-                {
-                    output[output_index] = temp[j];
-                    ++output_index;
-                }
-            }
-            return output;
-        }
-
         #region Random
         /// <summary>
         /// Выполняет перемешивание (тасование) элементов в данном массиве и записывает изменение в этот же экземпляр, возвращая ссылку на него. Использует указанный ГПСЧ.
@@ -1463,7 +1539,7 @@ namespace KlotosLib
                 return current;
             }
         }
-        #endregion
+        #endregion Random
 
         /// <summary>
         /// Возвращает один элемент из списка по его индексу, отсчитываемому с конца

@@ -43,7 +43,7 @@ namespace KlotosLib.StringTools
             if (Input.Length == 0) { throw new ArgumentException("Входная строка не может быть пустой", "Input"); }
             if (ReplacementList.IsNullOrEmpty()) { return Input; }
             Substring[] substrings = ReplacementList.Keys.ToArray();
-            if (Substring.HaveCommonBaseString(substrings) == false)
+            if (substrings.Length > 1 && Substring.HaveCommonBaseString(substrings) == false)
             {
                 throw new ArgumentException("Не все подстроки из списка замен имеют в качестве базовой строки указанную входную строку", "ReplacementList");
             }

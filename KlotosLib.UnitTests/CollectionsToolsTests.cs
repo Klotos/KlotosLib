@@ -138,8 +138,8 @@ namespace KlotosLib.UnitTests
         public void ConcatToStringSimple()
         {
             Char[] input = { 'a', 'b', 'c', 'a', 'a', 'y', ' ', 'y'};
-            String output = input.ConcatToString("Start: ", ".", "", true, false);
-            Assert.AreEqual("Start: abcy .", output);
+            String output = input.ConcatToString("Start: ", ".", "", false);
+            Assert.AreEqual("Start: abcaay y.", output);
         }
 
         [Test]
@@ -191,6 +191,63 @@ namespace KlotosLib.UnitTests
                 input1.SplitDictionary<Dictionary<Int32, String>, Int32, String>(100, CollectionTools.SplitterDisposition.ToFirst, out left_output1, out right_output1);
             });
             Assert.Throws<ArgumentException>(td);
+        }
+
+        [Test]
+        public void ConcatArrays()
+        {
+            Int32[] a1 = new Int32[5] { 1, 2, 3, -3, 5 };
+            Int32[] a2 = new Int32[3] { 0, 2, 3 };
+            Int32[] a3 = new Int32[0] { };
+            Int32[] a4 = null;
+            Int32[] a5 = new Int32[1] { 1 };
+            Int32[] res = CollectionTools.ConcatArrays(a1, a2, a3, a4, a5);
+            Int32[] expected = new Int32[] { 1, 2, 3, -3, 5, 0, 2, 3, 1 };
+            CollectionAssert.AreEqual(expected, res, res.ConcatToString());
+
+            Int32[] b1 = null;
+            Int32[] res2 = CollectionTools.ConcatArrays(b1);
+            CollectionAssert.AreEqual(new Int32[0] { }, res2);
+
+            String[] c1 = new String[0] { };
+            String[] c2 = new String[2] { "aa", "bb" };
+            String[] c3 = null;
+            String[] res3 = CollectionTools.ConcatArrays(c1, c2, c3);
+            String[] expected3 = new String[2] { "aa", "bb" };
+            CollectionAssert.AreEqual(expected3, res3, res3.ConcatToString());
+        }
+
+        [Test]
+        public void ConcatDictionaries()
+        {
+            Dictionary<int, string> input1 = new Dictionary<int, string>(3)
+            {
+                {1, "one"},
+                {2, "two"},
+                {3, "three"}
+            };
+
+            Dictionary<int, string> input2 = new Dictionary<int, string>(4)
+            {
+                {3, "three_second"},
+                {4, "four"},
+                {5, "five"},
+                {6, "six"}
+            };
+
+            Dictionary<int, string> actual1 = CollectionTools.ConcatDictionaries(input1, input2, null);
+            Assert.AreEqual(6, actual1.Count);
+            Assert.IsTrue(actual1[3] == "three_second");
+
+            Func<int, string, string, string> f1 = delegate(int key, string value1, string value2) { return value1 + value2 + ":"+key.ToString(); };
+
+            Dictionary<int, string> actual2 = CollectionTools.ConcatDictionaries(input1, input2, f1);
+            Assert.AreEqual(6, actual2.Count);
+            Assert.IsTrue(actual2[3] == "threethree_second:3");
+
+            Dictionary<int, string> actual3 = CollectionTools.ConcatDictionaries(input1, (Dictionary<int, string>) null, null);
+            
+
         }
 
         [Test]
@@ -422,30 +479,6 @@ namespace KlotosLib.UnitTests
             }), "output2 = " + output2.ConcatToString());
         }
                 
-        [Test]
-        public void ConcatArrays()
-        {
-            Int32[] a1 = new Int32[5] { 1, 2, 3, -3, 5 };
-            Int32[] a2 = new Int32[3] { 0, 2, 3 };
-            Int32[] a3 = new Int32[0] {  };
-            Int32[] a4 = null;
-            Int32[] a5 = new Int32[1] { 1 };
-            Int32[] res = CollectionTools.ConcatArrays(a1, a2, a3, a4, a5);
-            Int32[] expected = new Int32[] { 1, 2, 3, -3, 5, 0, 2, 3, 1 };
-            CollectionAssert.AreEqual(expected, res, res.ConcatToString());
-
-            Int32[] b1 = null;
-            Int32[] res2 = CollectionTools.ConcatArrays(b1);
-            CollectionAssert.AreEqual(new Int32[0] { }, res2);
-
-            String[] c1 = new String[0] { };
-            String[] c2 = new String[2] { "aa", "bb" };
-            String[] c3 = null;
-            String[] res3 = CollectionTools.ConcatArrays(c1, c2, c3);
-            String[] expected3 = new String[2] { "aa", "bb" };
-            CollectionAssert.AreEqual(expected3, res3, res3.ConcatToString());
-        }
-        
         [Test]
         public void Shuffle()
         {

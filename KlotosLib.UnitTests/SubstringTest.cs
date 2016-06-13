@@ -547,5 +547,60 @@ namespace KlotosLib.UnitTests
             Substring s2 = BaseStr2 == null ? null : Substring.FromIndexToIndex(BaseStr2, StartIndex2, EndIndex2);
             return Substring.AreIntersecting(s1, s2);
         }
+
+        [NUnit.Framework.Test]
+        public void AreIntersecting()
+        {
+            const String baseStr1 = "0123456789";
+
+            Substring ss1 = Substring.FromIndexToIndex(baseStr1, 0, 0);
+            Substring ss2 = Substring.FromIndexToIndex(baseStr1, 1, 2);
+            Substring ss3 = Substring.FromIndexToIndex(baseStr1, 3, 4);
+            Substring ss4 = Substring.FromIndexToIndex(baseStr1, 7, 8);
+
+            Substring ss1_equal = Substring.FromIndexToIndex(baseStr1, 0, 0);
+            Substring ss2_instance = ss2;
+            Substring ss3_intersect = Substring.FromIndexToIndex(baseStr1, 4, 5);
+            Substring ss4_inside = Substring.FromIndexToIndex(baseStr1, 8, 8);
+
+            Substring ss_bad = Substring.FromIndexToIndex("0123456", 0, 2);
+
+            Boolean actual_result1 = Substring.AreIntersecting(ss1, ss2, ss3, ss4);
+            Assert.IsFalse(actual_result1);
+            
+            Boolean actual_result2 = Substring.AreIntersecting(ss1, ss2, ss3, ss4, ss1_equal, ss2_instance, ss3_intersect, ss4_inside);
+            Assert.IsTrue(actual_result2);
+
+            Boolean actual_result3 = Substring.AreIntersecting(new Substring[2]{ ss3, ss3_intersect });
+            Assert.IsTrue(actual_result3);
+
+            Boolean actual_result4 = Substring.AreIntersecting(new Substring[2] { ss4, ss4_inside });
+            Assert.IsTrue(actual_result4);
+
+            Boolean actual_result5 = Substring.AreIntersecting(new Substring[2] { ss2, ss2_instance });
+            Assert.IsTrue(actual_result5);
+
+            Boolean actual_result6 = Substring.AreIntersecting(new Substring[2] { ss1, ss1_equal });
+            Assert.IsTrue(actual_result6);
+
+            Assert.Throws<ArgumentNullException>(delegate
+            {
+                Boolean result = Substring.AreIntersecting((Substring[])null);
+            });
+
+            Assert.Throws<ArgumentException>(delegate
+            {
+                Boolean result = Substring.AreIntersecting(new Substring[0] {  });
+            });
+
+            Assert.Throws<ArgumentException>(delegate
+            {
+                Boolean result = Substring.AreIntersecting(new Substring[1]{ss1});
+            });
+            Assert.Throws<ArgumentException>(delegate
+            {
+                Boolean result = Substring.AreIntersecting(new Substring[] { ss1, ss2, ss3, ss4, ss_bad });
+            });
+        }
     }
 }

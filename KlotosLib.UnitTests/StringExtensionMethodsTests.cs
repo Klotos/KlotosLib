@@ -292,8 +292,8 @@ namespace KlotosLib.UnitTests
             return Source.MultiReplace(Destination, Target);
         }
 
-        [TestCase("abcdabc", '_', new char[]{'a', 'c'}, ExpectedResult = "_b_d_b_")]
-        [TestCase("abcdabc", '_', new char[0] { }, ExpectedResult = "abcdabc")]
+        [TestCase("abcdabc", '_', new Char[]{'a', 'c'}, ExpectedResult = "_b_d_b_")]
+        [TestCase("abcdabc", '_', new Char[0] { }, ExpectedResult = "abcdabc")]
         [TestCase("", '_', new char[] { 'a', 'c' }, ExpectedException = typeof(ArgumentException))]
         public String MultiReplace2(String Source, Char Destination, params Char[] Target)
         {

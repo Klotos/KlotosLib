@@ -34,13 +34,14 @@
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AngleTest.cs" />
+    <Compile Include="GeometricAngleTest.cs" />
     <Compile Include="ByteQuantityTest.cs" />
     <Compile Include="CollectionsToolsTests.cs" />
     <Compile Include="CommonToolsTests.cs" />
@@ -48,6 +49,7 @@
     <Compile Include="EnumerationToolsTests.cs" />
     <Compile Include="FilePathToolsTest.cs" />
     <Compile Include="HtmlToolsTests.cs" />
+    <Compile Include="ImageToolsTests.cs" />
     <Compile Include="LambdaExtensionsTests.cs" />
     <Compile Include="NumericToolsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,6 +70,14 @@
       <Project>{7631CDF4-D2E1-4437-A9AF-96206BA28B11}</Project>
       <Name>KlotosLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SampleImages\BMP\" />
+    <Folder Include="SampleImages\PNG\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SampleImages\GIF\Gauss_animated_300x150.gif" />
+    <Content Include="SampleImages\GIF\Schema_370x261.GIF" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

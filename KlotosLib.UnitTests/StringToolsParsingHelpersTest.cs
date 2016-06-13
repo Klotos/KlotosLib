@@ -36,7 +36,21 @@ namespace KlotosLib.UnitTests
             {
                 List<Decimal> output5 = StringTools.ParsingHelpers.ParseInputStringToNumbers<Decimal>(input3, ",", NumberStyles.Float, null);
             });
+        }
 
+        [TestCase("", 2, ExpectedResult = new UInt32[0])]
+        [TestCase(" abc ", 0, ExpectedResult = new UInt32[0])]
+        [TestCase(" abc 123abc456",  0, ExpectedResult = new UInt32[2] { 123, 456 })]
+        [TestCase("abc123abc456abc", 0, ExpectedResult = new UInt32[2] { 123, 456 })]
+        [TestCase("abc123abc456abc", 4, ExpectedResult = new UInt32[2] { 23, 456 })]
+        [TestCase("abc123abc456abc", 6, ExpectedResult = new UInt32[1] { 456 })]
+        [TestCase("abc123abc456abc", 11, ExpectedResult = new UInt32[1] { 6 })]
+        [TestCase("abc123abc456abc", 12, ExpectedResult = new UInt32[0] { })]
+        [TestCase("abc123abc456abc", 15, ExpectedException = typeof(ArgumentOutOfRangeException))]
+        [TestCase("abc123abc456abc", -1, ExpectedException = typeof(ArgumentOutOfRangeException))]
+        public UInt32[] FindIntegers(String Input, Int32 StartIndex)
+        {
+            return StringTools.ParsingHelpers.FindIntegers(Input, StartIndex).ToArray();
         }
     }
 }
