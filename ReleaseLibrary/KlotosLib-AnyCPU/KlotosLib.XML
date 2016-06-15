@@ -1642,6 +1642,21 @@
             <param name="Header">Хидер BMP-файла, содержащий первые 26 байт</param>
             <returns></returns>
         </member>
+        <member name="M:KlotosLib.ImageTools.GetJpegSizeFromHeader(System.Byte[])">
+            <summary>
+            Извлекает разрешение (ширину и высоту) из указанного хидера, взятого в изображения формата JPEG
+            </summary>
+            <param name="Header">Хидер JPEG-файла, содержащий неизвестное количество байт. Рекомендуется передавать порядка одного мегабайта.</param>
+            <returns></returns>
+        </member>
+        <member name="M:KlotosLib.ImageTools.GetIconSizeFromHeader(System.Byte[])">
+            <summary>
+            Извлекает разрешение (ширину и высоту) из указанного хидера, взятого в изображения формата ICON. 
+            Если ICON содержит несколько изображений, возвращает разрешение самого первого из них.
+            </summary>
+            <param name="Header">Хидер ICON-файла, содержащий первые 8 байт</param>
+            <returns></returns>
+        </member>
         <member name="M:KlotosLib.ImageTools.GetImageFormat(System.Byte[])">
             <summary>
             Определяет формат изображения по его хидеру и возвращает формат в виде значения перечисления. Если формат определить не удалось, возвращает None. 
@@ -1653,7 +1668,7 @@
             http://www.libpng.org/pub/png/spec/1.1/PNG-Rationale.html#R.PNG-file-signature
             http://en.wikipedia.org/wiki/ICO_(file_format)
             </remarks>
-            <param name="HeaderPart">Хидер файла - его первые 12 байт. Если содержит меньше 12 байт, выбрасывается исключение.</param>
+            <param name="HeaderPart">Хидер файла - его первые 8 байт. Если содержит меньше 8 байт, выбрасывается исключение.</param>
             <exception cref="T:System.ArgumentException"></exception>
             <returns></returns>
         </member>

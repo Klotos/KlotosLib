@@ -981,7 +981,7 @@ namespace KlotosLib
         public static Size GetPngSizeFromHeader(Byte[] Header)
         {
             Header.ThrowIfNullOrEmpty();
-            if (Header.Length < 24) { throw new ArgumentOutOfRangeException("Header", "Массив Header содержит " + Header.Length + "элемента, тогда как должен содержать не менее 24"); }
+            if (Header.Length < 24) { throw new ArgumentOutOfRangeException("Header", "Массив Header содержит " + Header.Length + " байта, тогда как должен содержать не менее 24"); }
 
             Int32 width = 0;
 
@@ -1025,6 +1025,87 @@ namespace KlotosLib
 
             return new System.Drawing.Size(width, height);
         }
+
+        /// <summary>
+        /// Извлекает разрешение (ширину и высоту) из указанного хидера, взятого в изображения формата JPEG
+        /// </summary>
+        /// <param name="Header">Хидер JPEG-файла, содержащий неизвестное количество байт. Рекомендуется передавать порядка одного мегабайта.</param>
+        /// <returns></returns>
+        public static System.Drawing.Size GetJpegSizeFromHeader(Byte[] Header)
+        {
+            Header.ThrowIfNullOrEmpty();
+            if (Header.Length < 32) { throw new ArgumentOutOfRangeException("Header", "Массив Header содержит " + Header.Length + " байта, тогда как должен содержать не менее 32"); }
+
+            if (Header[0] != 0xff || Header[1] != 0xd8)
+            {
+                throw new Exception("Image is not JPEG");
+            }
+            
+            // Skip 5 chars, they are for signature
+            int offset = 4;
+
+            while (offset + 8 < Header.Length)
+            {
+                // read length of the next block
+                UInt16 i = (UInt16)(Header[offset] << 8 | Header[offset + 1]);
+
+                // check if there is no data ahead
+                if(offset + i >= Header.Length) {break;}
+
+                // ensure correct format
+                ValidateJpegBuffer(Header, offset, i);
+
+                // 0xFFC0 is baseline(SOF)
+                // 0xFFC2 is progressive(SOF2)
+                Byte next = Header[offset + i + 1];
+                if (next == 0xc0 || next == 0xc2)
+                {
+                    int height = (UInt16)((Header[offset + i + 5] << 8) | Header[offset + i + 5 + 1]);
+                    int width = (UInt16)((Header[offset + i + 5 + 2] << 8) | Header[offset + i + 5 + 1 + 2]);
+                    return new Size(width, height);
+                }
+
+                // move to the next block
+                offset = offset + i + 2;
+            }
+            throw new InvalidOperationException("Invalid JPEG, no size found");
+        }
+
+        private static void ValidateJpegBuffer(Byte[] Buffer, Int32 Offset, Int32 i)
+        {
+            // index should be within buffer limits
+            if (i > Buffer.Length - Offset) {
+                throw new InvalidOperationException("Corrupt JPEG, exceeded buffer limits");
+            }
+            // Every JPEG block must begin with a 0xFF
+            if (Buffer[Offset + i] != 0xFF)
+            {
+                throw new InvalidOperationException("Invalid JPEG, marker table corrupted");
+            }
+        }
+
+        /// <summary>
+        /// Извлекает разрешение (ширину и высоту) из указанного хидера, взятого в изображения формата ICON. 
+        /// Если ICON содержит несколько изображений, возвращает разрешение самого первого из них.
+        /// </summary>
+        /// <param name="Header">Хидер ICON-файла, содержащий первые 8 байт</param>
+        /// <returns></returns>
+        public static System.Drawing.Size GetIconSizeFromHeader(Byte[] Header)
+        {
+            Header.ThrowIfNullOrEmpty();
+            if (Header.Length < 8) { throw new ArgumentOutOfRangeException("Header", "Массив Header содержит " + Header.Length + " байта, тогда как должен содержать не менее 8"); }
+
+            if (Header[0] != 0x00 || Header[1] != 0x00 || Header[2] != 0x01 || Header[3] != 0x00)
+            {
+                throw new Exception("Image is not ICON");
+            }
+#if Debug
+            UInt16 number_of_images = BitConverter.ToUInt16(Header, 4);
+#endif
+            Byte width = Header[6];
+            Byte height = Header[7];
+            return new Size(width, height);
+        }
         #endregion
 
         #region Get image format from header
@@ -1038,13 +1119,13 @@ namespace KlotosLib
         /// http://www.libpng.org/pub/png/spec/1.1/PNG-Rationale.html#R.PNG-file-signature
         /// http://en.wikipedia.org/wiki/ICO_(file_format)
         /// </remarks>
-        /// <param name="HeaderPart">Хидер файла - его первые 12 байт. Если содержит меньше 12 байт, выбрасывается исключение.</param>
+        /// <param name="HeaderPart">Хидер файла - его первые 8 байт. Если содержит меньше 8 байт, выбрасывается исключение.</param>
         /// <exception cref="ArgumentException"></exception>
         /// <returns></returns>
         public static ImageTools.ImageFormats GetImageFormat(Byte[] HeaderPart)
         {
             if (HeaderPart.IsNullOrEmpty() == true) { throw new ArgumentException("Массив байт не может быть NULL или пустым", "HeaderPart"); }
-            if (HeaderPart.Length < 12) { throw new ArgumentException("Хидер должен содержать по крайней мере первые 12 байтов файла", "HeaderPart"); }
+            if (HeaderPart.Length < 8) { throw new ArgumentException("Хидер должен содержать по крайней мере первые 8 байтов файла", "HeaderPart"); }
 
             //GIF
             if (HeaderPart[0] == 0x47 && HeaderPart[1] == 0x49 && HeaderPart[2] == 0x46)
@@ -1060,8 +1141,7 @@ namespace KlotosLib
                 HeaderPart[6] == 0x1a && HeaderPart[7] == 0x0a)
             { return ImageFormats.PNG; }
             //JPEG
-            if (HeaderPart[0] == 0xff && HeaderPart[1] == 0xd8 && HeaderPart[2] == 0xff && HeaderPart[3] == 0xe0 &&
-                HeaderPart[6] == 0x4a && HeaderPart[7] == 0x46 && HeaderPart[8] == 0x49 && HeaderPart[9] == 0x46 && HeaderPart[10] == 0x00)
+            if (HeaderPart[0] == 0xff && HeaderPart[1] == 0xd8 && HeaderPart[2] == 0xff && (HeaderPart[3] == 0xE0 || HeaderPart[3] == 0xE1 || HeaderPart[3] == 0xC0))
             { return ImageFormats.JPEG; }
             //ICO
             if (HeaderPart[0] == 0x00 && HeaderPart[1] == 0x00 && HeaderPart[2] == 0x01 && HeaderPart[3] == 0x00)
