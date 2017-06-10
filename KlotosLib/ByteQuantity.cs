@@ -7,7 +7,7 @@ namespace KlotosLib
     /// Инкапсулирует байтовую величину, предоставляя различные методы преобразования
     /// </summary>
     [Serializable()]
-    public struct ByteQuantity : IEquatable<ByteQuantity>, IComparable<ByteQuantity>, IComparable, IConvertible, ICloneable
+    public struct ByteQuantity : IEquatable<ByteQuantity>, IComparable<ByteQuantity>, IComparable, IConvertible, ICloneable, IFormattable
     {
         /// <summary>
         /// Обозначает знак десятичного разделителя
@@ -515,6 +515,7 @@ namespace KlotosLib
         {
             return this._value.GetHashCode();
         }
+
         #endregion
 
         #region IComparable
@@ -758,6 +759,7 @@ namespace KlotosLib
         }
         #endregion
 
+        #region String serialization
         /// <summary>
         /// Возвращает строковое представление количества байт; разряды разделены пробелами, в конце присутствует приставка 'Bytes'.
         /// </summary>
@@ -767,6 +769,20 @@ namespace KlotosLib
             String output = this._value.ToString("N0") + " Bytes";
             return output;
         }
+
+        /// <summary>
+        /// Возвращает строковое представление количества байт с использованием указанного формата и сведений об особенностях форматирования; 
+        /// разряды разделены пробелами, в конце присутствует приставка 'Bytes'.
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="formatProvider"></param>
+        /// <returns></returns>
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            String output = this._value.ToString(format, formatProvider) + " Bytes";
+            return output;
+        }
+        #endregion String serialization
 
         #region Operators overloading
         /// <summary>
@@ -856,6 +872,6 @@ namespace KlotosLib
             Int64 lesser = Math.Min(First._value, Second._value);
             return new ByteQuantity(bigger - lesser);
         }
-        #endregion
+        #endregion Operators overloading
     }
 }

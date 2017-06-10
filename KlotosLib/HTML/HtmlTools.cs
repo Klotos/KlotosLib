@@ -4,180 +4,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web;
 using System.Xml;
 using System.Xml.Linq;
-using System.Web;
 using KlotosLib.StringTools;
 
-namespace KlotosLib
+namespace KlotosLib.HTML
 {
     /// <summary>
     /// Содержит статические чистые методы по работе с XML и HTML
     /// </summary>
     public static class HtmlTools
     {
-        /// <summary>
-        /// Возвращает все атрибуты вместе с их соответствующими значениями для указанного по имени тэга. 
-        /// Если тэгов несколько, будут возвращены атрибуты для первого встретившегося тэга.
-        /// </summary>
-        /// <param name="InputHTML">Входная HTML-содержащая строка. Не может быть NULL, пустой строкой или не содержать цифробуквенных символов.</param>
-        /// <param name="TargetTagName">Имя целевого тэга, все атрибуты со значениями которого следует возвратить. 
-        /// Не может быть NULL, пустой строкой или не содержать цифробуквенных символов.</param>
-        /// <param name="StartIndex">Начальная позиция входной HTML-содержащей строки, с которой следует начать поиск. Если 0 - поиск ведётся с начала. 
-        /// Если меньше 0 или больше длины исходной строки, выбрасывается исключение.</param>
-        /// <returns>Список атрибутов вместе с их соответствующими значениями для указанного тэга в виде словаря, 
-        /// где ключ - атрибут, а его значение - значение атрибута. Если целевой тэг не найден, возвращает NULL. 
-        /// Если тэг найден, но он не содержит атрибутов, возвращается пустой словарь.</returns>
-        public static Dictionary<String, String> GetAttributesForTag(String InputHTML, String TargetTagName, Int32 StartIndex)
-        {
-            if(InputHTML == null) {throw new ArgumentNullException("InputHTML");}
-            if(InputHTML.HasAlphaNumericChars()==false)
-            { throw new ArgumentException("Входная HTML-содержащая строка не содержит ни одной буквы или цифры и не является валидным HTML документом", "InputHTML"); }
-            if (TargetTagName.HasAlphaNumericChars() == false)
-            { throw new ArgumentException("Имя целевого тэга некорректно, так как не содержит ни одной буквы или цифры", "TargetTagName");}
-            if (StartIndex < 0) { throw new ArgumentOutOfRangeException("StartIndex", StartIndex, "Начальная позиция не может быть меньше 0"); }
-            if (StartIndex >= InputHTML.Length)
-            { throw new ArgumentOutOfRangeException("StartIndex", StartIndex, String.Format("Начальная позиция ('{0}') не может быть больше или равна длине строки ('{1}')", StartIndex, InputHTML.Length)); }
-            String cleared_tag_name = TargetTagName.Trim().ToLowerInvariant();
-            if (cleared_tag_name.StartsWith("<") == false)
-            {
-                cleared_tag_name = "<" + cleared_tag_name;
-            }
-            Int32 tag_start_pos = InputHTML.IndexOf(cleared_tag_name, StartIndex, StringComparison.OrdinalIgnoreCase);
-            if (tag_start_pos == -1)
-            {
-                return null;
-            }
-            Int32 closing_bracket_pos = InputHTML.IndexOf(">", tag_start_pos + cleared_tag_name.Length, StringComparison.OrdinalIgnoreCase);
-            if (InputHTML[closing_bracket_pos - 1] == '/')
-            {
-                closing_bracket_pos = closing_bracket_pos - 1;
-            }
-
-            string substring_with_attributes = InputHTML.SubstringWithEnd(tag_start_pos + cleared_tag_name.Length, closing_bracket_pos, false, false, false).Trim();
-            Dictionary<String, String> output = new Dictionary<String, String>(StringComparer.OrdinalIgnoreCase);
-            if (substring_with_attributes.IsStringNullEmptyWhiteSpace())
-            {
-                return output;
-            }
-            StringBuilder attribute_key_buffer = new StringBuilder(substring_with_attributes.Length);
-            StringBuilder attribute_value_buffer = new StringBuilder(substring_with_attributes.Length);
-            
-            Boolean key_is_now = true;
-            Boolean value_is_now = false;
-            Boolean found_equal_sign = false;
-            Boolean finished_pair = false;
-            Boolean inside_quotes = false;
-            Boolean value_without_quotes = false;
-            Boolean whitespace_previous = false;
-
-            foreach (Char one in substring_with_attributes)
-            {
-                if (Char.IsWhiteSpace(one))
-                {
-                    whitespace_previous = true;
-                    if (value_without_quotes == true)
-                    {
-                        value_without_quotes = false;
-                        value_is_now = false;
-                        key_is_now = false;
-                    }
-                    else if (value_is_now == true)
-                    {
-                        attribute_value_buffer.Append(one);
-                    }
-                    else
-                    {
-                        key_is_now = false;
-                    }
-                    continue;
-                }
-                if (one == '=')
-                {
-                    whitespace_previous = false;
-                    if (inside_quotes && value_is_now)
-                    {
-                        attribute_value_buffer.Append(one);
-                    }
-                    else
-                    {
-                        key_is_now = false;
-                        value_is_now = false;
-                        found_equal_sign = true;
-                    }
-                    continue;
-                }
-                if (one == '"' || one == '\'')
-                {
-                    whitespace_previous = false;
-                    inside_quotes = !inside_quotes;
-                    if (found_equal_sign)
-                    {
-                        key_is_now = false;
-                        value_is_now = true;
-                    }
-                    else
-                    {
-                        key_is_now = false;
-                        value_is_now = false;
-
-                        String attribute_key = attribute_key_buffer.ToString();
-                        if (output.ContainsKey(attribute_key) == false)
-                        {
-                            output.Add(attribute_key, attribute_value_buffer.ToString());
-                        }
-                        attribute_key_buffer.Clean();
-                        attribute_value_buffer.Clean();
-                        finished_pair = true;
-                    }
-                    found_equal_sign = false;
-                    continue;
-                }
-                if (value_is_now == false && found_equal_sign == false && inside_quotes == false && finished_pair == false && whitespace_previous == true)
-                {
-                    String attribute_key = attribute_key_buffer.ToString();
-                    if (output.ContainsKey(attribute_key) == false)
-                    {
-                        output.Add(attribute_key, attribute_value_buffer.ToString());
-                    }
-                    attribute_key_buffer.Clean();
-                    attribute_value_buffer.Clean();
-                    finished_pair = true;
-                }
-                whitespace_previous = false;
-                if (finished_pair == false && found_equal_sign == true && inside_quotes == false)
-                {
-                    found_equal_sign = false;
-                    value_is_now = true;
-                    value_without_quotes = true;
-                }
-                if (value_is_now)
-                {
-                    attribute_value_buffer.Append(one);
-                    continue;
-                }
-                if (finished_pair)
-                {
-                    finished_pair = false;
-                    key_is_now = true;
-                }
-                if ((Char.IsLetterOrDigit(one) || one == '-' || one == ':') && key_is_now)
-                {
-                    attribute_key_buffer.Append(one);
-                    continue;
-                }
-            }
-            if (attribute_key_buffer.Length > 0)
-            {
-                String attribute_key = attribute_key_buffer.ToString();
-                if (output.ContainsKey(attribute_key) == false)
-                {
-                    output.Add(attribute_key, attribute_value_buffer.ToString());
-                }
-            }
-            return output;
-        }
-
         /// <summary>
         /// Удаляет из входной строки все одинарные и парные HTML-тэги с их атрибутами, оставляя их содержимое. Если входная строка не содержит HTML-тэгов, метод возвращает её без изменений. 
         /// Удаляются также некорректно расположенные HTML-тэги (неоткрытые, незакрытые и перехлестывающиеся).
@@ -211,8 +49,11 @@ namespace KlotosLib
             String temp2 = InputHTML.Substring(start_position);
             if (temp2.HasVisibleChars() == true && StringTools.ContainsHelpers.ContainsAllOf(temp2, new char[] { '<', '>' }) == false)
             {
-                String temp3 = StringTools.SubstringHelpers.GetSubstringToToken(temp2, "<", false, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase);
-                temp.Append(temp3);
+                Substring temp3 = StringTools.SubstringHelpers.GetSubstringToToken(temp2, "<", false, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase);
+                if (temp3 != null)
+                {
+                    temp.Append(temp3.Value);
+                }
             }
             else
             {
@@ -256,8 +97,15 @@ namespace KlotosLib
             String temp2 = InputHTML.Substring(start_position);
             if (temp2.HasVisibleChars() == true)
             {
-                String temp3 = StringTools.SubstringHelpers.GetSubstringToToken(temp2, "<", false, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase);
-                temp.Append(temp3);
+                Substring temp3 = StringTools.SubstringHelpers.GetSubstringToToken(temp2, "<", false, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase);
+                if (temp3 != null)
+                {
+                    temp.Append(temp3.Value);
+                }
+                else if (temp2[0] != '<')
+                {
+                    temp.Append(temp2);
+                }
             }
             else
             {

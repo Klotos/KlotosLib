@@ -88,7 +88,7 @@ namespace KlotosLib.UnitTests
 
             const byte first2 = 127;
             const byte second2 = 64;
-            UInt16 combined2 = NumericTools.Combine(first2, second2);
+            UInt16 combined2 = KlotosLib.ByteTools.Combiners.GetUInt16BE(first2, second2);// NumericTools.Combine(first2, second2);
             KeyValuePair<byte, byte> res2 = NumericTools.Split(combined2);
             Assert.AreEqual(first2, res2.Key, "actual = " + res2.Key);
             Assert.AreEqual(second2, res2.Value, "actual = " + res2.Value);
@@ -108,7 +108,7 @@ namespace KlotosLib.UnitTests
             const byte second4 = 20;
             const byte third4 = 30;
             const byte fourth4 = 40;
-            UInt32 combined4 = NumericTools.Combine(first4, second4, third4, fourth4);
+            UInt32 combined4 = KlotosLib.ByteTools.Combiners.GetUInt32BE(first4, second4, third4, fourth4);//NumericTools.Combine(first4, second4, third4, fourth4);
             byte first4_out;
             byte second4_out;
             byte third4_out;

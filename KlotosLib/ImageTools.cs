@@ -19,7 +19,7 @@ namespace KlotosLib
         /// Битовое перечесление с допустимыми форматами изображений, содержащее стартовый флаг неизвестного формата
         /// </summary>
         [Flags]
-        public enum ImageFormats
+        public enum ImageFormats : byte
         {
             /// <summary>
             /// Формат изображения неизвестен или не указан
@@ -1041,7 +1041,7 @@ namespace KlotosLib
                 throw new Exception("Image is not JPEG");
             }
             
-            // Skip 5 chars, they are for signature
+            // Skip 4 chars, they are for signature
             int offset = 4;
 
             while (offset + 8 < Header.Length)

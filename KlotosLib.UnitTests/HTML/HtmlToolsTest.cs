@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using KlotosLib.HTML;
 using NUnit.Framework;
 
-namespace KlotosLib.UnitTests
+namespace KlotosLib.UnitTests.HTML
 {
     [TestFixture]
-    public class HtmlToolsTests
+    public class HtmlToolsTest
     {
         [NUnit.Framework.Test]
-        public void GetAttributesForTag()
+        public void HtmlElementDeficient()
         {
             const String input_HTML_1 = "<HTML>" +
                                   "<head>" +
@@ -19,10 +20,10 @@ namespace KlotosLib.UnitTests
                                   "<meta charset=\"utf-8\" />" +
                                   "</body>" +
                                   "</HTML>";
-            Dictionary<String, String> output1_1 = HtmlTools.GetAttributesForTag(input_HTML_1, "meta", 0);
-            Dictionary<String, String> output1_2 = HtmlTools.GetAttributesForTag(input_HTML_1, "meta", 50);
-            Dictionary<String, String> output1_3 = HtmlTools.GetAttributesForTag(input_HTML_1, "head", 0);
-            Dictionary<String, String> output1_4 = HtmlTools.GetAttributesForTag(input_HTML_1, "head", 50);
+            HtmlElementDeficient output1_1 = KlotosLib.HTML.HtmlElementDeficient.ExtractElementFromHtml(input_HTML_1, "meta", 0);
+            HtmlElementDeficient output1_2 = KlotosLib.HTML.HtmlElementDeficient.ExtractElementFromHtml(input_HTML_1, "meta", 50);
+            HtmlElementDeficient output1_3 = KlotosLib.HTML.HtmlElementDeficient.ExtractElementFromHtml(input_HTML_1, "head", 0);
+            HtmlElementDeficient output1_4 = KlotosLib.HTML.HtmlElementDeficient.ExtractElementFromHtml(input_HTML_1, "head", 50);
 
             Dictionary<String, String> expected1_1 = new Dictionary<string, string>()
             {
@@ -36,12 +37,11 @@ namespace KlotosLib.UnitTests
             };
 
             Dictionary<String, String> expected1_3 = new Dictionary<string, string>(0);
-            Dictionary<String, String> expected1_4 = null;
 
-            CollectionAssert.AreEqual(expected1_1, output1_1);
-            CollectionAssert.AreEqual(expected1_2, output1_2);
-            CollectionAssert.AreEqual(expected1_3, output1_3);
-            CollectionAssert.AreEqual(expected1_4, output1_4);
+            CollectionAssert.AreEqual(expected1_1, output1_1.Attributes);
+            CollectionAssert.AreEqual(expected1_2, output1_2.Attributes);
+            CollectionAssert.AreEqual(expected1_3, output1_3.Attributes);
+            Assert.IsNull(output1_4);
 
             const String input_HTML_2 = "<p><select SIZE=\"3\" size = \"4\" name=\"hero\">"+
                 "<option ID= \"x\" disabled=disabled>Выберите героя</option>"+
@@ -49,11 +49,16 @@ namespace KlotosLib.UnitTests
                 "<option value=\"t2\" selected disabled other=4>Крокодил Гена</option>" +
                 "<option value = \" t3 \" id= 2 disabled other = '3' another = 4 disabled = 'disabled' >Зло</option>" +
                 "</select></p>";
-            Dictionary<String, String> output2_1 = HtmlTools.GetAttributesForTag(input_HTML_2, " select", 0);
-            Dictionary<String, String> output2_2 = HtmlTools.GetAttributesForTag(input_HTML_2, " option ", 36);
-            Dictionary<String, String> output2_3 = HtmlTools.GetAttributesForTag(input_HTML_2, "<option", 80);
-            Dictionary<String, String> output2_4 = HtmlTools.GetAttributesForTag(input_HTML_2, "Option", 120);
-            Dictionary<String, String> output2_5 = HtmlTools.GetAttributesForTag(input_HTML_2, "<OPTION ", 190);
+            Dictionary<String, String> output2_1 =
+                KlotosLib.HTML.HtmlElementDeficient.ExtractElementFromHtml(input_HTML_2, " select", 0).Attributes;
+            Dictionary<String, String> output2_2 =
+                KlotosLib.HTML.HtmlElementDeficient.ExtractElementFromHtml(input_HTML_2, " option ", 36).Attributes;
+            Dictionary<String, String> output2_3 =
+                KlotosLib.HTML.HtmlElementDeficient.ExtractElementFromHtml(input_HTML_2, "<option", 80).Attributes;
+            Dictionary<String, String> output2_4 =
+                KlotosLib.HTML.HtmlElementDeficient.ExtractElementFromHtml(input_HTML_2, "Option", 120).Attributes;
+            Dictionary<String, String> output2_5 =
+                KlotosLib.HTML.HtmlElementDeficient.ExtractElementFromHtml(input_HTML_2, "<OPTION ", 190).Attributes;
 
             Dictionary<String, String> expected2_1 = new Dictionary<string, string>(2)
             {
@@ -98,12 +103,21 @@ namespace KlotosLib.UnitTests
             CollectionAssert.AreEqual(expected2_4, output2_4);
             CollectionAssert.AreEqual(expected2_5, output2_5);
 
-            Assert.Throws<ArgumentNullException>(delegate { HtmlTools.GetAttributesForTag(null, "html", 0); });
-            Assert.Throws<ArgumentException>(delegate { HtmlTools.GetAttributesForTag(" \r\n ", "html", 0); });
-            Assert.Throws<ArgumentException>(delegate { HtmlTools.GetAttributesForTag("<html id='x'></html>", " \r\n ", 0); });
-            Assert.Throws<ArgumentOutOfRangeException>(delegate { HtmlTools.GetAttributesForTag("<html id='x'></html>", "html", -1); });
-            Assert.Throws<ArgumentOutOfRangeException>(delegate { HtmlTools.GetAttributesForTag("<html id='x'></html>", "html", 20); });
-
+            Assert.Throws<ArgumentNullException>(
+                delegate { KlotosLib.HTML.HtmlElementDeficient.ExtractElementFromHtml(null, "html", 0); }
+            );
+            Assert.Throws<ArgumentException>(
+                delegate { KlotosLib.HTML.HtmlElementDeficient.ExtractElementFromHtml(" \r\n ", "html", 0); }
+            );
+            Assert.Throws<ArgumentException>(
+                delegate { KlotosLib.HTML.HtmlElementDeficient.ExtractElementFromHtml("<html id='x'></html>", " \r\n ", 0); }
+            );
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate { KlotosLib.HTML.HtmlElementDeficient.ExtractElementFromHtml("<html id='x'></html>", "html", -1); }
+            );
+            Assert.Throws<ArgumentOutOfRangeException>(
+                delegate { KlotosLib.HTML.HtmlElementDeficient.ExtractElementFromHtml("<html id='x'></html>", "html", 20); }
+            );
         }
 
         [TestCase(null, Result = null)]

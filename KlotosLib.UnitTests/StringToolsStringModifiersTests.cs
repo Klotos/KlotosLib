@@ -67,7 +67,7 @@ namespace KlotosLib.UnitTests
             replacement_list1.Add(ss7, "very bad");
             ArgumentException expected_exception = Assert.Throws<ArgumentException>(
                 delegate { String output6 = StringTools.StringModifiers.ReplaceAll(base_str1, replacement_list1); });
-            Assert.AreEqual("ReplacementList" ,expected_exception.ParamName);
+            Assert.AreEqual("replacementList" ,expected_exception.ParamName);
 
             const String base_str2 = "abcdefghijklmnop";
             Substring ss8 = Substring.FromIndexToIndex(base_str2, 2, 3);

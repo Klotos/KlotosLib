@@ -602,5 +602,74 @@ namespace KlotosLib.UnitTests
                 Boolean result = Substring.AreIntersecting(new Substring[] { ss1, ss2, ss3, ss4, ss_bad });
             });
         }
+
+        [TestCase("0123456789", 3, 6, 2, 2, ExpectedResult = "56")]
+        [TestCase("0123456789", 3, 6, 2, 1, ExpectedResult = "5")]
+        [TestCase("0123456789", 3, 6, 4, 1, ExpectedResult = "7")]
+        [TestCase("0123456789", 2, 6, 4, 1, ExpectedResult = "6")]
+        [TestCase("0123456789", 2, 6, 2, 3, ExpectedResult = "456")]
+        [TestCase("0123456789", 1, 6, 0, 3, ExpectedResult = "123")]
+        [TestCase("0123456789", 2, 6, -1, 3, ExpectedException = typeof(ArgumentOutOfRangeException))]
+        [TestCase("0123456789", 2, 6, 1, 0, ExpectedException = typeof(ArgumentOutOfRangeException))]
+        [TestCase("0123456789", 2, 6, 6, 3, ExpectedException = typeof(ArgumentOutOfRangeException))]
+        [TestCase("0123456789", 2, 6, 1, 8, ExpectedException = typeof(ArgumentOutOfRangeException))]
+        [TestCase("0123456789", 2, 6, 4, 4, ExpectedException = typeof(ArgumentOutOfRangeException))]
+        public String FromStartWithLength_Instance(string baseStr, int origIndex, int origLength, int targetIndex, int targetLength)
+        {
+            Substring orig = Substring.FromIndexWithLength(baseStr, origIndex, origLength);
+            Substring target = orig.FromIndexWithLength(targetIndex, targetLength);
+            return target.Value;
+        }
+
+        [TestCase("0123456789", 1, 8, "123", StringComparison.Ordinal, ExpectedResult = true)]
+        [TestCase("0123456789", 1, 8, "12345", StringComparison.Ordinal, ExpectedResult = true)]
+        [TestCase("0123456789", 1, 8, "12345678", StringComparison.Ordinal, ExpectedResult = true)]
+        [TestCase("0123456789", 1, 8, "123456789", StringComparison.Ordinal, ExpectedResult = false)]
+        [TestCase("0123456789", 1, 8, "0123", StringComparison.Ordinal, ExpectedResult = false)]
+
+        [TestCase("abcdefghijk", 1, 8, "bcd", StringComparison.Ordinal, ExpectedResult = true)]
+        [TestCase("abcdefghijk", 1, 8, "BCD", StringComparison.OrdinalIgnoreCase, ExpectedResult = true)]
+        [TestCase("abcdefghijk", 1, 8, "BCD", StringComparison.Ordinal, ExpectedResult = false)]
+
+        [TestCase("aaaaaaaa", 1, 4, "AaA", StringComparison.OrdinalIgnoreCase, ExpectedResult = true)]
+        [TestCase("aaaaaaaa", 1, 4, "aaaA", StringComparison.OrdinalIgnoreCase, ExpectedResult = true)]
+        [TestCase("aaaaaaaa", 1, 4, "aaaaa", StringComparison.OrdinalIgnoreCase, ExpectedResult = false)]
+
+        [TestCase("abAbABabaBa", 3, 8, "AbA", StringComparison.OrdinalIgnoreCase, ExpectedResult = false)]
+        [TestCase("abAbABabaBa", 2, 8, "AbA", StringComparison.OrdinalIgnoreCase, ExpectedResult = true)]
+        [TestCase("abAbABabaBa", 2, 8, "AbA", StringComparison.Ordinal, ExpectedResult = true)]
+
+        [TestCase("abcabcabcabc", 1, 11, "abc", StringComparison.OrdinalIgnoreCase, ExpectedResult = false)]
+
+        [TestCase("0123456789", 1, 8, "", StringComparison.Ordinal, ExpectedException = typeof(ArgumentException))]
+        [TestCase("0123456789", 1, 8, (string)null, StringComparison.Ordinal, ExpectedException = typeof(ArgumentException))]
+        public Boolean StartsWith(string baseStr, int origIndex, int origLength, String target, StringComparison comparisonType)
+        {
+            Substring orig = Substring.FromIndexWithLength(baseStr, origIndex, origLength);
+            return orig.StartsWith(target, comparisonType);
+        }
+        
+        [TestCase("0123456789", 1, 8, "123", StringComparison.Ordinal, ExpectedResult = false)]
+        [TestCase("0123456789", 1, 8, "678", StringComparison.Ordinal, ExpectedResult = true)]
+        [TestCase("0123456789", 1, 8, "8", StringComparison.Ordinal, ExpectedResult = true)]
+        [TestCase("0128488789", 1, 8, "8", StringComparison.Ordinal, ExpectedResult = true)]
+        [TestCase("0123456789", 1, 4, "1234", StringComparison.Ordinal, ExpectedResult = true)]
+        [TestCase("0123456789", 1, 4, "234", StringComparison.Ordinal, ExpectedResult = true)]
+        [TestCase("0123456789", 1, 4, "01234", StringComparison.Ordinal, ExpectedResult = false)]
+        [TestCase("0123456789", 1, 4, "12345", StringComparison.Ordinal, ExpectedResult = false)]
+        [TestCase("0123456789", 1, 4, "345", StringComparison.Ordinal, ExpectedResult = false)]
+
+        [TestCase("abcabcabc", 0, 6, "cabc", StringComparison.Ordinal, ExpectedResult = true)]
+        [TestCase("abcabcabc", 0, 6, "CABC", StringComparison.Ordinal, ExpectedResult = false)]
+        [TestCase("abcabcabc", 0, 6, "CABC", StringComparison.OrdinalIgnoreCase, ExpectedResult = true)]
+        [TestCase("abcabcabc", 0, 6, "abca", StringComparison.Ordinal, ExpectedResult = false)]
+
+        [TestCase("abcabcabc", 0, 6, "abcabc", StringComparison.Ordinal, ExpectedResult = true)]
+        [TestCase("abcabcabc", 0, 6, "abcabca", StringComparison.Ordinal, ExpectedResult = false)]
+        public Boolean EndsWith(string baseStr, int origIndex, int origLength, String target, StringComparison comparisonType)
+        {
+            Substring orig = Substring.FromIndexWithLength(baseStr, origIndex, origLength);
+            return orig.EndsWith(target, comparisonType);
+        }
     }
 }

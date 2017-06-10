@@ -41,14 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GeometricAngleTest.cs" />
+    <Compile Include="Angles\MeasurementUnitTest.cs" />
+    <Compile Include="Angles\RotationAngleTest.cs" />
+    <Compile Include="ByteTools\CombinersTest.cs" />
+    <Compile Include="Angles\GeometricAngleTest.cs" />
     <Compile Include="ByteQuantityTest.cs" />
     <Compile Include="CollectionsToolsTests.cs" />
     <Compile Include="CommonToolsTests.cs" />
     <Compile Include="DelegateToolsTests.cs" />
     <Compile Include="EnumerationToolsTests.cs" />
     <Compile Include="FilePathToolsTest.cs" />
-    <Compile Include="HtmlToolsTests.cs" />
+    <Compile Include="HTML\HtmlToolsTest.cs" />
     <Compile Include="ImageToolsTests.cs" />
     <Compile Include="LambdaExtensionsTests.cs" />
     <Compile Include="NumericToolsTests.cs" />

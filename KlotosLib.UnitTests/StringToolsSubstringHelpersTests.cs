@@ -136,6 +136,22 @@ namespace KlotosLib.UnitTests
 
             Substring output1_9 = StringTools.SubstringHelpers.GetInnerStringBetweenTokens(input1, "Abc", "cba", 0, 0, true, StringTools.Direction.FromEndToStart, StringComparison.Ordinal);
             Assert.IsNull(output1_9);
+
+            const String input2 = "<body><p>textfirst<body><hr/></body>textlast</p></body>";
+
+            Substring output2_1 = StringTools.SubstringHelpers.GetInnerStringBetweenTokens(input2, "<body>", "</body>", 0, 0, false, Direction.FromEndToStart, StringComparison.OrdinalIgnoreCase);
+            Substring output2_2 = StringTools.SubstringHelpers.GetInnerStringBetweenTokens(input2, "<body>", "</body>", 0, 44, false, Direction.FromEndToStart, StringComparison.OrdinalIgnoreCase);
+            Substring output2_3 = StringTools.SubstringHelpers.GetInnerStringBetweenTokens(input2, "<body>", "</body>", 2, 44, false, Direction.FromEndToStart, StringComparison.OrdinalIgnoreCase);
+            Substring output2_4 = StringTools.SubstringHelpers.GetInnerStringBetweenTokens(input2, "<hr/>", "</body>", 2, 555, false, Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase);
+
+            Substring expected2_1 = Substring.FromIndexWithLength(input2, 6, 42);
+            Substring expected2_2 = Substring.FromIndexWithLength(input2, 6, 23);
+            Substring expected2_3 = Substring.FromIndexWithLength(input2, 24, 5);
+
+            Assert.AreEqual(expected2_1, output2_1, string.Format("Expected: '{0}', actual: '{1}'", expected2_1.Value, output2_1.Value));
+            Assert.AreEqual(expected2_2, output2_2, string.Format("Expected: '{0}', actual: '{1}'", expected2_2.Value, output2_2.Value));
+            Assert.AreEqual(expected2_3, output2_3, string.Format("Expected: '{0}', actual: '{1}'", expected2_3.Value, output2_3.Value));
+            Assert.IsNull(output2_4);
         }
 
         [Test]
@@ -172,7 +188,7 @@ namespace KlotosLib.UnitTests
                 Substring output = StringTools.SubstringHelpers.GetInnerStringBetweenTokens(input1,
                     "abc", "CBA", 2, 2, false, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase);
             });
-            Assert.Throws<InvalidEnumArgumentException>(delegate
+            Assert.Throws<ArgumentException>(delegate
             {
                 Substring output = StringTools.SubstringHelpers.GetInnerStringBetweenTokens(input1,
                     "abc", "CBA", 10, 0, false, (StringTools.Direction)2, StringComparison.OrdinalIgnoreCase);
@@ -406,27 +422,32 @@ namespace KlotosLib.UnitTests
         }
 
         [TestCase("1234abcd123", "cd", false, StringTools.Direction.FromStartToEnd, StringComparison.Ordinal, ExpectedResult = "1234ab")]
-        [TestCase("1234abcd123", "CD", false, StringTools.Direction.FromStartToEnd, StringComparison.Ordinal, ExpectedResult = "1234abcd123")]
+        [TestCase("1234abcd123", "CD", false, StringTools.Direction.FromStartToEnd, StringComparison.Ordinal, ExpectedResult = null)]
         [TestCase("1234abcd123", "CD", false, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedResult = "1234ab")]
         [TestCase("1234abcd123", "cd", false, StringTools.Direction.FromEndToStart, StringComparison.Ordinal, ExpectedResult = "123")]
-        [TestCase("1234abcd123", "CD", false, StringTools.Direction.FromEndToStart, StringComparison.Ordinal, ExpectedResult = "1234abcd123")]
+        [TestCase("1234abcd123", "CD", false, StringTools.Direction.FromEndToStart, StringComparison.Ordinal, ExpectedResult = null)]
+        [TestCase("1234abcd123",  "3",  true, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedResult = "123")]
         [TestCase("1234abcd123", "CD", false, StringTools.Direction.FromEndToStart, StringComparison.OrdinalIgnoreCase, ExpectedResult = "123")]
-        [TestCase("1234abcd123", "12", false, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedResult = "")]
+        [TestCase("1234abcd123", "12", false, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedResult = null)]
         [TestCase("1234abcd123", "12", false, StringTools.Direction.FromEndToStart, StringComparison.OrdinalIgnoreCase, ExpectedResult = "3")]
-        [TestCase("1234abcd123", "1", false, StringTools.Direction.FromEndToStart, StringComparison.OrdinalIgnoreCase, ExpectedResult = "23")]
-        [TestCase("1234abcd123", "1", true, StringTools.Direction.FromEndToStart, StringComparison.OrdinalIgnoreCase, ExpectedResult = "123")]
-        [TestCase("1234abcd123", "1", false, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedResult = "")]
-        [TestCase("1234abcd123", "1", true, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedResult = "1")]
-        [TestCase("1234abcd123", "3", true, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedResult = "123")]
+        [TestCase("1234abcd123",  "1", false, StringTools.Direction.FromEndToStart, StringComparison.OrdinalIgnoreCase, ExpectedResult = "23")]
+        [TestCase("1234abcd123",  "1",  true, StringTools.Direction.FromEndToStart, StringComparison.OrdinalIgnoreCase, ExpectedResult = "123")]
+        [TestCase("1234abcd123",  "1", false, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedResult = null)]
+        [TestCase("1234abcd123",  "1",  true, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedResult = "1")]
+        [TestCase("1234abcd123",  "3",  true, StringTools.Direction.FromEndToStart, StringComparison.OrdinalIgnoreCase, ExpectedResult = "3")]
 
-        [TestCase("  ", "3", true, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedException = typeof(ArgumentException))]
+        [TestCase("  ", "3", true, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedResult = null)]
+        [TestCase("", "abcd", true, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedException = typeof(ArgumentException))]
+        [TestCase((string)null, "abcd", true, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedException = typeof(ArgumentException))]
         [TestCase("1234abcd123", "", true, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedException = typeof(ArgumentException))]
-        [TestCase("1234abcd123", "1234ABCD123", true, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedException = typeof(ArgumentException))]
-        [TestCase("1234abcd123", "1234ABCD123", true, StringTools.Direction.FromStartToEnd, StringComparison.Ordinal, ExpectedResult = "1234abcd123")]
+        [TestCase("1234abcd123", "1234ABCD123", true, StringTools.Direction.FromStartToEnd, StringComparison.OrdinalIgnoreCase, ExpectedResult = "1234abcd123")]
+        [TestCase("1234abcd123", "1234ABCD123", true, StringTools.Direction.FromStartToEnd, StringComparison.Ordinal, ExpectedResult = null)]
         [TestCase("1234abcd123", "abc", true, (StringTools.Direction)2, StringComparison.OrdinalIgnoreCase, ExpectedException = typeof(InvalidEnumArgumentException))]
+
         public String GetSubstringToToken(String Input, String Token, Boolean LeaveToken, StringTools.Direction Dir, StringComparison CompareOptions)
         {
-            return StringTools.SubstringHelpers.GetSubstringToToken(Input, Token, LeaveToken, Dir, CompareOptions);
+            Substring output = StringTools.SubstringHelpers.GetSubstringToToken(Input, Token, LeaveToken, Dir, CompareOptions);
+            return output == null ? null : output.Value;
         }
 
         [TestCase("1234abcd123", "3", true, StringTools.Direction.FromStartToEnd, StringComparison.Ordinal, ExpectedResult = "34abcd123")]
@@ -517,7 +538,7 @@ namespace KlotosLib.UnitTests
         [TestCase((String)null, ExpectedResult = (String)null)]
         public String SecureSQLQuery(String Input)
         {
-            return StringTools.SubstringHelpers.SecureSQLQuery(Input);
+            return StringTools.SubstringHelpers.SecureSqlQuery(Input);
         }
 
         [TestCase(3, new String[0]{}, ExpectedResult = "")]

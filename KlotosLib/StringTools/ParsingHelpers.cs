@@ -51,7 +51,7 @@ namespace KlotosLib.StringTools
         /// <returns>Список найденных чисел или пустой список, если не найдено ни одного числа</returns>
         public static List<UInt32> FindIntegers(String Input, Int32 StartIndex)
         {
-            if (Input.IsStringNullEmptyWS() == true) { return new List<UInt32>(0); }
+            if (Input.IsStringNullEmptyWs() == true) { return new List<UInt32>(0); }
             if(StartIndex < 0) {throw new ArgumentOutOfRangeException("StartIndex", StartIndex, "Начальный индекс не может быть меньше 0");}
             if(StartIndex >= Input.Length) {throw new ArgumentOutOfRangeException("StartIndex", StartIndex, "Начальный индекс не может превышать длину входной строки");}
 

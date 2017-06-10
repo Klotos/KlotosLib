@@ -169,25 +169,7 @@ namespace KlotosLib
 
         #region Combine and Split
         /// <summary>
-        /// Возвращает одно новое число типа UInt16, объединяя два указанных типа Byte
-        /// </summary>
-        /// <remarks>http://stackoverflow.com/a/827267</remarks>
-        /// <param name="First"></param>
-        /// <param name="Second"></param>
-        /// <returns></returns>
-        public static UInt16 Combine(Byte First, Byte Second)
-        {
-            unchecked
-            {
-                UInt16 res = First;
-                res = (UInt16)(res << 8);
-                res = (UInt16)(res | (UInt16)Second);
-                return res;
-            }
-        }
-
-        /// <summary>
-        /// Возвращает два новых 1-байтовых целых беззнаковых числа, разбивая поплам одно указанное 2-байтовое типа UInt16
+        /// Возвращает два новых 1-байтовых целых беззнаковых числа, разбивая пополам одно указанное 2-байтовое типа UInt16
         /// </summary>
         /// <param name="Number"></param>
         /// <returns></returns>
@@ -202,30 +184,7 @@ namespace KlotosLib
         }
 
         /// <summary>
-        /// Возвращает новое число типа UInt32, объединяя 4 указанных числа типа Byte
-        /// </summary>
-        /// <param name="First"></param>
-        /// <param name="Second"></param>
-        /// <param name="Third"></param>
-        /// <param name="Fourth"></param>
-        /// <returns></returns>
-        public static UInt32 Combine(Byte First, Byte Second, Byte Third, Byte Fourth)
-        {
-            unchecked
-            {
-                UInt32 res = First;
-                res = res << 8;
-                res = res | Second;
-                res = res << 8;
-                res = res | Third;
-                res = res << 8;
-                res = res | Fourth;
-                return res;
-            }
-        }
-
-        /// <summary>
-        /// Возвращает через выводные параметры 4 новых числа типа Byte, разбивая указанное число <paramref name="Number"/> на4 секции по по 8 бит
+        /// Возвращает через выводные параметры 4 новых числа типа Byte, разбивая указанное число <paramref name="Number"/> на 4 секции по по 8 бит
         /// </summary>
         /// <param name="Number"></param>
         /// <param name="First"></param>
@@ -323,6 +282,21 @@ namespace KlotosLib
             return true;
         }
 
+        private const Double _thresholdD = 0.0000001;
+
+        /// <summary>
+        /// Сравнивает два двоичных числа с плавающей запятой двойной точности, применяя внутреннее пороговое значение
+        /// </summary>
+        /// <param name="First">Первое сравниваемое число</param>
+        /// <param name="Second">Второе сравниваемое число</param>
+        /// <returns></returns>
+        public static Boolean AreEqual(Double First, Double Second)
+        {
+            Double difference = Math.Abs(First - Second);
+            if (difference > Math.Abs(_thresholdD)) { return false; }
+            return true;
+        }
+
         /// <summary>
         /// Сравнивает два двоичных числа с плавающей запятой одинарной точности с учётом указанного порогового значения
         /// </summary>
@@ -337,6 +311,41 @@ namespace KlotosLib
             return true;
         }
 
+        private const Single _thresholdF = 0.0000001f;
+
+        /// <summary>
+        /// Сравнивает два двоичных числа с плавающей запятой одинарной точности, применяя внутреннее пороговое значение
+        /// </summary>
+        /// <param name="First">Первое сравниваемое число</param>
+        /// <param name="Second">Второе сравниваемое число</param>
+        /// <returns></returns>
+        public static Boolean AreEqual(Single First, Single Second)
+        {
+            Single difference = Math.Abs(First - Second);
+            if (difference > Math.Abs(_thresholdF)) { return false; }
+            return true;
+        }
+
+        /// <summary>
+        /// Определяет, является ли указанное двоичное число с плавающей запятой двойной точности нулем
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Boolean IsZero(Double value)
+        {
+            return Math.Abs(value) < _thresholdD;
+        }
+
+        /// <summary>
+        /// Определяет, является ли указанное одинарной число с плавающей запятой двойной точности нулем
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Boolean IsZero(Single value)
+        {
+            return Math.Abs(value) < _thresholdF;
+        }
+
         /// <summary>
         /// Выполняет кластеризацию указанного набора чисел (в одном измерении) с указанным пороговым значением. Самостоятельно определяет количество кластеров.
         /// </summary>
@@ -347,8 +356,10 @@ namespace KlotosLib
         {
             Data.ThrowIfNullOrEmpty("Набор чисел является NULL", "Набор чисел пуст", "Data");
             if (Data.HasSingle() == true) { return new List<List<Double>>(1) { new List<Double>(1) { Data.Single() } }; }
-
-            List<Double> sorted_data = (from Double x in Data orderby x ascending select x).ToList();
+            
+            List<Double> sorted_data = Data.ToList();
+            sorted_data.Sort();
+            //List<Double> sorted_data = (from Double x in Data orderby x ascending select x).ToList();
             List<List<Double>> output = new List<List<Double>>();
             List<Double> first_cluster = new List<Double>() { sorted_data[0] };
             output.Add(first_cluster);

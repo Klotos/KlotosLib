@@ -15,25 +15,25 @@ namespace KlotosLib.StringTools
         /// Возвращает подстроку входной строки указанной длины, отсчитывая её с конца. Позволяет определить, 
         /// считывать ли строку до начала, если указанная длина превышает фактическую длину строки.
         /// </summary>
-        /// <param name="Input">Входная строка, подстроку из которой слуедует возвратить</param>
-        /// <param name="Length">Желаемая длина возвращаемой подстроки</param>
-        /// <param name="UntilStart">Определяет поведение метода в случае, если желаемая длина больше фактической длины входной подстроки: 
+        /// <param name="input">Входная строка, подстроку из которой слуедует возвратить</param>
+        /// <param name="length">Желаемая длина возвращаемой подстроки</param>
+        /// <param name="untilStart">Определяет поведение метода в случае, если желаемая длина больше фактической длины входной подстроки: 
         /// 'true' - возвратить входную строку; 'false' - выбросить исключение.</param>
         /// <returns></returns>
-        public static String SubstringFromEnd(String Input, Int32 Length, Boolean UntilStart)
+        public static String SubstringFromEnd(String input, Int32 length, Boolean untilStart)
         {
-            if (Input == null) { throw new ArgumentNullException("Input"); }
-            if (String.IsNullOrEmpty(Input) == true) { throw new ArgumentException("Входная строка не содержит ни одного символа", "Input"); }
-            if (Length < 1) { throw new ArgumentOutOfRangeException("Length", Length, "Возвращаемая длина не может быть меньше 1"); }
-            if (UntilStart == false && Length > Input.Length)
-            { throw new ArgumentOutOfRangeException("Length", Length, "Указанная длина = " + Length + " превышает фактическую длину строки = " + Input.Length); }
-            else if (UntilStart == true && Length > Input.Length)
+            if (input == null) { throw new ArgumentNullException("input"); }
+            if (String.IsNullOrEmpty(input) == true) { throw new ArgumentException("Входная строка не содержит ни одного символа", "input"); }
+            if (length < 1) { throw new ArgumentOutOfRangeException("length", length, "Возвращаемая длина не может быть меньше 1"); }
+            if (untilStart == false && length > input.Length)
+            { throw new ArgumentOutOfRangeException("length", length, "Указанная длина = " + length + " превышает фактическую длину строки = " + input.Length); }
+            else if (untilStart == true && length > input.Length)
             {
-                return Input;
+                return input;
             }
             else
             {
-                String temp = Input.Substring(Input.Length - Length);
+                String temp = input.Substring(input.Length - length);
                 return temp;
             }
         }
@@ -41,30 +41,30 @@ namespace KlotosLib.StringTools
         /// <summary>
         /// Ищет и возвращает из входной строки все найденные подстроки, если они там присутствуют
         /// </summary>
-        /// <param name="Input">Входная строка, в которой происходит поиск подстрок</param>
-        /// <param name="Target">Целевая подстрока, которая ищется во входной строке</param>
-        /// <param name="StartIndex">Начальная позиция входной строки, с которой включительно начинается поиск. Если 0 - поиск ведётся с начала. 
+        /// <param name="input">Входная строка, в которой происходит поиск подстрок</param>
+        /// <param name="target">Целевая подстрока, которая ищется во входной строке</param>
+        /// <param name="startIndex">Начальная позиция входной строки, с которой включительно начинается поиск. Если 0 - поиск ведётся с начала. 
         /// Если меньше 0 или больше длины входной строки, выбрасывается исключение.</param>
-        /// <param name="ComparisonType">Опции сравнения строк между собой, по которым будет вести поиск целевой подстроки во входной строке</param>
+        /// <param name="comparisonType">Опции сравнения строк между собой, по которым будет вести поиск целевой подстроки во входной строке</param>
         /// <returns>Список найденных подстрок. Если не будет найдена ни одна, метод возвратит пустой список.</returns>
-        public static List<Substring> FindSubstring(String Input, String Target, Int32 StartIndex, StringComparison ComparisonType)
+        public static List<Substring> FindSubstring(String input, String target, Int32 startIndex, StringComparison comparisonType)
         {
-            if (Input == null) { throw new ArgumentNullException("Input", "Входная строка не может быть NULL"); }
-            if(Input.Length == 0) {throw new ArgumentException("Входная строка не может быть пустой", "Input");}
-            if (Target.IsNullOrEmpty() == true) { throw new ArgumentException("Целевая подстрока не может быть NULL или пустой", "Target"); }
-            if (StartIndex < 0) { throw new ArgumentOutOfRangeException("StartIndex", StartIndex, "Начальная позиция не может быть меньше 0"); }
-            if (StartIndex >= Input.Length)
-            { throw new ArgumentOutOfRangeException("StartIndex", StartIndex, String.Format("Начальная позиция ('{0}') не может быть больше или равна длине строки ('{1}')", StartIndex, Input.Length)); }
+            if (input == null) { throw new ArgumentNullException("input", "Входная строка не может быть NULL"); }
+            if(input.Length == 0) {throw new ArgumentException("Входная строка не может быть пустой", "input");}
+            if (target.IsNullOrEmpty() == true) { throw new ArgumentException("Целевая подстрока не может быть NULL или пустой", "target"); }
+            if (startIndex < 0) { throw new ArgumentOutOfRangeException("startIndex", startIndex, "Начальная позиция не может быть меньше 0"); }
+            if (startIndex >= input.Length)
+            { throw new ArgumentOutOfRangeException("startIndex", startIndex, String.Format("Начальная позиция ('{0}') не может быть больше или равна длине строки ('{1}')", startIndex, input.Length)); }
 
             List<Substring> output = new List<Substring>();
-            Int32 search_offset = StartIndex;
+            Int32 searchOffset = startIndex;
             while (true)
             {
-                Int32 found_position = Input.IndexOf(Target, search_offset, ComparisonType);
-                if(found_position < 0) {break;}
+                Int32 foundPosition = input.IndexOf(target, searchOffset, comparisonType);
+                if(foundPosition < 0) {break;}
 
-                search_offset = found_position + Target.Length;
-                Substring found = Substring.FromIndexWithLength(Input, found_position, Target.Length);
+                searchOffset = foundPosition + target.Length;
+                Substring found = Substring.FromIndexWithLength(input, foundPosition, target.Length);
                 output.Add(found);
             }
             return output;
@@ -74,47 +74,47 @@ namespace KlotosLib.StringTools
         /// Возвращает входную строку, из которой удалены все подстроки, начинающиеся с указанного начального токена 
         /// и заканчивающиеся ближайшим указанным конечным токеном. 
         /// </summary>
-        /// <param name="Input">Входящая строка, в которой происходит поиск.</param>
-        /// <param name="StartToken">Начальный токен (подстрока), которым начинается удаляемая подстрока. Не может быть NULL или пустым.</param>
-        /// <param name="EndToken">Конечный токен (подстрока), которым оканчивается удаляемая подстрока. Не может быть NULL или пустым.</param>
-        /// <param name="RemoveTokens">Определяет, следует ли удалить начальный и конечный токены вместе с удаляемой подстрокой (true) или же их следует оставить (false)</param>
-        /// <param name="ComparisonType">Опции сравнения строк между собой</param>
+        /// <param name="input">Входящая строка, в которой происходит поиск.</param>
+        /// <param name="startToken">Начальный токен (подстрока), которым начинается удаляемая подстрока. Не может быть NULL или пустым.</param>
+        /// <param name="endToken">Конечный токен (подстрока), которым оканчивается удаляемая подстрока. Не может быть NULL или пустым.</param>
+        /// <param name="removeTokens">Определяет, следует ли удалить начальный и конечный токены вместе с удаляемой подстрокой (true) или же их следует оставить (false)</param>
+        /// <param name="comparisonType">Опции сравнения строк между собой</param>
         /// <returns>Новая строка. Если не найдено ни одной пары начальныго и конечного токенов, возвращается оригинальная строка.
         /// Если начальный и конечный токены одинаковы, или исходная строка является NULL, пустой строкой либо содержит лишь пробелы, 
         /// либо хотя бы один из токенов является NULL или пустой строкой, метод выбрасывает исключение.</returns>
-        public static String RemoveFromStartToEndToken(String Input, String StartToken, String EndToken, Boolean RemoveTokens, StringComparison ComparisonType)
+        public static String RemoveFromStartToEndToken(String input, String startToken, String endToken, Boolean removeTokens, StringComparison comparisonType)
         {
-            if (Input.IsStringNullEmptyWhiteSpace() == true) throw new ArgumentException("Входная строка является NULL, пустой строкой либо состоит лишь из одних пробелов", "Input");
-            if (StartToken.IsStringNullOrEmpty() == true) throw new ArgumentException("Начальный токен является NULL или пустой строкой", "StartToken");
-            if (EndToken.IsStringNullOrEmpty() == true) throw new ArgumentException("Конечный токен является NULL или пустой строкой", "EndToken");
-            if (String.Compare(StartToken, EndToken, ComparisonType) == 0)
+            if (input.IsStringNullEmptyWhiteSpace() == true) throw new ArgumentException("Входная строка является NULL, пустой строкой либо состоит лишь из одних пробелов", "input");
+            if (startToken.IsStringNullOrEmpty() == true) throw new ArgumentException("Начальный токен является NULL или пустой строкой", "startToken");
+            if (endToken.IsStringNullOrEmpty() == true) throw new ArgumentException("Конечный токен является NULL или пустой строкой", "endToken");
+            if (String.Compare(startToken, endToken, comparisonType) == 0)
             { throw new ArgumentException("Начальный и конечный токены должны быть разными с учётом указнных опций сравнения"); }
 
-            Int32 current_offset = 0;
-            StringBuilder sb = new StringBuilder(Input.Length);
+            Int32 currentOffset = 0;
+            StringBuilder sb = new StringBuilder(input.Length);
             while (true)
             {
-                Int32 start_index = Input.IndexOf(StartToken, current_offset, ComparisonType);
-                if (start_index < 0) { break; }
+                Int32 startIndex = input.IndexOf(startToken, currentOffset, comparisonType);
+                if (startIndex < 0) { break; }
 
 
-                Int32 end_index = Input.IndexOf(EndToken, start_index, ComparisonType);
-                if (end_index < 0) { break; }
+                Int32 endIndex = input.IndexOf(endToken, startIndex, comparisonType);
+                if (endIndex < 0) { break; }
 
                 String slice;
-                if (RemoveTokens)
+                if (removeTokens)
                 {
-                    slice = Input.SubstringWithEnd(current_offset, start_index);
+                    slice = input.SubstringWithEnd(currentOffset, startIndex);
                 }
                 else
                 {
-                    slice = Input.SubstringWithEnd(current_offset, start_index + StartToken.Length) + Input.Substring(end_index, EndToken.Length);
+                    slice = input.SubstringWithEnd(currentOffset, startIndex + startToken.Length) + input.Substring(endIndex, endToken.Length);
                 }
 
                 sb.Append(slice);
-                current_offset = end_index + EndToken.Length;
+                currentOffset = endIndex + endToken.Length;
             }
-            sb.Append(Input.Substring(current_offset));
+            sb.Append(input.Substring(currentOffset));
             return sb.ToString();
         }
 
@@ -123,70 +123,91 @@ namespace KlotosLib.StringTools
         /// Ведёт поиск токенов от начала или он указанной начальной позиции до конца строки, и возвращает первое попавшееся совпадение. 
         /// Если указанных токенов не найдено, возвращает NULL.
         /// </summary>
-        /// <param name="Input">Входная строка, содержащая токены, и внутри которой происходит поиск. Не может быть NULL, пустой или состоящей из одних пробелов.</param>
-        /// <param name="StartToken">Начальный токен. Не может быть NULL или пустой строкой.</param>
-        /// <param name="EndToken">Конечный токен. Не может быть NULL или пустой строкой.</param>
-        /// <param name="StartIndex">Начальная позиция исходной строки, с которой включительно начинается поиск. Если 0 - поиск ведётся с начала. 
+        /// <param name="input">Входная строка, содержащая токены, и внутри которой происходит поиск. Не может быть NULL, пустой или состоящей из одних пробелов.</param>
+        /// <param name="startToken">Начальный токен. Не может быть NULL или пустой строкой.</param>
+        /// <param name="endToken">Конечный токен. Не может быть NULL или пустой строкой.</param>
+        /// <param name="startIndex">Начальная позиция исходной строки, с которой включительно начинается поиск. Если 0 - поиск ведётся с начала. 
         /// Если меньше 0 или больше длины исходной строки, выбрасывается исключение.</param>
-        /// <param name="EndIndex">Конечная позиция исходной строки, на которой включительно останавливается поиск и за которую не выходит. 
+        /// <param name="endIndex">Конечная позиция исходной строки, на которой включительно останавливается поиск и за которую не выходит. 
         /// Если больше фактической длины строки, 0 или меньше 0, поиск ведётся до конца строки. 
         /// Если больше нуля и меньше или равно ненулевой начальной позиции, выбрасывается исключение.</param>
-        /// <param name="IncludeTokens">Определяет, следует ли включать начальный и конечный токены в возвращаемую подстроку (true) или нет (false)</param>
-        /// <param name="EndTokenSearchDirection">Задаёт направление поиска конечного токена после того, как найден начальный. 
+        /// <param name="includeTokens">Определяет, следует ли включать начальный и конечный токены в возвращаемую подстроку (true) или нет (false)</param>
+        /// <param name="endTokenSearchDirection">Задаёт направление поиска конечного токена после того, как найден начальный. 
         /// FromEndToStart - поиск ведётся от самого конца входной строки и продвигается до найденного начального токена до тех пор, пока не найдёт конечный токен. 
         /// FromStartToEnd - поиск ведётся от конца найденного начального токена до конца входной строки.</param>
-        /// <param name="ComparisonType">Опции сравнения строк между собой</param>
+        /// <param name="comparisionOptions">Опции сравнения строк между собой</param>
         /// <returns>NULL - если не нашло</returns>
         public static Substring GetInnerStringBetweenTokens
-            (String Input, String StartToken, String EndToken,
-            Int32 StartIndex, Int32 EndIndex, Boolean IncludeTokens, StringTools.Direction EndTokenSearchDirection, StringComparison ComparisonType)
+            (String input, String startToken, String endToken,
+            Int32 startIndex, Int32 endIndex, Boolean includeTokens, Direction endTokenSearchDirection, StringComparison comparisionOptions)
         {
-            if (Input.IsStringNullEmptyWhiteSpace() == true) throw new ArgumentException("Входная строка не может быть NULL, пустой или состоящей из одних пробелов", "Input");
-            if (StartToken.IsStringNullOrEmpty() == true) throw new ArgumentException("Начальный токен не может быть NULL или пустой строкой", "StartToken");
-            if (EndToken.IsStringNullOrEmpty() == true) throw new ArgumentException("Конечный токен не может быть NULL или пустой строкой", "EndToken");
-            if (StartIndex < 0) { throw new ArgumentOutOfRangeException("StartIndex", StartIndex, "Начальная позиция не может быть меньше 0"); }
-            if (StartIndex >= Input.Length)
-            { throw new ArgumentOutOfRangeException("StartIndex", StartIndex, String.Format("Начальная позиция ('{0}') не может быть больше или равна длине строки ('{1}')", StartIndex, Input.Length)); }
-            if (EndIndex <= 0 || EndIndex >= Input.Length)
+            if (input.IsStringNullEmptyWs()) { throw new ArgumentException("Input string cannot be NULL, empty or whitespaced", "input"); }
+            if (string.IsNullOrEmpty(startToken)) throw new ArgumentException("Start token cannot be NULL or empty", "startToken");
+            if (string.IsNullOrEmpty(endToken)) throw new ArgumentException("End token cannot be NULL or empty", "endToken");
+            if (startIndex < 0) { throw new ArgumentOutOfRangeException("startIndex", startIndex, "Start index cannot be negative"); }
+            if (startIndex >= input.Length)
+            { throw new ArgumentOutOfRangeException("startIndex", startIndex, String.Format("Start index ('{0}') cannot be greater or equal of the input string length ('{1}')", startIndex, input.Length)); }
+            Int32 finalEndIndex;
+            if (endIndex <= 0 || endIndex >= input.Length)
             {
-                EndIndex = Input.Length - 1;
+                finalEndIndex = input.Length - 1;
             }
-            if (EndIndex <= StartIndex)
-            { throw new ArgumentOutOfRangeException("EndIndex", EndIndex, String.Format("Конечная позиция ('{0}') не может быть меньше или равна начальной позиции ('{1}')", EndIndex, StartIndex)); }
-            if (Enum.IsDefined(EndTokenSearchDirection.GetType(), EndTokenSearchDirection) == false)
-            { throw new InvalidEnumArgumentException("EndTokenSearchDirection", (Int32)EndTokenSearchDirection, EndTokenSearchDirection.GetType()); }
-            if (Enum.IsDefined(typeof(StringComparison), ComparisonType) == false)
-            { throw new InvalidEnumArgumentException("ComparisonType", (Int32)ComparisonType, typeof(StringComparison)); }
-            Int32 start_token_start_pos = Input.IndexOf(StartToken, StartIndex, (EndIndex - StartIndex + 1), ComparisonType);
-            if (start_token_start_pos == -1)
+            else
+            {
+                finalEndIndex = endIndex;
+            }
+            if (finalEndIndex <= startIndex)
+            { throw new ArgumentOutOfRangeException("endIndex", endIndex, String.Format("End index ('{0}') cannot be lesser or equal of the start index ('{1}')", endIndex, startIndex)); }
+            if (Enum.IsDefined(typeof(StringComparison), (Int32)comparisionOptions) == false)
+            { throw new InvalidEnumArgumentException("comparisionOptions", (Int32)comparisionOptions, typeof(StringComparison)); }
+
+            Int32 startTokenStartPos = input.IndexOf(startToken, startIndex, (finalEndIndex - startIndex + 1), comparisionOptions);
+            if (startTokenStartPos == -1)
             {
                 return null;
             }
-            Int32 end_token_start_pos;
-            if (EndTokenSearchDirection == StringTools.Direction.FromStartToEnd)
+            Int32 endTokenStartPos;
+
+            Int32 innerStartIndex;
+            Int32 count;
+            if (endTokenSearchDirection == Direction.FromStartToEnd)
             {
-                Int32 search_start_index = start_token_start_pos + StartToken.Length;
-                Int32 count = EndIndex - search_start_index + 1;
-                end_token_start_pos = Input.IndexOf(EndToken, search_start_index, count, ComparisonType);
+                innerStartIndex = startTokenStartPos + startToken.Length;
+                count = finalEndIndex - innerStartIndex + 1;
+                endTokenStartPos = input.IndexOf(endToken, innerStartIndex, count, comparisionOptions);
             }
-            else// if (EndTokenSearchDirection == StringTools.Direction.FromEndToStart)
+            else if (endTokenSearchDirection == Direction.FromEndToStart)
             {
-                Int32 start_index = EndIndex;
-                Int32 count = EndIndex - start_token_start_pos + StartToken.Length;
-                end_token_start_pos = Input.LastIndexOf(EndToken, start_index, count, ComparisonType);
+                innerStartIndex = finalEndIndex;
+                count = finalEndIndex - (startTokenStartPos + startToken.Length);
+                endTokenStartPos = input.LastIndexOf(endToken, innerStartIndex, count, comparisionOptions);
             }
-            if (end_token_start_pos == -1)
+            else
+            {
+                throw new ArgumentException(String.Format("Value '{0}' ('{1}') of 'Direction' enumeration is not supported",
+                    endTokenSearchDirection.ToString(), (Int32)endTokenSearchDirection), "endTokenSearchDirection");
+            }
+            if (endTokenStartPos == -1)
             {
                 return null;
             }
             Substring output;
-            if (IncludeTokens == false)
+            if (includeTokens == false)
             {
-                output = Substring.FromIndexToIndex(Input, start_token_start_pos + StartToken.Length, end_token_start_pos - 1);
+                Int32 localStartIndex = startTokenStartPos + startToken.Length;
+                Int32 localEndIndex = endTokenStartPos - 1;
+                if (localStartIndex > localEndIndex)
+                {
+                    output = null;
+                }
+                else
+                {
+                    output = Substring.FromIndexToIndex(input, localStartIndex, localEndIndex);
+                }
             }
             else
             {
-                output = Substring.FromIndexToIndex(Input, start_token_start_pos, end_token_start_pos + EndToken.Length - 1);
+                output = Substring.FromIndexToIndex(input, startTokenStartPos, endTokenStartPos + endToken.Length - 1);
             }
             return output;
         }
@@ -196,68 +217,68 @@ namespace KlotosLib.StringTools
         /// Поиск ведётся с начала до конца строки, начиная с указанной позиции, и возвращает все попавшиеся совпадения. 
         /// Если указанных токенов не найдено, возвращает пустой список подстрок.
         /// </summary>
-        /// <param name="Input">Входная строка, содержащая токены, и внутри которой происходит поиск. Входная строка не может быть NULL, пустой или состоящей из одних пробелов.</param>
-        /// <param name="StartToken">Начальный токен, не может быть NULL или пустой строкой</param>
-        /// <param name="EndToken">Конечный токен, не может быть NULL или пустой строкой</param>
-        /// <param name="StartIndex">Позиция (включительная) начала поиска во входной строке. Если 0 - поиск ведётся с начала. 
+        /// <param name="input">Входная строка, содержащая токены, и внутри которой происходит поиск. Входная строка не может быть NULL, пустой или состоящей из одних пробелов.</param>
+        /// <param name="startToken">Начальный токен, не может быть NULL или пустой строкой</param>
+        /// <param name="endToken">Конечный токен, не может быть NULL или пустой строкой</param>
+        /// <param name="startIndex">Позиция (включительная) начала поиска во входной строке. Если 0 - поиск ведётся с начала. 
         /// Если меньше 0 или больше длины входной строки - выбрасывается исключение.</param>
-        /// <param name="IncludeTokens">Определяет, следует ли включать начальный и конечный токены в возвращаемые подстроки (true) или нет (false)</param>
-        /// <param name="CompOpt">Опции сравнения строк между собой</param>
+        /// <param name="includeTokens">Определяет, следует ли включать начальный и конечный токены в возвращаемые подстроки (true) или нет (false)</param>
+        /// <param name="compOpt">Опции сравнения строк между собой</param>
         /// <returns>Список подстрок. Если какая-либо из подстрок является пустой (т.е. между начальным и конечным токеном нет ни одного символа), 
         /// в списке она будет представлена значением NULL.</returns>
-        public static List<Substring> GetInnerStringsBetweenTokens(String Input, String StartToken, String EndToken, Int32 StartIndex, Boolean IncludeTokens, StringComparison CompOpt)
+        public static List<Substring> GetInnerStringsBetweenTokens(String input, String startToken, String endToken, Int32 startIndex, Boolean includeTokens, StringComparison compOpt)
         {
-            if (Input.IsStringNullEmptyWhiteSpace() == true)
-            { throw new ArgumentException("Входная строка не может быть NULL, пустой или состоящей из одних пробелов", "Input"); }
-            if (StartToken.IsStringNullOrEmpty() == true) { throw new ArgumentException("Начальный токен не может быть NULL или пустой строкой", "StartToken"); }
-            if (EndToken.IsStringNullOrEmpty() == true) { throw new ArgumentException("Конечный токен не может быть NULL или пустой строкой", "EndToken"); }
-            if (StartIndex < 0) { throw new ArgumentOutOfRangeException("StartIndex", StartIndex, "Позиция начала поиска не может быть меньше 0"); }
-            if (StartIndex >= Input.Length)
+            if (input.IsStringNullEmptyWhiteSpace() == true)
+            { throw new ArgumentException("Входная строка не может быть NULL, пустой или состоящей из одних пробелов", "input"); }
+            if (startToken.IsStringNullOrEmpty() == true) { throw new ArgumentException("Начальный токен не может быть NULL или пустой строкой", "startToken"); }
+            if (endToken.IsStringNullOrEmpty() == true) { throw new ArgumentException("Конечный токен не может быть NULL или пустой строкой", "endToken"); }
+            if (startIndex < 0) { throw new ArgumentOutOfRangeException("startIndex", startIndex, "Позиция начала поиска не может быть меньше 0"); }
+            if (startIndex >= input.Length)
             {
-                throw new ArgumentOutOfRangeException("StartIndex", StartIndex,
-                  String.Format("Позиция начала поиска ('{0}') не может быть больше или равна длине строки ('{1}')", StartIndex, Input.Length));
+                throw new ArgumentOutOfRangeException("startIndex", startIndex,
+                  String.Format("Позиция начала поиска ('{0}') не может быть больше или равна длине строки ('{1}')", startIndex, input.Length));
             }
-            if (Enum.IsDefined(typeof(StringComparison), (Int32)CompOpt) == false)
-            { throw new InvalidEnumArgumentException("CompOpt", (Int32)CompOpt, typeof(StringComparison)); }
+            if (Enum.IsDefined(typeof(StringComparison), (Int32)compOpt) == false)
+            { throw new InvalidEnumArgumentException("compOpt", (Int32)compOpt, typeof(StringComparison)); }
 
             List<Substring> output = new List<Substring>();
 
-            Int32 internal_offset = StartIndex;
+            Int32 internalOffset = startIndex;
 
             while (true)
             {
-                Int32 start_token_start_pos = Input.IndexOf(StartToken, internal_offset, CompOpt);
-                if (start_token_start_pos == -1)
+                Int32 startTokenStartPos = input.IndexOf(startToken, internalOffset, compOpt);
+                if (startTokenStartPos == -1)
                 {
                     return output;
                 }
-                Int32 end_token_start_pos = Input.IndexOf(EndToken, (start_token_start_pos + StartToken.Length), CompOpt);
-                if (end_token_start_pos == -1)
+                Int32 endTokenStartPos = input.IndexOf(endToken, (startTokenStartPos + startToken.Length), compOpt);
+                if (endTokenStartPos == -1)
                 {
                     return output;
                 }
-                if (start_token_start_pos + StartToken.Length == end_token_start_pos)
+                if (startTokenStartPos + startToken.Length == endTokenStartPos)
                 {
                     output.Add(null);
                 }
                 else
                 {
-                    Int32 substring_start_index;
-                    Int32 substring_end_index;
-                    if (IncludeTokens == false)
+                    Int32 substringStartIndex;
+                    Int32 substringEndIndex;
+                    if (includeTokens == false)
                     {
-                        substring_start_index = start_token_start_pos + StartToken.Length;
-                        substring_end_index = end_token_start_pos - 1;
+                        substringStartIndex = startTokenStartPos + startToken.Length;
+                        substringEndIndex = endTokenStartPos - 1;
                     }
                     else
                     {
-                        substring_start_index = start_token_start_pos;
-                        substring_end_index = end_token_start_pos - 1 + EndToken.Length;
+                        substringStartIndex = startTokenStartPos;
+                        substringEndIndex = endTokenStartPos - 1 + endToken.Length;
                         
                     }
-                    output.Add(Substring.FromIndexToIndex(Input, substring_start_index, substring_end_index));
+                    output.Add(Substring.FromIndexToIndex(input, substringStartIndex, substringEndIndex));
                 }
-                internal_offset = end_token_start_pos + EndToken.Length;//обновление смещения
+                internalOffset = endTokenStartPos + endToken.Length;//обновление смещения
             }
         }
 
@@ -266,247 +287,259 @@ namespace KlotosLib.StringTools
         /// в правильной последовательности. Если каких-либо или всех указанных токенов не найдено, или их реальный порядок не совпадает с указанным, 
         /// возвращается пустой список подстрок.
         /// </summary>
-        /// <param name="Input">Входная строка, содержащая токены, и внутри которой происходит поиск. Входная строка не может быть NULL, пустой или состоящей из одних пробелов.</param>
-        /// <param name="StartTokens">Список начальных токенов в определённой последовательности, которая будет соблюдена при поиске подстрок. 
+        /// <param name="input">Входная строка, содержащая токены, и внутри которой происходит поиск. Входная строка не может быть NULL, пустой или состоящей из одних пробелов.</param>
+        /// <param name="startTokens">Список начальных токенов в определённой последовательности, которая будет соблюдена при поиске подстрок. 
         /// Не может быть NULL или пустым, но может содержать единственный элемент.</param>
-        /// <param name="EndTokens">Список конечных токенов в определённой последовательности, которая будет соблюдена при поиске подстрок. 
+        /// <param name="endTokens">Список конечных токенов в определённой последовательности, которая будет соблюдена при поиске подстрок. 
         /// Не может быть NULL или пустым, но может содержать единственный элемент.</param>
-        /// <param name="EndTokensSearchDirection">Задаёт направление поиска конечных токенов после того, как найдены все начальные. 
+        /// <param name="endTokensSearchDirection">Задаёт направление поиска конечных токенов после того, как найдены все начальные. 
         /// FromEndToStart - поиск ведётся от самого конца строки и продвигается до последнего начального токена до тех пор, пока не найдёт все конечные токены. 
         /// FromStartToEnd - поиск ведётся от конца последнего начального токена до конца строки.</param>
-        /// <param name="StartIndex">Позиция (включительная) начала поиска во входной строке. Если 0 - поиск ведётся с начала. 
+        /// <param name="startIndex">Позиция (включительная) начала поиска во входной строке. Если 0 - поиск ведётся с начала. 
         /// Если меньше 0 или больше длины входной строки - выбрасывается исключение.</param>
-        /// <param name="CompOpt">Опции сравнения строк между собой</param>
+        /// <param name="compOpt">Опции сравнения строк между собой</param>
         /// <exception cref="ArgumentException"></exception>
         /// <returns>Искомая подстрока. Если не найдена, возвращается NULL.</returns>
-        public static Substring GetInnerStringBetweenTokensSet(String Input, String[] StartTokens, String[] EndTokens,
-            StringTools.Direction EndTokensSearchDirection, Int32 StartIndex, StringComparison CompOpt)
+        public static Substring GetInnerStringBetweenTokensSet(String input, String[] startTokens, String[] endTokens,
+            StringTools.Direction endTokensSearchDirection, Int32 startIndex, StringComparison compOpt)
         {
-            if(Input == null){throw new ArgumentNullException("Input");}
-            if (Input.IsStringNullEmptyWhiteSpace() == true)
-            { throw new ArgumentException("Входная строка не может быть NULL, пустой или состоящей из одних пробелов", "Input"); }
+            if(input == null){throw new ArgumentNullException("input");}
+            if (input.IsStringNullEmptyWhiteSpace() == true)
+            { throw new ArgumentException("Входная строка не может быть NULL, пустой или состоящей из одних пробелов", "input"); }
 
-            if (StartTokens.IsNullOrEmpty())
-            { throw new ArgumentException("Список начальных токенов не может быть NULL или пустым", "StartTokens"); }
-            if (EndTokens.IsNullOrEmpty())
-            { throw new ArgumentException("Список конечных токенов не может быть NULL или пустым", "EndTokens"); }
-            if (StartIndex < 0) { throw new ArgumentOutOfRangeException("StartIndex", StartIndex, "Позиция начала поиска не может быть меньше 0"); }
-            if (StartIndex >= Input.Length)
+            if (startTokens.IsNullOrEmpty())
+            { throw new ArgumentException("Список начальных токенов не может быть NULL или пустым", "startTokens"); }
+            if (endTokens.IsNullOrEmpty())
+            { throw new ArgumentException("Список конечных токенов не может быть NULL или пустым", "endTokens"); }
+            if (startIndex < 0) { throw new ArgumentOutOfRangeException("startIndex", startIndex, "Позиция начала поиска не может быть меньше 0"); }
+            if (startIndex >= input.Length)
             {
-                throw new ArgumentOutOfRangeException("StartIndex", StartIndex,
-                  String.Format("Позиция начала поиска ('{0}') не может быть больше или равна длине строки ('{1}')", StartIndex, Input.Length));
+                throw new ArgumentOutOfRangeException("startIndex", startIndex,
+                  String.Format("Позиция начала поиска ('{0}') не может быть больше или равна длине строки ('{1}')", startIndex, input.Length));
             }
-            if (Enum.IsDefined(typeof(StringTools.Direction), EndTokensSearchDirection) == false)
-            { throw new InvalidEnumArgumentException("EndTokensSearchDirection", (Int32)EndTokensSearchDirection, typeof(StringTools.Direction)); }
+            if (Enum.IsDefined(typeof(StringTools.Direction), endTokensSearchDirection) == false)
+            { throw new InvalidEnumArgumentException("endTokensSearchDirection", (Int32)endTokensSearchDirection, typeof(StringTools.Direction)); }
 
-            if (Enum.IsDefined(typeof(StringComparison), (Int32)CompOpt) == false)
-            { throw new InvalidEnumArgumentException("CompOpt", (Int32)CompOpt, typeof(StringComparison)); }
+            if (Enum.IsDefined(typeof(StringComparison), (Int32)compOpt) == false)
+            { throw new InvalidEnumArgumentException("compOpt", (Int32)compOpt, typeof(StringComparison)); }
 
-            Int32 internal_offset = StartIndex;
+            Int32 internalOffset = startIndex;
 
-            for (Int32 one_start_token_index = 0; one_start_token_index < StartTokens.Length; one_start_token_index++)
+            for (Int32 oneStartTokenIndex = 0; oneStartTokenIndex < startTokens.Length; oneStartTokenIndex++)
             {
-                String current_start_token = StartTokens[one_start_token_index];
-                Int32 current_start_token_pos = Input.IndexOf(current_start_token, internal_offset, CompOpt);
-                if (current_start_token_pos == -1)
+                String currentStartToken = startTokens[oneStartTokenIndex];
+                Int32 currentStartTokenPos = input.IndexOf(currentStartToken, internalOffset, compOpt);
+                if (currentStartTokenPos == -1)
                 {
                     return null;
                 }
                 else
                 {
-                    internal_offset = current_start_token_pos + current_start_token.Length;
+                    internalOffset = currentStartTokenPos + currentStartToken.Length;
                 }
             }
-            Int32 final_substr_start_index = internal_offset;
+            Int32 finalSubstrStartIndex = internalOffset;
 
-            if (EndTokensSearchDirection == StringTools.Direction.FromEndToStart)
+            if (endTokensSearchDirection == StringTools.Direction.FromEndToStart)
             {
-                Int32 end_offset = Input.Length - 1;
+                Int32 endOffset = input.Length - 1;
 
-                for (Int32 one_end_token_index = EndTokens.Length - 1; one_end_token_index >= 0; one_end_token_index--)
+                for (Int32 oneEndTokenIndex = endTokens.Length - 1; oneEndTokenIndex >= 0; oneEndTokenIndex--)
                 {
-                    String current_end_token = EndTokens[one_end_token_index];
-                    Int32 count_to_search = end_offset - final_substr_start_index;
-                    Int32 current_end_token_pos = Input.LastIndexOf(current_end_token, end_offset, count_to_search, CompOpt);
-                    if (current_end_token_pos == -1)
+                    String currentEndToken = endTokens[oneEndTokenIndex];
+                    Int32 countToSearch = endOffset - finalSubstrStartIndex;
+                    Int32 currentEndTokenPos = input.LastIndexOf(currentEndToken, endOffset, countToSearch, compOpt);
+                    if (currentEndTokenPos == -1)
                     {
                         return null;
                     }
                     else
                     {
-                        end_offset = current_end_token_pos;
+                        endOffset = currentEndTokenPos;
                     }
                 }
-                return Substring.FromIndexToIndex(Input, final_substr_start_index, end_offset - 1);
+                return Substring.FromIndexToIndex(input, finalSubstrStartIndex, endOffset - 1);
             }
             else// if (EndTokensSearchDirection == StringTools.Direction.FromStartToEnd)
             {
-                Int32 final_substr_end_index = 0;
+                Int32 finalSubstrEndIndex = 0;
 
-                for (Int32 one_end_token_index = 0; one_end_token_index < EndTokens.Length; one_end_token_index++)
+                for (Int32 oneEndTokenIndex = 0; oneEndTokenIndex < endTokens.Length; oneEndTokenIndex++)
                 {
-                    String current_end_token = EndTokens[one_end_token_index];
+                    String currentEndToken = endTokens[oneEndTokenIndex];
 
-                    Int32 current_end_token_pos = Input.IndexOf(current_end_token, internal_offset, CompOpt);
-                    if (current_end_token_pos == -1)
+                    Int32 currentEndTokenPos = input.IndexOf(currentEndToken, internalOffset, compOpt);
+                    if (currentEndTokenPos == -1)
                     {
                         return null;
                     }
-                    internal_offset = current_end_token_pos + current_end_token.Length;
-                    if (final_substr_end_index == 0)
+                    internalOffset = currentEndTokenPos + currentEndToken.Length;
+                    if (finalSubstrEndIndex == 0)
                     {
-                        final_substr_end_index = current_end_token_pos;
+                        finalSubstrEndIndex = currentEndTokenPos;
                     }
                 }
-                return Substring.FromIndexToIndex(Input, final_substr_start_index, final_substr_end_index - 1);
+                return Substring.FromIndexToIndex(input, finalSubstrStartIndex, finalSubstrEndIndex - 1);
             }
         }
 
         /// <summary>
         /// Возвращает часть указанной входной строки, которая размещена от начала или от конца и до первого указанного токена
         /// </summary>
-        /// <param name="Input">Входящая строка, из которой надо извлечь подстроку</param>
-        /// <param name="Token">Токен, который определяет конец подстроки</param>
-        /// <param name="LeaveToken">Если "true" - ближайший токен будет оставлен. Если "false" - он тоже будет удалён.</param>
-        /// <param name="Dir">Направление, с которого будет возвращена подстрока: из начала или из конца</param>
-        /// <param name="CompareOptions">Опции сравнения строк между собой</param>
-        /// <returns></returns>
-        public static string GetSubstringToToken(String Input, String Token, Boolean LeaveToken, StringTools.Direction Dir, StringComparison CompareOptions)
+        /// <param name="input">Входящая строка, из которой надо извлечь подстроку</param>
+        /// <param name="token">Токен, который определяет конец подстроки</param>
+        /// <param name="leaveToken">Если "true" - ближайший токен будет помещён в возвращаемую подстроку. 
+        /// Если "false" - он будет отсутствовать в возвращаемой подстроке.</param>
+        /// <param name="dir">Направление, с которого будет возвращена подстрока: из начала или из конца</param>
+        /// <param name="compareOptions">Опции сравнения строк между собой</param>
+        /// <returns>Экземпляр подстроки или NULL, если во входной строке не был найден указанный токен.</returns>
+        public static Substring GetSubstringToToken(String input, String token, Boolean leaveToken, StringTools.Direction dir, StringComparison compareOptions)
         {
-            if (Input.IsStringNullEmptyWhiteSpace() == true) { throw new ArgumentException("Входная строка не может быть NULL, пустой или состоящей из одних пробелов", "Input"); }
-            if (Token.IsStringNullOrEmpty() == true) { throw new ArgumentException("Токен не может быть NULL или пустой строкой", "Token"); }
-            if (String.Compare(Input, Token, CompareOptions) == 0) { throw new ArgumentException("Входная строка не может быть равна токену"); }
-            if (Input.Contains(Token, CompareOptions) == false) { return Input; }
-            Int32 input_length = Input.Length;
-            String temp;
-            switch (Dir)
+            if (input.IsStringNullOrEmpty() == true) { throw new ArgumentException("Входная строка не может быть NULL или пустой", "input"); }
+            if (token.IsStringNullOrEmpty() == true) { throw new ArgumentException("Токен не может быть NULL или пустой строкой", "token"); }
+            Substring output;
+            switch (dir)
             {
                 case StringTools.Direction.FromStartToEnd:
-                    Int32 index_of_first_token = Input.IndexOf(Token, CompareOptions);
-                    temp = Input.Substring(0, index_of_first_token);
-                    if (LeaveToken == false) { return temp; }
-                    else { return temp + Token; }
+                    Int32 indexOfFirstToken = input.IndexOf(token, compareOptions);
+                    if (indexOfFirstToken < 0 || (indexOfFirstToken == 0 && leaveToken == false))
+                    {
+                        output = null;
+                    }
+                    else
+                    {
+                        output = Substring.FromStartToIndex(input,
+                        leaveToken ? indexOfFirstToken + token.Length - 1 : indexOfFirstToken - 1);
+                    }
+                    break;
                 case StringTools.Direction.FromEndToStart:
-                    Int32 token_length = Token.Length;
-                    Int32 index_of_last_token = Input.LastIndexOf(Token, CompareOptions);
-                    temp = SubstringFromEnd(Input, (input_length - (index_of_last_token + token_length)), true);
-                    if (LeaveToken == false) { return temp; }
-                    else { return Token + temp; }
+                    Int32 indexOfLastToken = input.LastIndexOf(token, compareOptions);
+                    if (indexOfLastToken < 0)
+                    {
+                        output = null;
+                    }
+                    else
+                    {
+                        output = Substring.FromIndexToEnd(input,
+                            leaveToken ? indexOfLastToken : indexOfLastToken + token.Length);
+                    }
+                    break;
                 default:
-                    throw new InvalidEnumArgumentException("Dir", (Int32)Dir, Dir.GetType());
+                    throw new InvalidEnumArgumentException("dir", (Int32)dir, dir.GetType());
             }
+            return output;
         }
 
         /// <summary>
         /// Возвращает подстроку из входной строки, которая отчитывается от начала или от конца и до указанного вхожденя указанного токена.
         /// </summary>
-        /// <param name="Input"></param>
-        /// <param name="Token"></param>
-        /// <param name="Number">Номер вхождения указанного токена, начиная с 1</param>
-        /// <param name="Dir"></param>
-        /// <param name="ComparisonType"></param>
+        /// <param name="input"></param>
+        /// <param name="token"></param>
+        /// <param name="number">Номер вхождения указанного токена, начиная с 1</param>
+        /// <param name="dir"></param>
+        /// <param name="comparisonType"></param>
         /// <returns></returns>
-        public static String GetSubstringToTokenWithSpecifiedNumber(String Input, String Token, Byte Number, StringTools.Direction Dir, StringComparison ComparisonType)
+        public static String GetSubstringToTokenWithSpecifiedNumber(String input, String token, Byte number, StringTools.Direction dir, StringComparison comparisonType)
         {
-            if (Input.IsStringNullEmptyWhiteSpace() == true) { throw new ArgumentException("Входная строка не может быть NULL, пустой или состоящей из одних пробелов", "Input"); }
-            if (Token.IsStringNullOrEmpty() == true) { throw new ArgumentException("Токен не может быть NULL или пустой строкой", "Token"); }
-            if (Enum.IsDefined(ComparisonType.GetType(), ComparisonType) == false)
-            { throw new InvalidEnumArgumentException("ComparisonType", (Int32)ComparisonType, ComparisonType.GetType()); }
-            if (String.Compare(Input, Token, ComparisonType) == 0) { throw new ArgumentException("Входная строка не может быть равна токену"); }
-            if (Input.Contains(Token, ComparisonType) == false) { return Input; }
-            if (Number == 0) { throw new ArgumentOutOfRangeException("Number", "Номер вхождения указанного токена не может быть нулевой"); }
-            Int32 nums_of_occureses = StringTools.StringAnalyzers.GetNumberOfOccurencesInString(Input, Token, ComparisonType);
-            if (Number > nums_of_occureses) { throw new ArgumentOutOfRangeException("Number", Number, "Указанная позиция больше, чем количество вхождений токена в строке"); }
+            if (input.IsStringNullEmptyWhiteSpace() == true) { throw new ArgumentException("Входная строка не может быть NULL, пустой или состоящей из одних пробелов", "input"); }
+            if (token.IsStringNullOrEmpty() == true) { throw new ArgumentException("Токен не может быть NULL или пустой строкой", "token"); }
+            if (Enum.IsDefined(comparisonType.GetType(), comparisonType) == false)
+            { throw new InvalidEnumArgumentException("comparisonType", (Int32)comparisonType, comparisonType.GetType()); }
+            if (String.Compare(input, token, comparisonType) == 0) { throw new ArgumentException("Входная строка не может быть равна токену"); }
+            if (input.Contains(token, comparisonType) == false) { return input; }
+            if (number == 0) { throw new ArgumentOutOfRangeException("number", "Номер вхождения указанного токена не может быть нулевой"); }
+            Int32 numsOfOccureses = StringTools.StringAnalyzers.GetNumberOfOccurencesInString(input, token, comparisonType);
+            if (number > numsOfOccureses) { throw new ArgumentOutOfRangeException("number", number, "Указанная позиция больше, чем количество вхождений токена в строке"); }
 
-            List<int> positions = StringTools.StringAnalyzers.GetPositionsOfTokenInString(Input, Token, ComparisonType);
+            List<int> positions = StringTools.StringAnalyzers.GetPositionsOfTokenInString(input, token, comparisonType);
 
-            Int32 token_length = Token.Length;
-            Int32 desired_position;
-            switch (Dir)
+            Int32 tokenLength = token.Length;
+            Int32 desiredPosition;
+            switch (dir)
             {
                 case StringTools.Direction.FromStartToEnd:
-                    desired_position = positions[Number - 1];
-                    return Input.Substring(0, desired_position);
+                    desiredPosition = positions[number - 1];
+                    return input.Substring(0, desiredPosition);
                 case StringTools.Direction.FromEndToStart:
-                    desired_position = positions[positions.Count - Number];
-                    return Input.Substring(desired_position + token_length);
+                    desiredPosition = positions[positions.Count - number];
+                    return input.Substring(desiredPosition + tokenLength);
                 default:
-                    throw new InvalidEnumArgumentException("Dir", (Int32)Dir, Dir.GetType());
+                    throw new InvalidEnumArgumentException("dir", (Int32)dir, dir.GetType());
             }
         }
 
         /// <summary>
         /// Возвращает подстроку из входной строки, которая отчитывается от указанной позиции и до указанного вхожденя указанного токена.
         /// </summary>
-        /// <param name="Input"></param>
-        /// <param name="Token">Номер вхождения указанного токена, начиная с 1</param>
-        /// <param name="Number"></param>
-        /// <param name="StartPosition"></param>
-        /// <param name="ComparisonType"></param>
+        /// <param name="input"></param>
+        /// <param name="token">Номер вхождения указанного токена, начиная с 1</param>
+        /// <param name="number"></param>
+        /// <param name="startPosition"></param>
+        /// <param name="comparisonType"></param>
         /// <returns></returns>
-        public static String GetSubstringToTokenWithSpecifiedNumber(String Input, String Token, Byte Number, Int32 StartPosition, StringComparison ComparisonType)
+        public static String GetSubstringToTokenWithSpecifiedNumber(String input, String token, Byte number, Int32 startPosition, StringComparison comparisonType)
         {
-            if (Input.IsStringNullEmptyWhiteSpace() == true) { throw new ArgumentException("Входная строка не может быть NULL, пустой или состоящей из одних пробелов", "Input"); }
-            if (Token.IsStringNullOrEmpty() == true) { throw new ArgumentException("Токен не может быть NULL или пустой строкой", "Token"); }
-            if (Enum.IsDefined(ComparisonType.GetType(), ComparisonType) == false)
-            { throw new InvalidEnumArgumentException("ComparisonType", (Int32)ComparisonType, ComparisonType.GetType()); }
-            if (String.Compare(Input, Token, ComparisonType) == 0) { throw new ArgumentException("Входная строка не может быть равна токену"); }
-            if (Input.Contains(Token, ComparisonType) == false) { return Input; }
-            if (Number == 0) { throw new ArgumentOutOfRangeException("Number", "Номер вхождения указанного токена не может быть нулевой"); }
-            if (StartPosition < 0) { throw new ArgumentOutOfRangeException("StartPosition", StartPosition, "Начальная позиция не может быть меньше 0"); }
-            String sub = Input.Substring(StartPosition);
-            Int32 nums_of_occureses = StringTools.StringAnalyzers.GetNumberOfOccurencesInString(sub, Token, ComparisonType);
-            if (Number > nums_of_occureses) { throw new ArgumentOutOfRangeException("Number", "Указанная бозиция больше, чем количество вхождений токена в части строки"); }
+            if (input.IsStringNullEmptyWhiteSpace() == true) { throw new ArgumentException("Входная строка не может быть NULL, пустой или состоящей из одних пробелов", "input"); }
+            if (token.IsStringNullOrEmpty() == true) { throw new ArgumentException("Токен не может быть NULL или пустой строкой", "token"); }
+            if (Enum.IsDefined(comparisonType.GetType(), comparisonType) == false)
+            { throw new InvalidEnumArgumentException("comparisonType", (Int32)comparisonType, comparisonType.GetType()); }
+            if (String.Compare(input, token, comparisonType) == 0) { throw new ArgumentException("Входная строка не может быть равна токену"); }
+            if (input.Contains(token, comparisonType) == false) { return input; }
+            if (number == 0) { throw new ArgumentOutOfRangeException("number", "Номер вхождения указанного токена не может быть нулевой"); }
+            if (startPosition < 0) { throw new ArgumentOutOfRangeException("startPosition", startPosition, "Начальная позиция не может быть меньше 0"); }
+            String sub = input.Substring(startPosition);
+            Int32 numsOfOccureses = StringTools.StringAnalyzers.GetNumberOfOccurencesInString(sub, token, comparisonType);
+            if (number > numsOfOccureses) { throw new ArgumentOutOfRangeException("number", "Указанная бозиция больше, чем количество вхождений токена в части строки"); }
 
-            List<int> positions = StringTools.StringAnalyzers.GetPositionsOfTokenInString(sub, Token, ComparisonType);
-            Int32 desired_position = positions[Number - 1];
-            return sub.Substring(0, desired_position);
+            List<int> positions = StringTools.StringAnalyzers.GetPositionsOfTokenInString(sub, token, comparisonType);
+            Int32 desiredPosition = positions[number - 1];
+            return sub.Substring(0, desiredPosition);
         }
 
         /// <summary>
         /// Возвращает исходную строку, в которой обрезана её часть от начала или от конца до ближайшего указанного токена
         /// </summary>
-        /// <param name="Input">Входящая строка, из которой надо извлечь подстроку</param>
-        /// <param name="Token">Токен, который определяет точку обрезания и также обрезается</param>
-        /// <param name="LeaveToken">Если "true" - ближайший токен будет оставлен. Если "false" - он тоже будет удалён.</param>
-        /// <param name="Dir">Направление, с которого будет обрезана подстрока: из начала или из конца</param>
-        /// <param name="ComparisonType">Опции сравнения строк между собой</param>
+        /// <param name="input">Входящая строка, из которой надо извлечь подстроку</param>
+        /// <param name="token">Токен, который определяет точку обрезания и также обрезается</param>
+        /// <param name="leaveToken">Если "true" - ближайший токен будет оставлен. Если "false" - он тоже будет удалён.</param>
+        /// <param name="dir">Направление, с которого будет обрезана подстрока: из начала или из конца</param>
+        /// <param name="comparisonType">Опции сравнения строк между собой</param>
         /// <returns></returns>
-        public static String TruncateToClosestToken(String Input, String Token, Boolean LeaveToken, StringTools.Direction Dir, StringComparison ComparisonType)
+        public static String TruncateToClosestToken(String input, String token, Boolean leaveToken, StringTools.Direction dir, StringComparison comparisonType)
         {
-            if (Input.IsStringNullEmptyWhiteSpace() == true) { throw new ArgumentException("Входная строка не может быть NULL, пустой или состоящей из одних пробелов", "Input"); }
-            if (Token.IsStringNullOrEmpty() == true) { throw new ArgumentException("Токен не может быть NULL или пустой строкой", "Token"); }
-            if (Enum.IsDefined(ComparisonType.GetType(), ComparisonType) == false)
-            { throw new InvalidEnumArgumentException("ComparisonType", (Int32)ComparisonType, ComparisonType.GetType()); }
-            if (String.Compare(Input, Token, ComparisonType) == 0) { throw new ArgumentException("Входная строка не может быть равна токену"); }
-            if (Input.Contains(Token, ComparisonType) == false) { return Input; }
-            Int32 token_length = Token.Length;
-            switch (Dir)
+            if (input.IsStringNullEmptyWhiteSpace() == true) { throw new ArgumentException("Входная строка не может быть NULL, пустой или состоящей из одних пробелов", "input"); }
+            if (token.IsStringNullOrEmpty() == true) { throw new ArgumentException("Токен не может быть NULL или пустой строкой", "token"); }
+            if (Enum.IsDefined(comparisonType.GetType(), comparisonType) == false)
+            { throw new InvalidEnumArgumentException("comparisonType", (Int32)comparisonType, comparisonType.GetType()); }
+            if (String.Compare(input, token, comparisonType) == 0) { throw new ArgumentException("Входная строка не может быть равна токену"); }
+            if (input.Contains(token, comparisonType) == false) { return input; }
+            Int32 tokenLength = token.Length;
+            switch (dir)
             {
                 case StringTools.Direction.FromStartToEnd:
-                    Int32 index_of_first_token = Input.IndexOf(Token, ComparisonType);
-                    if (LeaveToken == true)
+                    Int32 indexOfFirstToken = input.IndexOf(token, comparisonType);
+                    if (leaveToken == true)
                     {
-                        return Input.Remove(0, index_of_first_token);
+                        return input.Remove(0, indexOfFirstToken);
                     }
                     else
                     {
-                        return Input.Remove(0, index_of_first_token + token_length);
+                        return input.Remove(0, indexOfFirstToken + tokenLength);
                     }
 
                 case StringTools.Direction.FromEndToStart:
 
-                    Int32 index_of_last_token = Input.LastIndexOf(Token, ComparisonType);
-                    if (LeaveToken == true)
+                    Int32 indexOfLastToken = input.LastIndexOf(token, comparisonType);
+                    if (leaveToken == true)
                     {
-                        return Input.Remove(index_of_last_token + token_length);
+                        return input.Remove(indexOfLastToken + tokenLength);
                     }
                     else
                     {
-                        return Input.Remove(index_of_last_token);
+                        return input.Remove(indexOfLastToken);
                     }
                 default:
-                    throw new InvalidEnumArgumentException("Dir", (Int32)Dir, Dir.GetType());
+                    throw new InvalidEnumArgumentException("dir", (Int32)dir, dir.GetType());
             }
         }
 
@@ -514,50 +547,50 @@ namespace KlotosLib.StringTools
         /// Удаляет из входной строки указанную начальную и конечную подстроки, если они есть. Если нет хотя бы одной из них, то возвращается исходная строка. 
         /// Если во входной строке содержится множество вложенных один в другой начальных и конечных токенов, метод удалит их все рекурсивно.
         /// </summary>
-        /// <param name="Input">Входная строка, из которой необходимо удалить все указанные начальные и конечные токены.</param>
-        /// <param name="StartToken">Начальный токен</param>
-        /// <param name="EndToken">Конечный токен</param>
-        /// <param name="CompOpt"></param>
+        /// <param name="input">Входная строка, из которой необходимо удалить все указанные начальные и конечные токены.</param>
+        /// <param name="startToken">Начальный токен</param>
+        /// <param name="endToken">Конечный токен</param>
+        /// <param name="compOpt"></param>
         /// <returns>Новая строка, содержащая копию старой с удалёнными токенами</returns>
-        public static String DeleteStartAndEndTokens(String Input, String StartToken, String EndToken, StringComparison CompOpt)
+        public static String DeleteStartAndEndTokens(String input, String startToken, String endToken, StringComparison compOpt)
         {
-            if (StartToken.IsNullOrEmpty() == true) { throw new ArgumentException("Начальный токен не может быть NULL или пустой строкой", "Input"); }
-            if (EndToken == null) { throw new ArgumentException("Конечный токен не может быть NULL или пустой строкой", "EndToken"); }
+            if (startToken.IsNullOrEmpty() == true) { throw new ArgumentException("Начальный токен не может быть NULL или пустой строкой", "input"); }
+            if (endToken == null) { throw new ArgumentException("Конечный токен не может быть NULL или пустой строкой", "endToken"); }
 
-            if (Input.IsStringNullEmptyWhiteSpace() == true) { return Input; }
+            if (input.IsStringNullEmptyWhiteSpace() == true) { return input; }
 
-            if (Input.StartsWith(StartToken, CompOpt) == true && Input.EndsWith(EndToken, CompOpt) == true)
+            if (input.StartsWith(startToken, compOpt) == true && input.EndsWith(endToken, compOpt) == true)
             {
-                Input = Input.Remove(0, StartToken.Length);
-                Input = Input.Remove(Input.Length - EndToken.Length, EndToken.Length);
-                return DeleteStartAndEndTokens(Input, StartToken, EndToken, CompOpt);
+                input = input.Remove(0, startToken.Length);
+                input = input.Remove(input.Length - endToken.Length, endToken.Length);
+                return DeleteStartAndEndTokens(input, startToken, endToken, compOpt);
             }
             else
             {
-                return Input;
+                return input;
             }
         }
 
         /// <summary>
         /// Удаляет из входной строки все символы, которые не подпадают под допустимые
         /// </summary>
-        /// <param name="Input">Входная строка, которую следует "почистить". Если NULL или пустая, возвращается без изменений</param>
-        /// <param name="AllowedSymbols">Допустимые клссы символов. Если содержит неопределённое значение, входная строка возвращается без изменений.</param>
+        /// <param name="input">Входная строка, которую следует "почистить". Если NULL или пустая, возвращается без изменений</param>
+        /// <param name="allowedSymbols">Допустимые клссы символов. Если содержит неопределённое значение, входная строка возвращается без изменений.</param>
         /// <returns></returns>
-        public static String CleanFromChars(String Input, StringTools.StringAnalyzers.ContainsEntities AllowedSymbols)
+        public static String CleanFromChars(String input, StringTools.StringAnalyzers.ContainsEntities allowedSymbols)
         {
-            if (Input.IsStringNullOrEmpty() == true || AllowedSymbols == StringTools.StringAnalyzers.ContainsEntities.Empty) { return Input; }
-            StringBuilder output = new StringBuilder(Input.Length);
-            for (Int32 i = 0; i < Input.Length; i++)
+            if (input.IsStringNullOrEmpty() == true || allowedSymbols == StringTools.StringAnalyzers.ContainsEntities.Empty) { return input; }
+            StringBuilder output = new StringBuilder(input.Length);
+            for (Int32 i = 0; i < input.Length; i++)
             {
-                Char current = Input[i];
-                if (Char.IsControl(current) == true && AllowedSymbols.Misses(StringTools.StringAnalyzers.ContainsEntities.Controls) == true)
+                Char current = input[i];
+                if (Char.IsControl(current) == true && allowedSymbols.Misses(StringTools.StringAnalyzers.ContainsEntities.Controls) == true)
                 { continue; }
                 if (
-                    (AllowedSymbols.Contains(StringTools.StringAnalyzers.ContainsEntities.Letters) == true && Char.IsLetter(current) == true) ||
-                    (AllowedSymbols.Contains(StringTools.StringAnalyzers.ContainsEntities.Digits) == true && Char.IsDigit(current) == true) ||
-                    (AllowedSymbols.Contains(StringTools.StringAnalyzers.ContainsEntities.Spaces) == true && Char.IsWhiteSpace(current) == true) ||
-                    (AllowedSymbols.Contains(StringTools.StringAnalyzers.ContainsEntities.Controls) == true && Char.IsControl(current) == true)
+                    (allowedSymbols.Contains(StringTools.StringAnalyzers.ContainsEntities.Letters) == true && Char.IsLetter(current) == true) ||
+                    (allowedSymbols.Contains(StringTools.StringAnalyzers.ContainsEntities.Digits) == true && Char.IsDigit(current) == true) ||
+                    (allowedSymbols.Contains(StringTools.StringAnalyzers.ContainsEntities.Spaces) == true && Char.IsWhiteSpace(current) == true) ||
+                    (allowedSymbols.Contains(StringTools.StringAnalyzers.ContainsEntities.Controls) == true && Char.IsControl(current) == true)
                     )
                 {
                     output.Append(current);
@@ -569,12 +602,12 @@ namespace KlotosLib.StringTools
         /// <summary>
         /// Защищает входную строку от SQL-инъекции, экранируя одинарные кавычки
         /// </summary>
-        /// <param name="Input"></param>
+        /// <param name="input"></param>
         /// <returns></returns>
-        public static String SecureSQLQuery(String Input)
+        public static String SecureSqlQuery(String input)
         {
-            if (Input.HasVisibleChars() == false) { return Input; }
-            String output = Input.Replace("'", "''");
+            if (input.HasVisibleChars() == false) { return input; }
+            String output = input.Replace("'", "''");
             return output;
         }
 
@@ -582,28 +615,28 @@ namespace KlotosLib.StringTools
         /// Конкатенирует все указанные строки в одну и дублирует её указанное количество раз, конкатенируя каждый новый дубль к предыдущему
         /// </summary>
         /// <remarks>Детерминированный бессмертный метод, не бросающий исключений</remarks>
-        /// <param name="IterationsCount">Количество дублей конкатенированных строк, которые необходимо совершить. Если равен 0, возвращается пустая строка.</param>
-        /// <param name="Input">Массив от одной включительно и больше строк, которые необходимо конкатенировать. 
+        /// <param name="iterationsCount">Количество дублей конкатенированных строк, которые необходимо совершить. Если равен 0, возвращается пустая строка.</param>
+        /// <param name="input">Массив от одной включительно и больше строк, которые необходимо конкатенировать. 
         /// Если не содержит ни одной строки, не являющейся NULL или пустой, метод возвращает пустую строку.</param>
         /// <returns>Одна строка</returns>
-        public static String ConcatenateAllStringsManyTimes(Int32 IterationsCount, params String[] Input)
+        public static String ConcatenateAllStringsManyTimes(Int32 iterationsCount, params String[] input)
         {
-            if (IterationsCount < 0) { throw new ArgumentOutOfRangeException("IterationsCount", IterationsCount, "Количество итераций не может быть меньше 0"); }
-            if (IterationsCount <= 0) { return String.Empty; }
-            if (Input.IsNullOrEmpty() == true) { return String.Empty; }
-            StringBuilder temp = new StringBuilder(IterationsCount * Input.Length * 4);
-            for (UInt32 i = 0; i < IterationsCount; i++)
+            if (iterationsCount < 0) { throw new ArgumentOutOfRangeException("iterationsCount", iterationsCount, "Количество итераций не может быть меньше 0"); }
+            if (iterationsCount <= 0) { return String.Empty; }
+            if (input.IsNullOrEmpty() == true) { return String.Empty; }
+            StringBuilder temp = new StringBuilder(iterationsCount * input.Length * 4);
+            for (UInt32 i = 0; i < iterationsCount; i++)
             {
-                Boolean is_exists_valid = false;
-                foreach (String s in Input)
+                Boolean isExistsValid = false;
+                foreach (String s in input)
                 {
                     if (s.IsStringNullOrEmpty() == false)
                     {
                         temp.Append(s);
-                        is_exists_valid = true;
+                        isExistsValid = true;
                     }
                 }
-                if (is_exists_valid == false) { return String.Empty; }
+                if (isExistsValid == false) { return String.Empty; }
             }
             return temp.ToString();
         }
@@ -611,31 +644,31 @@ namespace KlotosLib.StringTools
         /// <summary>
         /// Уплотняет пробелы в указанной строке, сокращая множественные идущие подряд пробелы до одного
         /// </summary>
-        /// <param name="Input">Строка, которую следует уплотнить. Если NULL или пустая - будет возвращена без изменений.</param>
+        /// <param name="input">Строка, которую следует уплотнить. Если NULL или пустая - будет возвращена без изменений.</param>
         /// <returns></returns>
-        public static String ShrinkSpaces(String Input)
+        public static String ShrinkSpaces(String input)
         {
-            if (Input.IsNullOrEmpty() == true) { return Input; }
-            StringBuilder output = new StringBuilder(Input.Length);
+            if (input.IsNullOrEmpty() == true) { return input; }
+            StringBuilder output = new StringBuilder(input.Length);
             const Char space = ' ';
-            Int32 spaces_count = 0;
-            foreach (Char c in Input)
+            Int32 spacesCount = 0;
+            foreach (Char c in input)
             {
                 if (Char.IsControl(c) == true || Char.IsWhiteSpace(c) == false)
                 {
-                    if (spaces_count > 0)
+                    if (spacesCount > 0)
                     {
-                        spaces_count = 0;
+                        spacesCount = 0;
                         output.Append(space);
                     }
                     output.Append(c);
                 }
                 else
                 {
-                    spaces_count++;
+                    spacesCount++;
                 }
             }
-            if (spaces_count > 0)
+            if (spacesCount > 0)
             {
                 output.Append(space);
             }
